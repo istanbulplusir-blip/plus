@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'fa' }}" dir="{% if LANGUAGE_CODE == 'en' %}ltr{% else %}rtl{% endif %}" data-theme="light" class="no-js">
+  <head>
+    <!-- Meta Tags and SEO -->
+    {% include "includes/head-meta.html" %}
+
+    <!-- Resource Hints and Icons -->
+    {% include "includes/head-resources.html" %}
+
+    <!-- Styles -->
+    {% include "includes/head-styles.html" %}
+    <!-- CRITICAL: Keep this block on a single line to prevent template syntax errors -->
+    {% block extra_css %}{% endblock %}
+
+    <!-- Head Scripts -->
+    {% include "includes/head-scripts.html" %}
+  </head>
+  <body>
+    <!-- Page Loader -->
+    {% include "components/page-loader.html" %}
+
+    <!-- ARIA live regions for dynamic content -->
+    <div
+      id="aria-live-polite"
+      aria-live="polite"
+      aria-atomic="true"
+      class="visually-hidden"
+    ></div>
+    <div
+      id="aria-live-assertive"
+      aria-live="assertive"
+      aria-atomic="true"
+      class="visually-hidden"
+    ></div>
+
+    <!-- CSRF Token for JavaScript -->
+    {% csrf_token %}
+
+    <!-- Modern background with animated gradients -->
+    <div class="modern-background" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    {% include "components/navbar.html" %}
+
+    <!-- Main content area with semantic structure -->
+    <main id="main-content" class="main-content" role="main">
+      <!-- Messages -->
+      {% include "components/messages.html" %}
+
+      <!-- Page content -->
+      <div class="content-wrapper">{% block content %}{% endblock %}</div>
+    </main>
+
+    <!-- Footer -->
+    {% include "components/footer.html" %}
+
+    <!-- Back to top button -->
+    {% include "components/back-to-top.html" %}
+
+    <!-- JavaScript -->
+    {% include "includes/body-scripts.html" %}
+    <!-- CRITICAL: Keep this block on a single line to prevent template syntax errors -->
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,76 @@
+{% load static %}
+{% comment %}
+Hero Logo Component - For prominent display areas like homepage hero sections
+Usage: {% include "components/hero-logo.html" with show_text=true|false %}
+{% endcomment %}
+
+{% with show_text=show_text|default:true %}
+<div class="hero-logo-container text-center">
+  <div class="hero-logo-wrapper">
+    {% include "components/logo.html" with size="xlarge" quality="high" logo_context="hero" show_text=show_text text_class="hero-brand-text" %}
+  </div>
+  {% if show_text %}
+  <p class="hero-tagline mt-3">
+    فروشگاه آنلاین محصولات با کیفیت و ارسال سریع
+  </p>
+  {% endif %}
+</div>
+
+<style>
+  .hero-logo-container {
+    padding: 2rem 0;
+  }
+
+  .hero-logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .hero-brand-text {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-tagline {
+    font-size: 1.2rem;
+    color: var(--bs-gray-600);
+    font-weight: 500;
+  }
+
+  /* Dark theme adjustments */
+  [data-theme="dark"] .hero-logo-wrapper {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .hero-tagline {
+    color: var(--bs-gray-400);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hero-brand-text {
+      font-size: 2rem;
+    }
+    
+    .hero-tagline {
+      font-size: 1rem;
+    }
+    
+    .hero-logo-wrapper {
+      padding: 1rem;
+    }
+  }
+</style>
+{% endwith %}

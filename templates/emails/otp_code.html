@@ -1,0 +1,33 @@
+{% extends "emails/base.html" %} {% block title %}کد تأیید - {{
+site_name|default:"استانبول پلاس" }}{% endblock %} {% block content %}
+<h2>کد تأیید شما</h2>
+
+<p>سلام،</p>
+
+<p>کد تأیید شما برای {{ purpose_title }} در زیر آمده است:</p>
+
+<div class="otp-code">
+  <div class="code">{{ code }}</div>
+  <p style="margin: 10px 0 0 0; font-size: 14px; color: #666">
+    این کد تا {{ expiry_minutes }} دقیقه دیگر معتبر است
+  </p>
+</div>
+
+<div class="warning">
+  <strong>نکات امنیتی:</strong>
+  <ul style="margin: 10px 0; padding-right: 20px">
+    <li>این کد را با هیچ کس به اشتراک نگذارید</li>
+    <li>کارکنان ما هرگز از شما کد تأیید نخواهند خواست</li>
+    <li>
+      اگر این درخواست را شما انجام نداده‌اید، لطفاً این ایمیل را نادیده بگیرید
+    </li>
+  </ul>
+</div>
+
+<p>اگر مشکلی دارید، می‌توانید با تیم پشتیبانی ما تماس بگیرید.</p>
+
+<p>
+  با تشکر،<br />
+  تیم {{ site_name|default:"استانبول پلاس" }}
+</p>
+{% endblock %}

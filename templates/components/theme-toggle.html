@@ -1,0 +1,170 @@
+{% comment %} Modern Theme Toggle Component Usage: {% include "components/theme-toggle.html" with size="sm|md|lg" position="navbar|floating|inline" %} {% endcomment %}
+{% load static %}
+{% with size=size|default:"md" position=position|default:"navbar" %}
+<button
+  type="button"
+  class="btn theme-toggle theme-toggle-{{ size }} theme-toggle-{{ position }}"
+  id="themeToggle{{ position|title }}"
+  aria-label="تغییر تم به حالت تاریک یا روشن"
+  aria-describedby="theme-status-{{ position }}"
+  title="تغییر تم"
+  data-bs-toggle="tooltip"
+  data-bs-placement="bottom"
+  data-bs-title="تغییر تم"
+>
+  <!-- Light theme icon (sun) -->
+  <i
+    class="bi bi-sun-fill theme-icon-light"
+    aria-hidden="true"
+    data-theme-icon="light"
+  ></i>
+
+  <!-- Dark theme icon (moon) -->
+  <i
+    class="bi bi-moon-fill theme-icon-dark"
+    aria-hidden="true"
+    data-theme-icon="dark"
+  ></i>
+
+  <!-- Loading spinner (hidden by default) -->
+  <div class="theme-toggle-spinner d-none" aria-hidden="true">
+    <div class="spinner-border spinner-border-sm" role="status">
+      <span class="visually-hidden">در حال تغییر تم...</span>
+    </div>
+  </div>
+
+  <!-- Screen reader status -->
+  <span class="visually-hidden" id="theme-status-{{ position }}">
+    تم فعلی: روشن
+  </span>
+</button>
+
+<!-- Enhanced styles for different sizes and positions -->
+<style>
+  /* Size variations */
+  .theme-toggle-sm {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .theme-toggle-md {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+
+  .theme-toggle-lg {
+    width: 52px;
+    height: 52px;
+    font-size: 1.3rem;
+  }
+
+  /* Position variations */
+  .theme-toggle-floating {
+    position: fixed;
+    bottom: var(--space-6);
+    left: var(--space-6);
+    z-index: var(--z-index-fixed);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .theme-toggle-floating:hover {
+    box-shadow: var(--shadow-xl);
+  }
+
+  .theme-toggle-inline {
+    position: relative;
+    margin: var(--space-2);
+  }
+
+  .theme-toggle-navbar {
+    margin: 0;
+  }
+
+  /* RTL adjustments */
+  [dir="rtl"] .theme-toggle-floating {
+    left: auto;
+    right: var(--space-6);
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .theme-toggle-floating {
+      bottom: var(--space-4);
+      left: var(--space-4);
+    }
+
+    [dir="rtl"] .theme-toggle-floating {
+      left: auto;
+      right: var(--space-4);
+    }
+
+    .theme-toggle-sm {
+      width: 32px;
+      height: 32px;
+      font-size: 0.8rem;
+    }
+
+    .theme-toggle-md {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+
+    .theme-toggle-lg {
+      width: 48px;
+      height: 48px;
+      font-size: 1.2rem;
+    }
+  }
+
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .theme-toggle {
+      border-width: 2px !important;
+      border-color: var(--color-primary) !important;
+    }
+
+    .theme-toggle:focus {
+      outline: 3px solid var(--color-primary) !important;
+      outline-offset: 3px !important;
+    }
+  }
+
+  /* Print mode */
+  @media print {
+    .theme-toggle {
+      display: none !important;
+    }
+  }
+</style>
+
+<!-- Initialize tooltip if Bootstrap is available -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Bootstrap tooltip if available
+    if (typeof bootstrap !== "undefined" && bootstrap.Tooltip) {
+      const themeToggle = document.getElementById(
+        "themeToggle{{ position|title }}"
+      );
+      if (themeToggle) {
+        new bootstrap.Tooltip(themeToggle);
+      }
+    }
+
+    // Add keyboard support
+    const themeToggle = document.getElementById(
+      "themeToggle{{ position|title }}"
+    );
+    if (themeToggle) {
+      themeToggle.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.click();
+        }
+      });
+    }
+  });
+</script>
+{% endwith %}

@@ -1,0 +1,118 @@
+{% extends 'base.html' %} {% load static %} {% block title %}تأیید ایمیل -
+Istanbul Plus{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+{% endblock %} {% block content %}
+<div class="container auth-container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card auth-card">
+        <div class="card-header">
+          <h3 class="mb-0 text-center">
+            <i class="bi bi-envelope-check me-2"></i>
+            تأیید ایمیل
+          </h3>
+        </div>
+        <div class="card-body text-center">
+          {% if success %}
+          <!-- Success state -->
+          <div class="mb-4">
+            <i
+              class="bi bi-check-circle-fill text-success"
+              style="font-size: 4rem"
+            ></i>
+          </div>
+
+          <h4 class="text-success mb-3">ایمیل با موفقیت تأیید شد!</h4>
+
+          {% if user %}
+          <div class="alert alert-success">
+            <i class="bi bi-envelope-check me-2"></i>
+            ایمیل <strong>{{ user.email }}</strong> تأیید شد
+          </div>
+          {% endif %}
+
+          <p class="text-muted mb-4">{{ message }}</p>
+
+          <div class="d-grid gap-2">
+            {% if suggest_login %}
+            <a href="{% url 'users:login' %}" class="btn btn-auth">
+              <i class="bi bi-box-arrow-in-right me-2"></i>
+              ورود به حساب کاربری
+            </a>
+            <a href="{% url 'core:home' %}" class="btn btn-secondary-auth">
+              <i class="bi bi-house me-2"></i>
+              صفحه اصلی
+            </a>
+            {% else %}
+            <a href="{% url 'users:profile' %}" class="btn btn-auth">
+              <i class="bi bi-person me-2"></i>
+              مشاهده پروفایل
+            </a>
+            <a href="{% url 'core:home' %}" class="btn btn-secondary-auth">
+              <i class="bi bi-house me-2"></i>
+              صفحه اصلی
+            </a>
+            {% endif %}
+          </div>
+
+          {% else %}
+          <!-- Error state -->
+          <div class="mb-4">
+            <i
+              class="bi bi-x-circle-fill text-danger"
+              style="font-size: 4rem"
+            ></i>
+          </div>
+
+          <h4 class="text-danger mb-3">خطا در تأیید ایمیل</h4>
+
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ message }}
+          </div>
+
+          <div class="d-grid gap-2">
+            <a
+              href="{% url 'users:verification-status' %}"
+              class="btn btn-warning"
+            >
+              <i class="bi bi-arrow-clockwise me-2"></i>
+              درخواست مجدد تأیید
+            </a>
+            <a href="{% url 'users:login' %}" class="btn btn-secondary-auth">
+              <i class="bi bi-box-arrow-in-right me-2"></i>
+              ورود
+            </a>
+            <a href="{% url 'core:home' %}" class="btn btn-secondary-auth">
+              <i class="bi bi-house me-2"></i>
+              صفحه اصلی
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Additional info -->
+      <div class="card mt-3">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-info-circle me-2"></i>
+            اطلاعات مفید
+          </h6>
+          <ul class="list-unstyled mb-0 small text-muted">
+            {% if success %}
+            <li class="mb-1">• ایمیل شما اکنون تأیید شده است</li>
+            <li class="mb-1">• می‌توانید از تمام امکانات سایت استفاده کنید</li>
+            <li>• اطلاعیه‌های مهم به ایمیل شما ارسال می‌شود</li>
+            {% else %}
+            <li class="mb-1">• لینک تأیید ممکن است منقضی شده باشد</li>
+            <li class="mb-1">• از صحت لینک اطمینان حاصل کنید</li>
+            <li>• در صورت مشکل، لینک جدید درخواست کنید</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

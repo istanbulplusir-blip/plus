@@ -1,0 +1,323 @@
+{% extends 'base.html' %} {% load static %} {% block title %}تأیید شماره موبایل
+- Istanbul Plus{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+{% endblock %} {% block content %}
+<div class="container auth-container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card auth-card">
+        <div class="card-header">
+          <h3 class="mb-0 text-center">
+            <i class="bi bi-phone me-2"></i>
+            تأیید شماره موبایل
+          </h3>
+        </div>
+        <div class="card-body">
+          {% if phone_verified %}
+          <!-- Already verified state -->
+          <div class="text-center">
+            <div class="mb-4">
+              <i
+                class="bi bi-check-circle-fill text-success"
+                style="font-size: 4rem"
+              ></i>
+            </div>
+
+            <h4 class="text-success mb-3">شماره موبایل تأیید شده</h4>
+
+            <div class="alert alert-success">
+              <i class="bi bi-phone-check me-2"></i>
+              شماره موبایل <strong>{{ phone }}</strong> قبلاً تأیید شده است
+            </div>
+
+            <div class="d-grid gap-2">
+              <a href="{% url 'users:profile' %}" class="btn btn-auth">
+                <i class="bi bi-person me-2"></i>
+                بازگشت به پروفایل
+              </a>
+              <a
+                href="{% url 'users:verification-status' %}"
+                class="btn btn-secondary-auth"
+              >
+                <i class="bi bi-shield-check me-2"></i>
+                وضعیت تأیید
+              </a>
+            </div>
+          </div>
+
+          {% elif not phone %}
+          <!-- No phone number state -->
+          <div class="text-center">
+            <div class="mb-4">
+              <i
+                class="bi bi-exclamation-triangle-fill text-warning"
+                style="font-size: 4rem"
+              ></i>
+            </div>
+
+            <h4 class="text-warning mb-3">شماره موبایل ثبت نشده</h4>
+
+            <div class="alert alert-warning">
+              <i class="bi bi-info-circle me-2"></i>
+              ابتدا باید شماره موبایل خود را در پروفایل ثبت کنید
+            </div>
+
+            <div class="d-grid gap-2">
+              <a href="{% url 'users:profile' %}" class="btn btn-auth">
+                <i class="bi bi-plus-circle me-2"></i>
+                افزودن شماره موبایل
+              </a>
+              <a
+                href="{% url 'users:verification-status' %}"
+                class="btn btn-secondary-auth"
+              >
+                <i class="bi bi-arrow-left me-2"></i>
+                بازگشت
+              </a>
+            </div>
+          </div>
+
+          {% else %}
+          <!-- Verification needed state -->
+          <div id="alert-container" class="mb-3"></div>
+
+          <div class="text-center mb-4">
+            <div class="mb-3">
+              <i class="bi bi-phone text-primary" style="font-size: 3rem"></i>
+            </div>
+            <p class="text-muted">
+              برای تأیید شماره موبایل <strong>{{ phone }}</strong>
+              ابتدا کد تأیید را دریافت کنید.
+            </p>
+          </div>
+
+          <!-- Send OTP button -->
+          <div class="d-grid mb-3" id="send-otp-section">
+            <button type="button" class="btn btn-auth" id="send-otp-btn">
+              <i class="bi bi-send me-2"></i>
+              ارسال کد تأیید
+            </button>
+          </div>
+
+          <!-- OTP verification form (initially hidden) -->
+          <div id="otp-section" style="display: none">
+            <form id="phone-verify-form">
+              {% csrf_token %}
+
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  class="form-control otp-input"
+                  id="otp_code"
+                  name="otp_code"
+                  placeholder="کد تأیید"
+                  maxlength="6"
+                  pattern="[0-9]{6}"
+                  inputmode="numeric"
+                  required
+                />
+                <label for="otp_code">کد تأیید (6 رقم)</label>
+                <div class="form-text">
+                  کد 6 رقمی ارسال شده به شماره موبایل خود را وارد کنید
+                </div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success">
+                  <i class="bi bi-check-circle me-2"></i>
+                  تأیید کد
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary-auth"
+                  id="resend-otp-btn"
+                  disabled
+                >
+                  <i class="bi bi-arrow-clockwise me-2"></i>
+                  ارسال مجدد کد
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Back button -->
+          <div class="text-center mt-4">
+            <a
+              href="{% url 'users:verification-status' %}"
+              class="text-decoration-none"
+            >
+              <i class="bi bi-arrow-left me-1"></i>
+              بازگشت به وضعیت تأیید
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Help section -->
+      <div class="card mt-3">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-question-circle me-2"></i>
+            راهنما
+          </h6>
+          <ul class="list-unstyled mb-0 small text-muted">
+            {% if not phone_verified and phone %}
+            <li class="mb-1">• کد تأیید به شماره {{ phone }} ارسال می‌شود</li>
+            <li class="mb-1">• کد تأیید تا 5 دقیقه معتبر است</li>
+            <li class="mb-1">• در صورت عدم دریافت، مجدداً درخواست کنید</li>
+            <li>• از صحت شماره موبایل اطمینان حاصل کنید</li>
+            {% else %}
+            <li class="mb-1">• تأیید شماره موبایل برای امنیت حساب ضروری است</li>
+            <li class="mb-1">
+              • پس از تأیید، اطلاعیه‌ها از طریق SMS ارسال می‌شود
+            </li>
+            <li>• می‌توانید شماره موبایل را در پروفایل تغییر دهید</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/auth.js' %}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sendOtpBtn = document.getElementById("send-otp-btn");
+    const resendOtpBtn = document.getElementById("resend-otp-btn");
+    const otpSection = document.getElementById("otp-section");
+    const sendOtpSection = document.getElementById("send-otp-section");
+    const phoneVerifyForm = document.getElementById("phone-verify-form");
+    const otpInput = document.getElementById("otp_code");
+
+    // Initialize AuthManager
+    const authManager = new AuthManager();
+
+    // Send OTP functionality
+    if (sendOtpBtn) {
+      sendOtpBtn.addEventListener("click", function () {
+        sendOTP(this);
+      });
+    }
+
+    if (resendOtpBtn) {
+      resendOtpBtn.addEventListener("click", function () {
+        sendOTP(this);
+      });
+    }
+
+    function sendOTP(btn) {
+      authManager.setLoading(btn, true);
+
+      fetch('{% url "users:verification-status" %}', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": authManager.csrfToken,
+        },
+        body: JSON.stringify({
+          verification_type: "phone",
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            authManager.showMessage(data.message, "success");
+
+            // Show OTP section and hide send button
+            sendOtpSection.style.display = "none";
+            otpSection.style.display = "block";
+
+            // Focus on OTP input
+            setTimeout(() => {
+              otpInput.focus();
+            }, 100);
+
+            // Start countdown for resend button
+            startResendCountdown();
+          } else {
+            authManager.showMessage(data.message, "danger");
+          }
+        })
+        .catch((error) => {
+          authManager.showMessage("خطا در ارسال درخواست", "danger");
+        })
+        .finally(() => {
+          authManager.setLoading(btn, false);
+        });
+    }
+
+    // Phone verification form submission
+    if (phoneVerifyForm) {
+      phoneVerifyForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const otpCode = otpInput.value.trim();
+        if (!otpCode) {
+          authManager.showMessage("لطفاً کد تأیید را وارد کنید", "warning");
+          return;
+        }
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        authManager.setLoading(submitBtn, true);
+
+        fetch('{% url "users:verify-phone" %}', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": authManager.csrfToken,
+          },
+          body: JSON.stringify({
+            otp_code: otpCode,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              authManager.showMessage(data.message, "success");
+              setTimeout(() => {
+                window.location.href = '{% url "users:verification-status" %}';
+              }, 2000);
+            } else {
+              authManager.showMessage(data.message, "danger");
+            }
+          })
+          .catch((error) => {
+            authManager.showMessage("خطا در تأیید کد", "danger");
+          })
+          .finally(() => {
+            authManager.setLoading(submitBtn, false);
+          });
+      });
+    }
+
+    // Auto-format OTP input
+    if (otpInput) {
+      otpInput.addEventListener("input", function (e) {
+        this.value = this.value.replace(/[^0-9]/g, "");
+      });
+    }
+
+    function startResendCountdown() {
+      if (!resendOtpBtn) return;
+
+      let seconds = 60;
+      const originalText = resendOtpBtn.innerHTML;
+
+      resendOtpBtn.disabled = true;
+
+      const timer = setInterval(() => {
+        resendOtpBtn.innerHTML = `<i class="bi bi-clock me-2"></i>ارسال مجدد (${seconds})`;
+        seconds--;
+
+        if (seconds < 0) {
+          clearInterval(timer);
+          resendOtpBtn.innerHTML = originalText;
+          resendOtpBtn.disabled = false;
+        }
+      }, 1000);
+    }
+  });
+</script>
+{% endblock %}

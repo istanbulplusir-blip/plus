@@ -1,0 +1,61 @@
+{% load static %}
+<!-- Optimized CSS Loading for Production -->
+
+<!-- Resource Hints for Better Performance -->
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+
+<!-- Font loading handled by CSS -->
+
+<!-- Critical CSS (Inlined) -->
+<style>
+  {% include "css/critical-inline.css" %}
+</style>
+
+<!-- Main CSS Bundle (High Priority) -->
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+<!-- Legacy CSS for older browsers -->
+<link rel="stylesheet" href="{% static 'css/legacy.css' %}" />
+
+<!-- Conditional CSS Variables Fallback for IE11 -->
+<!--[if IE]>
+  <link
+    rel="stylesheet"
+    href="{% static 'css/utilities/css-vars-fallback.css' %}"
+  />
+<![endif]-->
+
+<!-- Modern CSS Features Detection and Fallbacks -->
+<script>
+  // Load CSS Variables fallback for browsers that don't support them
+  if (!window.CSS || !CSS.supports || !CSS.supports("--css", "variables")) {
+    var fallbackCSS = document.createElement("link");
+    fallbackCSS.rel = "stylesheet";
+    fallbackCSS.href = '{% static "css/utilities/css-vars-fallback.css" %}';
+    document.head.appendChild(fallbackCSS);
+  }
+</script>
+
+<!-- CSS Loading Performance Script -->
+<script>
+  (function () {
+    // Track CSS loading performance only
+    try {
+      if (window.performance && window.performance.mark) {
+        window.performance.mark("css-loading-start");
+
+        window.addEventListener("load", function () {
+          window.performance.mark("css-loading-end");
+          window.performance.measure(
+            "css-loading-duration",
+            "css-loading-start",
+            "css-loading-end"
+          );
+        });
+      }
+    } catch (e) {
+      // Silently handle performance tracking errors
+      console.debug("CSS performance tracking error:", e);
+    }
+  })();
+</script>

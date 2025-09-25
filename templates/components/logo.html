@@ -1,0 +1,69 @@
+{% load static %}
+{% comment %}
+Logo Component Usage:
+{% include "components/logo.html" with size="small|medium|large" quality="high|low" logo_context="navbar|footer|hero" %}
+
+Parameters:
+- size: "small" (24px), "medium" (32px), "large" (48px), "xlarge" (64px)
+- quality: "high" (highquality.png), "low" (lowquality.png) 
+- logo_context: "navbar", "footer", "hero", "card" (for styling context)
+- show_text: true|false (default: true)
+- text_class: CSS classes for text styling
+{% endcomment %}
+
+{% comment %} Determine logo file and dimensions directly {% endcomment %}
+{% if quality == "low" %}
+  {% if size == "small" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-small">
+      <img src="{% static 'Istanbulplusir-logo-lowquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-small" width="24" height="24" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% elif size == "medium" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-medium">
+      <img src="{% static 'Istanbulplusir-logo-lowquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-medium" width="32" height="32" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% elif size == "large" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-large">
+      <img src="{% static 'Istanbulplusir-logo-lowquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-large" width="48" height="48" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% elif size == "xlarge" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-xlarge">
+      <img src="{% static 'Istanbulplusir-logo-lowquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-xlarge" width="64" height="64" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% else %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-medium">
+      <img src="{% static 'Istanbulplusir-logo-lowquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-medium" width="32" height="32" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% endif %}
+{% else %}
+  {% if size == "small" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-small">
+      <img src="{% static 'Istanbulplusir-logo-highquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-small" width="24" height="24" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% elif size == "medium" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-medium">
+      <img src="{% static 'Istanbulplusir-logo-highquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-medium" width="32" height="32" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% elif size == "large" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-large">
+      <img src="{% static 'Istanbulplusir-logo-highquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-large" width="48" height="48" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% elif size == "xlarge" %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-xlarge">
+      <img src="{% static 'Istanbulplusir-logo-highquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-xlarge" width="64" height="64" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% else %}
+    <div class="logo-container logo-{{ logo_context|default:"" }} logo-medium">
+      <img src="{% static 'Istanbulplusir-logo-highquality.png' %}" alt="Istanbul Plus Logo" class="logo logo-{{ logo_context|default:"" }} logo-medium" width="32" height="32" loading="{% if logo_context == 'navbar' %}eager{% else %}lazy{% endif %}" decoding="async" />
+      {% if show_text|default:true %}<span class="logo-text {{ text_class|default:"" }}">Istanbul Plus</span>{% endif %}
+    </div>
+  {% endif %}
+{% endif %}

@@ -1,0 +1,285 @@
+{% load static %}
+<!-- Modern glassmorphism navigation -->
+<nav
+  class="navbar navbar-expand-lg fixed-top glass-nav"
+  id="mainNavbar"
+  role="navigation"
+  aria-label="{% if LANGUAGE_CODE == 'fa' %}ناوبری اصلی{% else %}Main navigation{% endif %}"
+>
+  <div class="container">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">
+      {% if LANGUAGE_CODE == 'fa' %}
+        رفتن به محتوا
+      {% else %}
+        Skip to content
+      {% endif %}
+    </a>
+    <a
+      class="navbar-brand fw-bold d-flex align-items-center"
+      href="{% url 'core:home' %}"
+      aria-label="{% if LANGUAGE_CODE == 'fa' %}صفحه اصلی {{ site_name|default:'Istanbul Plus' }}{% else %}{{ site_name|default:'Istanbul Plus' }} Homepage{% endif %}"
+    >
+      {% load site_tags %}
+      {% render_logo size="large" quality="high" logo_context="navbar" %}
+    </a>
+
+    <!-- Theme toggle button for mobile -->
+    <button
+      type="button"
+      class="btn btn-outline-light btn-sm d-lg-none theme-toggle-mobile"
+      id="themeToggleMobile"
+      aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر تم به حالت تاریک یا روشن{% else %}Toggle dark/light theme{% endif %}"
+      aria-describedby="theme-status"
+      title="{% if LANGUAGE_CODE == 'fa' %}تغییر تم{% else %}Toggle theme{% endif %}"
+    >
+      <i class="bi bi-sun-fill theme-icon-light" aria-hidden="true"></i>
+      <i class="bi bi-moon-fill theme-icon-dark" aria-hidden="true"></i>
+      <span class="visually-hidden" id="theme-status">
+        {% if LANGUAGE_CODE == 'fa' %}تم فعلی: روشن{% else %}Current theme:
+        light{% endif %}
+      </span>
+    </button>
+
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر منوی ناوبری{% else %}Toggle navigation menu{% endif %}"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Main navigation -->
+      <ul class="navbar-nav navbar-nav-main">
+        {% for item in main_menu %}
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="{{ item.url }}"
+            aria-current="{% if request.resolver_match.url_name == item.url|slice:'1:-1' %}page{% endif %}"
+            {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+          >
+            {% if item.icon_class %}
+            <i class="{{ item.icon_class }} nav-icon" aria-hidden="true"></i>
+            {% endif %}
+            <span>{{ item.title }}</span>
+          </a>
+        </li>
+        {% empty %}
+        <!-- Fallback menu items -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="{% url 'core:home' %}"
+            aria-current="{% if request.resolver_match.url_name == 'home' %}page{% endif %}"
+          >
+            <i class="bi bi-house-door nav-icon" aria-hidden="true"></i>
+            <span>{% if LANGUAGE_CODE == 'fa' %}خانه{% else %}Home{% endif %}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="{% url 'products:product_list' %}"
+            aria-current="{% if 'products' in request.resolver_match.namespace %}page{% endif %}"
+          >
+            <i class="bi bi-grid nav-icon" aria-hidden="true"></i>
+            <span>{% if LANGUAGE_CODE == 'fa' %}محصولات{% else %}Products{% endif %}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Right side navigation -->
+      <ul class="navbar-nav navbar-nav-actions align-items-center">
+        <!-- Language/Direction Toggle -->
+        <li class="nav-item d-none d-lg-block">
+          <div
+            class="btn-group btn-group-sm"
+            role="group"
+            aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر زبان{% else %}Language toggle{% endif %}"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-secondary {% if LANGUAGE_CODE == 'fa' %}active{% endif %}"
+              onclick="setLanguage('fa')"
+              aria-pressed="{% if LANGUAGE_CODE == 'fa' %}true{% else %}false{% endif %}"
+            >
+              <span class="d-none d-xl-inline">فا</span>
+              <span class="d-xl-none">FA</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary {% if LANGUAGE_CODE == 'en' %}active{% endif %}"
+              onclick="setLanguage('en')"
+              aria-pressed="{% if LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %}"
+            >
+              <span class="d-none d-xl-inline">En</span>
+              <span class="d-xl-none">EN</span>
+            </button>
+          </div>
+        </li>
+
+        <!-- Mobile Language Toggle -->
+        <li class="nav-item d-lg-none">
+          <div
+            class="btn-group btn-group-sm w-100"
+            role="group"
+            aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر زبان{% else %}Language toggle{% endif %}"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-secondary flex-fill {% if LANGUAGE_CODE == 'fa' %}active{% endif %}"
+              onclick="setLanguage('fa')"
+              aria-pressed="{% if LANGUAGE_CODE == 'fa' %}true{% else %}false{% endif %}"
+            >
+              فارسی
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary flex-fill {% if LANGUAGE_CODE == 'en' %}active{% endif %}"
+              onclick="setLanguage('en')"
+              aria-pressed="{% if LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %}"
+            >
+              English
+            </button>
+          </div>
+        </li>
+
+        <!-- Theme toggle for desktop -->
+        <li class="nav-item d-none d-lg-block">
+          <button
+            type="button"
+            class="btn btn-outline-light btn-sm theme-toggle-desktop"
+            id="themeToggleDesktop"
+            aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر تم به حالت تاریک یا روشن{% else %}Toggle dark/light theme{% endif %}"
+            aria-describedby="theme-status-desktop"
+            title="{% if LANGUAGE_CODE == 'fa' %}تغییر تم{% else %}Toggle theme{% endif %}"
+            aria-pressed="false"
+          >
+            <i class="bi bi-sun-fill theme-icon-light" aria-hidden="true"></i>
+            <i class="bi bi-moon-fill theme-icon-dark" aria-hidden="true"></i>
+            <span class="visually-hidden" id="theme-status-desktop">
+              {% if LANGUAGE_CODE == 'fa' %}تم فعلی: روشن{% else %}Current
+              theme: light{% endif %}
+            </span>
+          </button>
+        </li>
+
+        <!-- Mobile Theme Toggle -->
+        <li class="nav-item d-lg-none">
+          <button
+            type="button"
+            class="btn btn-outline-light btn-sm theme-toggle-mobile-menu w-100"
+            id="themeToggleMobileMenu"
+            aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر تم به حالت تاریک یا روشن{% else %}Toggle dark/light theme{% endif %}"
+            title="{% if LANGUAGE_CODE == 'fa' %}تغییر تم{% else %}Toggle theme{% endif %}"
+            aria-pressed="false"
+          >
+            <i class="bi bi-sun-fill theme-icon-light" aria-hidden="true"></i>
+            <i class="bi bi-moon-fill theme-icon-dark" aria-hidden="true"></i>
+            <span class="ms-2">
+              {% if LANGUAGE_CODE == 'fa' %}تغییر تم{% else %}Toggle Theme{% endif %}
+            </span>
+          </button>
+        </li>
+
+        <!-- Shopping cart -->
+        <li class="nav-item">
+          <a
+            class="nav-link position-relative cart-link d-flex align-items-center{% if cart_item_count %} has-items{% endif %}"
+            href="{% url 'cart:cart_detail' %}"
+            aria-label="{% if LANGUAGE_CODE == 'fa' %}سبد خرید{% if cart_item_count %} - {{ cart_item_count }} آیتم{% endif %}{% else %}Shopping cart{% if cart_item_count %} - {{ cart_item_count }} items{% endif %}{% endif %}"
+            title="{% if LANGUAGE_CODE == 'fa' %}سبد خرید{% else %}Shopping Cart{% endif %}"
+          >
+            <i class="bi bi-cart3 fs-5"></i>
+            {% if cart_item_count %}
+            <span class="cart-badge badge rounded-pill bg-danger position-absolute">
+              {{ cart_item_count }}
+              <span class="visually-hidden">
+                {% if LANGUAGE_CODE == 'fa' %}آیتم در سبد خرید{% else %}items in
+                cart{% endif %}
+              </span>
+            </span>
+            {% endif %}
+          </a>
+        </li>
+
+        {% if user.is_authenticated %}
+        <!-- User dropdown -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle d-flex align-items-center"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            aria-label="منوی کاربری - {{ user.get_full_name|default:user.phone }}"
+            aria-haspopup="true"
+          >
+            <i class="bi bi-person-circle fs-5 me-1" aria-hidden="true"></i>
+            <span class="d-none d-md-inline">
+              {{ user.get_full_name|default:user.phone|truncatechars:15 }}
+            </span>
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end glass-dropdown"
+            aria-labelledby="navbarDropdown"
+          >
+            <li>
+              <a class="dropdown-item" href="{% url 'users:profile' %}">
+                <i class="bi bi-person me-2" aria-hidden="true"></i>
+                پروفایل
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'orders:order_list' %}">
+                <i class="bi bi-bag me-2" aria-hidden="true"></i>
+                سفارش‌ها
+              </a>
+            </li>
+            <li>
+              <hr
+                class="dropdown-divider"
+                role="separator"
+                aria-hidden="true"
+              />
+            </li>
+            <li>
+              <a
+                class="dropdown-item text-danger"
+                href="{% url 'users:logout' %}"
+              >
+                <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>
+                خروج
+              </a>
+            </li>
+          </ul>
+        </li>
+        {% else %}
+        <!-- Authentication links -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'users:login' %}">
+            <i class="bi bi-box-arrow-in-right nav-icon"></i>
+            {% if LANGUAGE_CODE == 'fa' %}ورود{% else %}Login{% endif %}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link btn btn-outline-primary btn-sm px-3"
+            href="{% url 'users:register' %}"
+          >
+            {% if LANGUAGE_CODE == 'fa' %}ثبت‌نام{% else %}Register{% endif %}
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

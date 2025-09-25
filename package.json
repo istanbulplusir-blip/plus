@@ -1,0 +1,83 @@
+{
+  "name": "istanbul-plus-ui-testing",
+  "version": "1.0.0",
+  "description": "Cross-browser compatibility and CSS validation testing for Istanbul Plus e-commerce platform",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:cross-browser": "playwright test tests/cross-browser/",
+    "test:visual": "playwright test tests/visual-regression/",
+    "test:accessibility": "playwright test tests/accessibility/",
+    "test:performance": "playwright test tests/performance/",
+    "validate:css": "stylelint 'static/css/**/*.css' --fix",
+    "validate:css-check": "stylelint 'static/css/**/*.css'",
+    "validate:css-tree": "csstree-validator static/css/",
+    "build:css": "npm run validate:css && npm run optimize:css",
+    "optimize:css": "cleancss -o static/css/build/main.min.css static/css/main.css",
+    "analyze:css": "cssstats static/css/main.css",
+    "lighthouse": "lighthouse http://localhost:8000 --output=json --output-path=./reports/lighthouse.json",
+    "axe": "axe http://localhost:8000 --save ./reports/axe-results.json",
+    "install:playwright": "playwright install",
+    "install:browsers": "playwright install-deps",
+    "report:open": "playwright show-report",
+    "report:merge": "playwright merge-reports --reporter=html ./test-results",
+    "clean:reports": "rimraf test-results reports",
+    "setup": "npm run install:playwright && npm run install:browsers"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@axe-core/playwright": "^4.8.2",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0",
+    "stylelint-config-recess-order": "^4.4.0",
+    "stylelint-order": "^6.0.3",
+    "stylelint-scss": "^5.3.1",
+    "csstree-validator": "^3.0.0",
+    "clean-css-cli": "^5.6.2",
+    "cssstats": "^4.0.5",
+    "lighthouse": "^11.3.0",
+    "axe-core": "^4.8.2",
+    "rimraf": "^5.0.5",
+    "postcss": "^8.4.31",
+    "postcss-scss": "^4.0.9",
+    "autoprefixer": "^10.4.16",
+    "browserslist": "^4.22.1"
+  },
+  "dependencies": {
+    "css-vars-ponyfill": "^2.4.8"
+  },
+  "browserslist": [
+    "Chrome >= 70",
+    "Firefox >= 65",
+    "Safari >= 12",
+    "Edge >= 79",
+    "IE >= 11",
+    "iOS >= 12",
+    "Android >= 7"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "cross-browser",
+    "css-validation",
+    "playwright",
+    "testing",
+    "accessibility",
+    "performance",
+    "visual-regression"
+  ],
+  "author": "Istanbul Plus Development Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/istanbul-plus.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/istanbul-plus/issues"
+  },
+  "homepage": "https://github.com/your-org/istanbul-plus#readme"
+}

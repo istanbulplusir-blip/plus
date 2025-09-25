@@ -1,0 +1,466 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load site_tags %}
+{% block title %}خانه | {{ block.super }}{% endblock %}
+{% block content %}
+<!-- Modern Hero Section -->
+<section class="hero-section" 
+         {% if hero_config %}
+         data-background-type="{{ hero_config.background_type }}"
+         data-animation-enabled="{{ hero_config.animation_enabled|yesno:'true,false' }}"
+         data-animation-speed="{{ hero_config.animation_speed }}"
+         data-show-particles="{{ hero_config.show_particles|yesno:'true,false' }}"
+         data-show-cards="{{ hero_config.show_cards|yesno:'true,false' }}"
+         data-cards-count="{{ hero_config.cards_count }}"
+         style="
+           {% if hero_config.background_type == 'gradient' %}
+             background: linear-gradient(135deg, {{ hero_config.background_gradient_start }} 0%, {{ hero_config.background_gradient_end }} 100%);
+           {% elif hero_config.background_type == 'solid' %}
+             background-color: {{ hero_config.background_color }};
+           {% elif hero_config.background_type == 'image' and hero_config.background_image %}
+             background-image: url('{{ hero_config.background_image.url }}');
+             background-size: cover;
+             background-position: center;
+           {% endif %}
+         "
+         {% endif %}>
+  <div class="hero-background">
+    {% if hero_config and hero_config.background_type == 'gradient' %}
+      <div class="hero-gradient" 
+           style="background: linear-gradient(135deg, {{ hero_config.background_gradient_start }} 0%, {{ hero_config.background_gradient_end }} 100%);"></div>
+    {% else %}
+      <div class="hero-gradient"></div>
+    {% endif %}
+    {% if hero_config and hero_config.show_particles %}
+      <div class="hero-particles"></div>
+    {% endif %}
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          <span class="hero-title-main">به فروشگاه</span>
+          <span class="hero-title-brand">{{ site_name|default:"Istanbul Plus" }}</span>
+          <span class="hero-title-sub">خوش آمدید</span>
+        </h1>
+        {% get_site_content 'hero_description' as hero_desc %}
+        <p class="hero-description">
+          {% if hero_desc %}
+            {{ hero_desc.content|safe }}
+          {% else %}
+            تجربه خرید آنلاین منحصر به فرد با بهترین محصولات و خدمات درجه یک
+          {% endif %}
+        </p>
+        <div class="hero-actions">
+          <a
+            href="{% url 'products:product_list' %}"
+            class="btn btn-hero-primary"
+          >
+            <span>کاوش محصولات</span>
+            <i class="bi bi-arrow-left"></i>
+          </a>
+          <a href="#featured-categories" class="btn btn-hero-secondary">
+            <span>دسته‌بندی‌ها</span>
+            <i class="bi bi-grid-3x3-gap"></i>
+          </a>
+        </div>
+      </div>
+      {% if hero_config and hero_config.show_cards %}
+        <div class="hero-visual">
+          {% render_hero_cards limit=hero_config.cards_count|default:3 %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- Featured Categories Section -->
+<section id="featured-categories" class="section-featured-categories">
+  <div class="container">
+    <div class="section-header scroll-fade-up">
+      <h2 class="section-title">دسته‌بندی‌های محبوب</h2>
+      <p class="section-subtitle">کاوش در مجموعه‌های منتخب ما</p>
+    </div>
+    <div class="categories-grid scroll-stagger">
+      {% for category in categories|slice:":4" %}
+      <div
+        class="category-item scroll-fade-up delay-{{ forloop.counter0|add:1 }}00"
+      >
+        <div class="card category-card h-100">
+          <div class="card-img-container">
+            {% if category.image %}
+            <img
+              src="{{ category.image.url }}"
+              class="card-img-top"
+              alt="{{ category.name }}"
+              loading="lazy"
+            />
+            {% else %}
+            <div class="card-img-placeholder">
+              <i class="bi bi-grid-3x3-gap"></i>
+              <span>{{ category.name }}</span>
+            </div>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ category.name }}</h5>
+            <p class="card-text">{{ category.description|truncatewords:12 }}</p>
+            <div class="card-actions">
+              <a
+                href="{% url 'products:category_detail' category.slug %}"
+                class="btn btn-outline-primary"
+              >
+                <span>مشاهده محصولات</span>
+                <i class="bi bi-arrow-left"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="empty-state">
+          <i class="bi bi-grid-3x3-gap"></i>
+          <h3>دسته‌بندی‌ای موجود نیست</h3>
+          <p>به زودی دسته‌بندی‌های جدید اضافه خواهند شد</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="section-featured-products">
+  <div class="container">
+    <div class="section-header scroll-fade-up">
+      <h2 class="section-title">محصولات ویژه</h2>
+      <p class="section-subtitle">برترین انتخاب‌های ما برای شما</p>
+    </div>
+    <div class="products-grid scroll-stagger">
+      {% for product in featured_products|slice:":4" %}
+      <div
+        class="product-item scroll-fade-up delay-{{ forloop.counter0|add:2 }}00"
+      >
+        <div class="card product-card h-100">
+          <div class="card-img-container">
+            {% if product.image %}
+            <img
+              src="{{ product.image.url }}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+              loading="lazy"
+            />
+            {% else %}
+            <div class="card-img-placeholder">
+              <i class="bi bi-box"></i>
+              <span>{{ product.name }}</span>
+            </div>
+            {% endif %}
+            <div class="product-badge featured">ویژه</div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">{{ product.description|truncatewords:12 }}</p>
+            <div class="price-display">
+              {{ product.price|floatformat:0 }} تومان
+            </div>
+            <div class="card-actions">
+              <a
+                href="{% url 'products:product_detail' product.slug %}"
+                class="btn btn-primary"
+              >
+                <span>مشاهده محصول</span>
+                <i class="bi bi-eye"></i>
+              </a>
+              <button class="btn btn-wishlist" title="افزودن به علاقه‌مندی‌ها">
+                <i class="bi bi-heart"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="empty-state">
+          <i class="bi bi-star"></i>
+          <h3>محصول ویژه‌ای موجود نیست</h3>
+          <p>به زودی محصولات ویژه جدید معرفی خواهند شد</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if featured_products|length > 4 %}
+    <div class="section-footer">
+      <a
+        href="{% url 'products:product_list' %}?featured=true"
+        class="btn btn-outline-primary btn-lg"
+      >
+        <span>مشاهده همه محصولات ویژه</span>
+        <i class="bi bi-arrow-left"></i>
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="section-cta">
+  <div class="container">
+    <div class="cta-content scroll-scale">
+      <div class="cta-text">
+        <h2 class="cta-title">آماده برای شروع خرید هستید؟</h2>
+        <p class="cta-description">
+          با عضویت در خبرنامه ما از جدیدترین محصولات و تخفیف‌های ویژه باخبر شوید
+        </p>
+      </div>
+      <div class="cta-actions">
+        <a href="{% url 'products:product_list' %}" class="btn btn-cta-primary">
+          <span>شروع خرید</span>
+          <i class="bi bi-cart-plus"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block extra_js %}
+<script src="{% static 'js/home.js' %}"></script>
+<script>
+  // Additional home page specific functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    // Add product IDs to cards for wishlist functionality
+    document.querySelectorAll(".product-card").forEach((card, index) => {
+      const productLink = card.querySelector('a[href*="product_detail"]');
+      if (productLink) {
+        const productSlug = productLink.href.split("/").pop().replace("/", "");
+        card.dataset.productId = productSlug;
+      }
+    });
+
+    // Enhanced loading states for images
+    document.querySelectorAll(".card-img-top").forEach((img) => {
+      img.addEventListener("load", function () {
+        this.classList.add("loaded");
+      });
+
+      img.addEventListener("error", function () {
+        this.classList.add("error");
+        // Fallback to placeholder
+        this.src = "{% static 'img/no-image.png' %}";
+      });
+    });
+
+    // Add loading animation to buttons
+    document.querySelectorAll(".btn").forEach((btn) => {
+      btn.addEventListener("click", function (e) {
+        if (this.href && !this.href.includes("#")) {
+          this.classList.add("loading");
+          const originalText = this.innerHTML;
+          this.innerHTML =
+            '<i class="bi bi-arrow-clockwise spin"></i> در حال بارگذاری...';
+
+          // Reset after navigation (fallback)
+          setTimeout(() => {
+            this.classList.remove("loading");
+            this.innerHTML = originalText;
+          }, 3000);
+        }
+      });
+    });
+
+    // Keyboard navigation enhancements
+    document.addEventListener("keydown", function (e) {
+      // ESC key to close any open modals or return to top
+      if (e.key === "Escape") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Space bar on hero section to scroll to content
+      if (e.key === " " && window.pageYOffset < window.innerHeight) {
+        e.preventDefault();
+        document.querySelector("#featured-categories").scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+    });
+
+        // Performance monitoring
+        if ("performance" in window) {
+          window.addEventListener("load", function () {
+            setTimeout(() => {
+              const perfData = performance.getEntriesByType("navigation")[0];
+              if (perfData && perfData.loadEventEnd > 3000) {
+                console.warn(
+                  "Home page load time is slow:",
+                  perfData.loadEventEnd + "ms"
+                );
+              }
+            }, 0);
+          });
+        }
+
+        // Hero Configuration Management
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) {
+          // Apply animation settings
+          const animationSpeed = heroSection.dataset.animationSpeed;
+          if (animationSpeed) {
+            const cards = heroSection.querySelectorAll('.showcase-card');
+            cards.forEach(card => {
+              card.style.animationDuration = animationSpeed === 'slow' ? '3s' : 
+                                           animationSpeed === 'fast' ? '1s' : '2s';
+            });
+          }
+
+          // Disable animations if needed
+          const animationEnabled = heroSection.dataset.animationEnabled;
+          if (animationEnabled === 'false') {
+            const cards = heroSection.querySelectorAll('.showcase-card');
+            cards.forEach(card => {
+              card.style.animation = 'none';
+            });
+          }
+
+          // Handle background changes
+          const backgroundType = heroSection.dataset.backgroundType;
+          if (backgroundType === 'image') {
+            heroSection.style.backgroundAttachment = 'fixed';
+          }
+        }
+  });
+</script>
+
+<style>
+  /* Additional inline styles for loading states */
+  .btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .card-img-top {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-img-top.loaded {
+    opacity: 1;
+  }
+
+  .card-img-top.error {
+    opacity: 0.5;
+  }
+
+  /* Keyboard focus styles */
+  .keyboard-focused {
+    outline: 2px solid var(--color-primary) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Screen reader only class */
+  .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* Performance optimizations for scrolling */
+  .scrolling * {
+    pointer-events: none;
+  }
+
+  .page-hidden .hero-particles,
+  .page-hidden .showcase-card {
+    animation-play-state: paused;
+  }
+
+  /* Hero Cards Styles */
+  .showcase-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    border-radius: 12px;
+  }
+
+  .showcase-price {
+    font-weight: bold;
+    color: var(--color-primary);
+    margin: 8px 0;
+    font-size: 1.1rem;
+  }
+
+  .showcase-link {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .showcase-link:hover {
+    background: var(--color-secondary);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  /* Hero Configuration Styles */
+  .hero-section[data-animation-speed="slow"] .showcase-card {
+    animation-duration: 3s;
+  }
+  
+  .hero-section[data-animation-speed="normal"] .showcase-card {
+    animation-duration: 2s;
+  }
+  
+  .hero-section[data-animation-speed="fast"] .showcase-card {
+    animation-duration: 1s;
+  }
+
+  /* Disable animations when disabled */
+  .hero-section[data-animation-enabled="false"] .showcase-card {
+    animation: none !important;
+  }
+
+  /* Background image styles */
+  .hero-section[style*="background-image"] {
+    background-attachment: fixed;
+  }
+
+  /* Solid background styles */
+  .hero-section[style*="background-color"] .hero-gradient {
+    display: none;
+  }
+</style>
+{% endblock %}

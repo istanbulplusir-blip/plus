@@ -1,0 +1,178 @@
+/* Light Theme - Default and Explicit */
+:root {
+  /* Theme Transition Support */
+  --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  
+  /* Background Colors */
+  --color-background: var(--color-white);
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-tertiary: var(--color-gray-100);
+  
+  /* Surface Colors */
+  --color-surface: var(--color-white);
+  --color-surface-hover: var(--color-gray-50);
+  --color-surface-active: var(--color-gray-100);
+  
+  /* Text Colors */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-700);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-inverse: var(--color-white);
+  
+  /* Border Colors */
+  --color-border: var(--color-gray-200);
+  --color-border-hover: var(--color-gray-300);
+  --color-border-focus: var(--color-primary);
+  
+  /* Glassmorphism for Light Theme */
+  --glass-background: rgba(255, 255, 255, 0.25);
+  --glass-background-hover: rgba(255, 255, 255, 0.35);
+  --glass-background-active: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  
+  /* Card Colors */
+  --color-card-background: var(--color-white);
+  --color-card-border: var(--color-gray-200);
+  --color-card-shadow: var(--shadow-base);
+  
+  /* Input Colors */
+  --color-input-background: var(--color-white);
+  --color-input-border: var(--color-gray-300);
+  --color-input-border-focus: var(--color-primary);
+  --color-input-text: var(--color-gray-900);
+  --color-input-placeholder: var(--color-gray-500);
+  
+  /* Navigation Colors */
+  --color-nav-background: rgba(255, 255, 255, 0.95);
+  --color-nav-text: var(--color-gray-900);
+  --color-nav-text-hover: var(--color-primary);
+  --color-nav-border: var(--color-gray-200);
+  
+  /* Footer Colors */
+  --color-footer-background: var(--color-gray-50);
+  --color-footer-text: var(--color-gray-700);
+  --color-footer-text-secondary: var(--color-gray-500);
+  
+  /* Button Colors */
+  --color-button-primary-bg: var(--gradient-primary);
+  --color-button-primary-text: var(--color-white);
+  --color-button-primary-hover: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  
+  --color-button-secondary-bg: var(--color-gray-100);
+  --color-button-secondary-text: var(--color-gray-700);
+  --color-button-secondary-hover: var(--color-gray-200);
+  
+  --color-button-outline-bg: transparent;
+  --color-button-outline-text: var(--color-primary);
+  --color-button-outline-border: var(--color-primary);
+  --color-button-outline-hover-bg: var(--color-primary);
+  --color-button-outline-hover-text: var(--color-white);
+  
+  /* Alert Colors */
+  --color-alert-success-bg: var(--color-success-light);
+  --color-alert-success-text: var(--color-success-dark);
+  --color-alert-success-border: var(--color-success);
+  
+  --color-alert-warning-bg: var(--color-warning-light);
+  --color-alert-warning-text: var(--color-warning-dark);
+  --color-alert-warning-border: var(--color-warning);
+  
+  --color-alert-error-bg: var(--color-error-light);
+  --color-alert-error-text: var(--color-error-dark);
+  --color-alert-error-border: var(--color-error);
+  
+  --color-alert-info-bg: var(--color-info-light);
+  --color-alert-info-text: var(--color-info-dark);
+  --color-alert-info-border: var(--color-info);
+}
+
+/* Light theme specific styles */
+:root,
+[data-theme="light"] {
+  /* Apply light theme variables */
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: var(--theme-transition);
+}
+
+.navbar {
+  background-color: var(--color-nav-background);
+  backdrop-filter: var(--backdrop-blur);
+  border-bottom: 1px solid var(--color-nav-border);
+  transition: var(--theme-transition);
+}
+
+.card {
+  background-color: var(--color-card-background);
+  border: 1px solid var(--color-card-border);
+  box-shadow: var(--color-card-shadow);
+  transition: var(--theme-transition);
+}
+
+.glass,
+.glass-nav,
+.glass-dropdown,
+.glass-alert {
+  background: var(--glass-background);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: var(--theme-transition);
+}
+
+.glass:hover,
+.glass-nav:hover,
+.glass-dropdown:hover {
+  background: var(--glass-background-hover);
+}
+
+.glass:active,
+.glass-nav:active {
+  background: var(--glass-background-active);
+}
+
+/* Form elements */
+.form-control,
+.form-select,
+.form-check-input {
+  background-color: var(--color-input-background);
+  border-color: var(--color-input-border);
+  color: var(--color-input-text);
+  transition: var(--theme-transition);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+/* Buttons */
+.btn {
+  transition: var(--theme-transition);
+}
+
+/* Footer */
+.modern-footer {
+  background-color: var(--color-footer-background);
+  color: var(--color-footer-text);
+  transition: var(--theme-transition);
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  transition: var(--theme-transition);
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}

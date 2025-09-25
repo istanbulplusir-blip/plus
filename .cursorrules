@@ -1,0 +1,296 @@
+# Istanbul Plus Django Project - Cursor Rules
+
+## Project Overview
+
+This is a Django e-commerce project for Istanbul Plus, featuring:
+
+- Modern responsive design with Bootstrap 5.3.0
+- RTL/LTR language support (Persian/English)
+- Dark/Light theme system
+- Modular template architecture
+- Static file optimization
+
+## Django Template Guidelines
+
+### Template Tag Best Practices
+
+1. **Always use proper template tag syntax:**
+
+   ```django
+   {% load static %}
+   {% block extra_css %}{% endblock %}
+   {% include "components/navbar.html" %}
+   ```
+
+2. **Avoid nested template tags:**
+
+   ```django
+   <!-- ❌ WRONG - Nested with tags cause syntax errors -->
+   {% with context="navbar" %}
+     {% with size="medium" %}
+       {% include "components/logo.html" %}
+     {% endwith %}
+   {% endwith %}
+
+   <!-- ✅ CORRECT - Use direct parameters -->
+   {% include "components/logo.html" with size="medium" logo_context="navbar" %}
+   ```
+
+3. **Template block formatting:**
+
+   ```django
+   <!-- ❌ WRONG - Split across lines -->
+   {% block extra_css %}{% endblock
+   %}
+
+   <!-- ✅ CORRECT - Single line or properly formatted -->
+   {% block extra_css %}{% endblock %}
+   ```
+
+4. **Reserved parameter names to avoid:**
+   - `context` (conflicts with Django's internal context)
+   - Use `logo_context`, `card_context`, etc. instead
+
+### Template Structure
+
+- **Base template**: `templates/base.html` - Main layout with includes
+- **Components**: `templates/components/` - Reusable UI components
+- **Includes**: `templates/includes/` - Head sections, scripts, etc.
+- **Pages**: `templates/[app_name]/` - App-specific templates
+
+### Required Template Blocks
+
+Every template extending `base.html` should use these blocks:
+
+```django
+{% block title %}Page Title{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block content %}{% endblock %}
+{% block extra_js %}{% endblock %}
+```
+
+## Theme System Guidelines
+
+### Theme Management
+
+1. **DO NOT modify theme files directly:**
+
+   - `static/js/theme-manager.js` - Core theme logic
+   - `static/js/theme-debug.js` - Debug panel (disabled in production)
+   - `static/js/theme-test.js` - Testing utilities (disabled in production)
+
+2. **Theme switching is handled automatically:**
+
+   - Users can toggle between light/dark themes
+   - Theme preference is saved in localStorage
+   - System respects user's OS theme preference
+
+3. **CSS Variables for theming:**
+
+   ```css
+   :root {
+     --color-primary: #667eea;
+     --color-secondary: #764ba2;
+     --background-primary: #ffffff;
+     --text-primary: #333333;
+   }
+
+   [data-theme="dark"] {
+     --background-primary: #1a1a1a;
+     --text-primary: #ffffff;
+   }
+   ```
+
+### Avoiding Theme Issues
+
+1. **Don't hardcode colors:**
+
+   ```css
+   /* ❌ WRONG */
+   .my-element {
+     color: #333;
+     background: #fff;
+   }
+
+   /* ✅ CORRECT */
+   .my-element {
+     color: var(--text-primary);
+     background: var(--background-primary);
+   }
+   ```
+
+2. **Use theme-aware components:**
+
+   ```django
+   <!-- ✅ CORRECT - Logo component handles themes automatically -->
+   {% include "components/logo.html" with size="medium" logo_context="navbar" %}
+   ```
+
+3. **Test both themes:**
+   - Always test components in both light and dark themes
+   - Ensure proper contrast ratios
+   - Verify readability in both modes
+
+## Static Files Management
+
+### File Organization
+
+```
+static/
+├── css/
+│   ├── base/           # Core styles (fonts, variables, reset)
+│   ├── components/     # Component-specific styles
+│   ├── layouts/        # Page layout styles
+│   └── utilities/      # Helper classes
+├── js/
+│   ├── theme-manager.js    # Theme system (DO NOT MODIFY)
+│   ├── navigation.js       # Navigation functionality
+│   └── [component].js      # Component-specific scripts
+├── img/
+│   ├── Istanbulplusir-logo-highquality.png
+│   ├── Istanbulplusir-logo-lowquality.png
+│   └── [other images]
+└── fonts/
+    └── bootstrap-icons.woff2
+```
+
+### Static File Usage
+
+```django
+<!-- ✅ CORRECT - Use static template tag -->
+{% load static %}
+<img src="{% static 'img/logo.png' %}" alt="Logo" />
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+```
+
+## Component Guidelines
+
+### Logo Component
+
+```django
+<!-- Usage examples -->
+{% include "components/logo.html" with size="small" quality="high" logo_context="navbar" %}
+{% include "components/logo.html" with size="large" quality="low" logo_context="hero" show_text=false %}
+```
+
+**Parameters:**
+
+- `size`: "small" (24px), "medium" (32px), "large" (48px), "xlarge" (64px)
+- `quality`: "high" (highquality.png), "low" (lowquality.png)
+- `logo_context`: "navbar", "footer", "hero", "card"
+- `show_text`: true/false (default: true)
+- `text_class`: CSS classes for text styling
+
+### Navigation Component
+
+- Responsive navbar with mobile menu
+- Logo integration
+- Theme toggle button
+- Language switcher (RTL/LTR)
+
+### Footer Component
+
+- Multi-column layout
+- Social media links
+- Logo integration
+- Copyright information
+
+## Development Guidelines
+
+### Code Style
+
+1. **HTML**: Use semantic elements, proper indentation
+2. **CSS**: Use CSS custom properties, mobile-first approach
+3. **JavaScript**: ES6+, async/await, proper error handling
+4. **Python**: PEP 8, type hints, docstrings
+
+### Performance
+
+1. **Images**: Use appropriate formats (WebP, PNG, JPG)
+2. **CSS**: Minify for production, use critical CSS
+3. **JavaScript**: Lazy load non-critical scripts
+4. **Fonts**: Use system fonts, avoid external font loading
+
+### Accessibility
+
+1. **ARIA labels**: Proper labeling for screen readers
+2. **Keyboard navigation**: All interactive elements accessible
+3. **Color contrast**: WCAG AA compliance
+4. **Focus management**: Visible focus indicators
+
+## Common Issues & Solutions
+
+### Template Syntax Errors
+
+- **Problem**: `Unclosed tag on line X: 'block'`
+- **Solution**: Ensure `{% endblock %}` is on the same line or properly formatted
+- **CRITICAL**: Never split `{% endblock %}` across multiple lines - this causes persistent syntax errors
+- **Example**:
+
+  ```django
+  <!-- ❌ WRONG - Causes persistent errors -->
+  {% block extra_css %}{% endblock
+  %}
+
+  <!-- ✅ CORRECT - Single line -->
+  {% block extra_css %}{% endblock %}
+  ```
+
+### Theme Not Working
+
+- **Problem**: Theme toggle not responding
+- **Solution**: Check if theme-manager.js is loaded, verify localStorage
+
+### Static Files Not Loading
+
+- **Problem**: 404 errors for CSS/JS files
+- **Solution**: Run `python manage.py collectstatic`, check STATIC_URL setting
+
+### Logo Not Displaying
+
+- **Problem**: Logo component showing broken image
+- **Solution**: Verify logo files exist in static/img/, check file permissions
+
+## Testing Checklist
+
+- [ ] Template syntax validation (`python manage.py check`)
+- [ ] Static files loading correctly
+- [ ] Theme switching works in both directions
+- [ ] Responsive design on mobile/tablet/desktop
+- [ ] RTL/LTR language switching
+- [ ] Logo displays in all contexts
+- [ ] Navigation works on all devices
+- [ ] Forms submit correctly
+- [ ] JavaScript errors in console
+
+## File Modification Guidelines
+
+### Files to NEVER modify directly:
+
+- `static/js/theme-manager.js` - Core theme system
+- `templates/base.html` - Use includes instead
+- `settings/base.py` - Use environment-specific settings
+
+### Files safe to modify:
+
+- `templates/[app]/` - App-specific templates
+- `static/css/components/` - Component styles
+- `static/js/[component].js` - Component scripts
+- `templates/components/` - Reusable components
+
+## Deployment Notes
+
+- Run `python manage.py collectstatic` before deployment
+- Ensure all static files are properly served
+- Test theme functionality in production environment
+- Verify RTL/LTR switching works correctly
+- Check mobile responsiveness
+
+## Support
+
+For issues related to:
+
+- Template syntax: Check Django template documentation
+- Theme system: Review theme-manager.js comments
+- Static files: Verify Django static files configuration
+- Components: Check component documentation in templates/components/

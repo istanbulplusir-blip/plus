@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Modern Cards</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/base/variables.css" />
+    <link rel="stylesheet" href="css/components/cards.css" />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center text-white mb-5">تست کارت‌های مدرن</h1>
+
+      <!-- Product Cards Test -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h2 class="text-white mb-4">کارت‌های محصول</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card product-card h-100">
+            <img
+              src="img/no-image.png"
+              class="card-img-top"
+              alt="محصول تست"
+              loading="lazy"
+            />
+            <div class="card-body">
+              <h5 class="card-title">محصول تست شماره ۱</h5>
+              <p class="card-text">
+                این یک توضیح تستی برای محصول است که نشان می‌دهد کارت چگونه کار
+                می‌کند.
+              </p>
+              <div class="price-display">۱۲۵,۰۰۰ تومان</div>
+              <div class="card-actions">
+                <a href="#" class="btn btn-primary">مشاهده محصول</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card product-card h-100">
+            <img
+              src="img/no-image.png"
+              class="card-img-top"
+              alt="محصول تست"
+              loading="lazy"
+            />
+            <div class="card-body">
+              <h5 class="card-title">محصول تست شماره ۲</h5>
+              <p class="card-text">
+                محصول دیگری با قیمت متفاوت و توضیحات بیشتر.
+              </p>
+              <div class="price-display">۲۵۰,۰۰۰ تومان</div>
+              <div class="card-actions">
+                <a href="#" class="btn btn-primary">مشاهده محصول</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card product-card h-100">
+            <img
+              src="img/no-image.png"
+              class="card-img-top"
+              alt="محصول تست"
+              loading="lazy"
+            />
+            <div class="card-body">
+              <h5 class="card-title">محصول تست شماره ۳</h5>
+              <p class="card-text">سومین محصول تستی با ویژگی‌های خاص.</p>
+              <div class="price-display">۵۰۰,۰۰۰ تومان</div>
+              <div class="card-actions">
+                <a href="#" class="btn btn-primary">مشاهده محصول</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Cards Test -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h2 class="text-white mb-4">کارت‌های دسته‌بندی</h2>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card category-card h-100">
+            <img
+              src="img/no-image.png"
+              class="card-img-top"
+              alt="دسته‌بندی تست"
+              loading="lazy"
+            />
+            <div class="card-body">
+              <h5 class="card-title">دسته‌بندی تست ۱</h5>
+              <p class="card-text">
+                توضیحات دسته‌بندی اول که شامل محصولات مختلف است.
+              </p>
+              <div class="card-actions">
+                <a href="#" class="btn btn-outline-primary">مشاهده محصولات</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card category-card h-100">
+            <img
+              src="img/no-image.png"
+              class="card-img-top"
+              alt="دسته‌بندی تست"
+              loading="lazy"
+            />
+            <div class="card-body">
+              <h5 class="card-title">دسته‌بندی تست ۲</h5>
+              <p class="card-text">دسته‌بندی دوم با محصولات متنوع و جذاب.</p>
+              <div class="card-actions">
+                <a href="#" class="btn btn-outline-primary">مشاهده محصولات</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Skeleton Test -->
+      <div class="row">
+        <div class="col-12">
+          <h2 class="text-white mb-4">حالت بارگذاری</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card card-skeleton h-100">
+            <div class="card-img-top card-img-loading"></div>
+            <div class="card-body">
+              <div class="skeleton-line skeleton-title"></div>
+              <div class="skeleton-line skeleton-text"></div>
+              <div class="skeleton-line skeleton-text short"></div>
+              <div class="skeleton-line skeleton-price"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/cards.js"></script>
+  </body>
+</html>

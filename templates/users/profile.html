@@ -1,0 +1,64 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block title %}پروفایل کاربری - Istanbul Plus{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="bi bi-person-circle me-2"></i>پروفایل کاربری</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <div class="mb-3">
+                {% if user.avatar %}
+                  <img src="{{ user.avatar.url }}" alt="آواتار" class="img-fluid rounded-circle" style="width: 120px; height: 120px;">
+                {% else %}
+                  <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 120px; height: 120px; font-size: 3rem;">
+                    <i class="bi bi-person"></i>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-md-8">
+              <h4>{{ user.get_full_name|default:user.username }}</h4>
+              <p class="text-muted">
+                <i class="bi bi-envelope me-2"></i>
+                {{ user.email|default:"ایمیل ثبت نشده" }}
+              </p>
+              <p class="text-muted">
+                <i class="bi bi-phone me-2"></i>
+                {{ user.phone|default:"شماره موبایل ثبت نشده" }}
+              </p>
+              
+              <div class="mt-3">
+                <span class="badge {% if user.email_verified %}bg-success{% else %}bg-warning{% endif %} me-2">
+                  {% if user.email_verified %}ایمیل تأیید شده{% else %}ایمیل تأیید نشده{% endif %}
+                </span>
+                <span class="badge {% if user.phone_verified %}bg-success{% else %}bg-warning{% endif %}">
+                  {% if user.phone_verified %}موبایل تأیید شده{% else %}موبایل تأیید نشده{% endif %}
+                </span>
+              </div>
+              
+              <div class="mt-4">
+                <a href="{% url 'users:verification-status' %}" class="btn btn-outline-primary me-2">
+                  <i class="bi bi-shield-check me-1"></i>
+                  تأیید هویت
+                </a>
+                <a href="{% url 'users:logout' %}" class="btn btn-outline-danger">
+                  <i class="bi bi-box-arrow-right me-1"></i>
+                  خروج
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

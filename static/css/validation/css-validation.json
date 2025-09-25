@@ -1,0 +1,293 @@
+{
+  "name": "CSS Validation Configuration",
+  "description": "Configuration for CSS validation and cross-browser testing",
+  "version": "1.0.0",
+  "validation": {
+    "tools": [
+      {
+        "name": "W3C CSS Validator",
+        "url": "https://jigsaw.w3.org/css-validator/",
+        "description": "Official W3C CSS validation service",
+        "usage": "Validate CSS files for syntax errors and compliance"
+      },
+      {
+        "name": "stylelint",
+        "package": "stylelint",
+        "config": ".stylelintrc.json",
+        "description": "Modern CSS linter",
+        "usage": "npm install stylelint && npx stylelint 'static/css/**/*.css'"
+      },
+      {
+        "name": "CSS Tree Validator",
+        "package": "csstree-validator",
+        "description": "Fast CSS syntax validator",
+        "usage": "npm install csstree-validator && npx csstree-validator static/css/"
+      }
+    ],
+    "rules": {
+      "syntax": {
+        "semicolons": "required",
+        "quotes": "consistent",
+        "colors": "lowercase",
+        "units": "consistent"
+      },
+      "compatibility": {
+        "browsers": [
+          "Chrome >= 70",
+          "Firefox >= 65",
+          "Safari >= 12",
+          "Edge >= 79",
+          "IE >= 11"
+        ],
+        "prefixes": "auto",
+        "fallbacks": "required"
+      },
+      "performance": {
+        "max_selectors": 4095,
+        "max_file_size": "100kb",
+        "critical_css": "inline",
+        "unused_css": "remove"
+      }
+    }
+  },
+  "testing": {
+    "browsers": {
+      "desktop": [
+        {
+          "name": "Chrome",
+          "versions": ["latest", "latest-1", "latest-2"],
+          "engine": "Blink",
+          "priority": "high"
+        },
+        {
+          "name": "Firefox",
+          "versions": ["latest", "latest-1", "latest-2"],
+          "engine": "Gecko",
+          "priority": "high"
+        },
+        {
+          "name": "Safari",
+          "versions": ["latest", "latest-1"],
+          "engine": "WebKit",
+          "priority": "high"
+        },
+        {
+          "name": "Edge",
+          "versions": ["latest", "latest-1"],
+          "engine": "Blink",
+          "priority": "high"
+        },
+        {
+          "name": "Internet Explorer",
+          "versions": ["11"],
+          "engine": "Trident",
+          "priority": "medium",
+          "notes": "Legacy support with fallbacks"
+        }
+      ],
+      "mobile": [
+        {
+          "name": "Chrome Mobile",
+          "versions": ["latest", "latest-1"],
+          "platform": "Android",
+          "priority": "high"
+        },
+        {
+          "name": "Safari Mobile",
+          "versions": ["latest", "latest-1"],
+          "platform": "iOS",
+          "priority": "high"
+        },
+        {
+          "name": "Samsung Internet",
+          "versions": ["latest"],
+          "platform": "Android",
+          "priority": "medium"
+        },
+        {
+          "name": "Firefox Mobile",
+          "versions": ["latest"],
+          "platform": "Android",
+          "priority": "medium"
+        }
+      ]
+    },
+    "viewports": [
+      {
+        "name": "Mobile Portrait",
+        "width": 375,
+        "height": 667,
+        "devicePixelRatio": 2
+      },
+      {
+        "name": "Mobile Landscape",
+        "width": 667,
+        "height": 375,
+        "devicePixelRatio": 2
+      },
+      {
+        "name": "Tablet Portrait",
+        "width": 768,
+        "height": 1024,
+        "devicePixelRatio": 2
+      },
+      {
+        "name": "Tablet Landscape",
+        "width": 1024,
+        "height": 768,
+        "devicePixelRatio": 2
+      },
+      {
+        "name": "Desktop Small",
+        "width": 1280,
+        "height": 720,
+        "devicePixelRatio": 1
+      },
+      {
+        "name": "Desktop Large",
+        "width": 1920,
+        "height": 1080,
+        "devicePixelRatio": 1
+      },
+      {
+        "name": "Desktop 4K",
+        "width": 3840,
+        "height": 2160,
+        "devicePixelRatio": 2
+      }
+    ],
+    "features": [
+      {
+        "name": "CSS Custom Properties",
+        "test": "CSS.supports('--css', 'variables')",
+        "fallback": "static/css/utilities/css-vars-fallback.css"
+      },
+      {
+        "name": "CSS Grid",
+        "test": "CSS.supports('display', 'grid')",
+        "fallback": "flexbox layout"
+      },
+      {
+        "name": "Flexbox Gap",
+        "test": "CSS.supports('gap', '1rem')",
+        "fallback": "margin-based spacing"
+      },
+      {
+        "name": "Backdrop Filter",
+        "test": "CSS.supports('backdrop-filter', 'blur(1px)')",
+        "fallback": "solid background colors"
+      },
+      {
+        "name": "CSS Aspect Ratio",
+        "test": "CSS.supports('aspect-ratio', '1/1')",
+        "fallback": "padding-bottom technique"
+      },
+      {
+        "name": "CSS Container Queries",
+        "test": "CSS.supports('container-type', 'inline-size')",
+        "fallback": "media queries"
+      },
+      {
+        "name": "CSS Logical Properties",
+        "test": "CSS.supports('margin-inline-start', '1rem')",
+        "fallback": "physical properties with RTL support"
+      }
+    ],
+    "accessibility": {
+      "color_contrast": {
+        "aa": 4.5,
+        "aaa": 7,
+        "large_text_aa": 3,
+        "large_text_aaa": 4.5
+      },
+      "focus_indicators": {
+        "visible": true,
+        "min_size": "2px",
+        "color_contrast": 3
+      },
+      "motion": {
+        "respect_prefers_reduced_motion": true,
+        "max_duration": "500ms",
+        "essential_only": true
+      },
+      "keyboard_navigation": {
+        "all_interactive_elements": true,
+        "logical_tab_order": true,
+        "skip_links": true
+      }
+    },
+    "performance": {
+      "css_size": {
+        "critical": "14kb",
+        "total": "100kb",
+        "per_file": "50kb"
+      },
+      "loading": {
+        "critical_css": "inline",
+        "non_critical": "async",
+        "unused_css": "remove"
+      },
+      "rendering": {
+        "layout_shifts": "minimize",
+        "paint_times": "optimize",
+        "animation_fps": 60
+      }
+    }
+  },
+  "automation": {
+    "tools": [
+      {
+        "name": "Playwright",
+        "description": "Cross-browser testing automation",
+        "config": "playwright.config.js",
+        "usage": "npm install @playwright/test && npx playwright test"
+      },
+      {
+        "name": "Puppeteer",
+        "description": "Chrome automation for testing",
+        "usage": "npm install puppeteer"
+      },
+      {
+        "name": "BrowserStack",
+        "description": "Cloud-based cross-browser testing",
+        "url": "https://www.browserstack.com/"
+      },
+      {
+        "name": "Sauce Labs",
+        "description": "Cloud testing platform",
+        "url": "https://saucelabs.com/"
+      }
+    ],
+    "scripts": {
+      "validate_css": "stylelint 'static/css/**/*.css' --fix",
+      "test_browsers": "playwright test --config=playwright.config.js",
+      "visual_regression": "playwright test --config=visual-regression.config.js",
+      "accessibility_test": "axe-core static/css/",
+      "performance_test": "lighthouse --output=json --output-path=./reports/lighthouse.json"
+    }
+  },
+  "fallback_strategies": {
+    "css_custom_properties": {
+      "method": "css-vars-ponyfill",
+      "files": ["static/css/utilities/css-vars-fallback.css"]
+    },
+    "css_grid": {
+      "method": "flexbox",
+      "files": ["static/css/utilities/grid-fallback.css"]
+    },
+    "backdrop_filter": {
+      "method": "solid_backgrounds",
+      "files": ["static/css/utilities/backdrop-fallback.css"]
+    },
+    "modern_css_features": {
+      "method": "progressive_enhancement",
+      "files": ["static/css/utilities/progressive-enhancement.css"]
+    }
+  },
+  "documentation": {
+    "browser_support_matrix": "docs/browser-support.md",
+    "testing_procedures": "docs/testing-procedures.md",
+    "fallback_documentation": "docs/fallback-strategies.md",
+    "performance_guidelines": "docs/performance-guidelines.md"
+  }
+}

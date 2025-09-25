@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% load static %} {% block title %}تعداد درخواست‌ها
+زیاد است{% endblock %} {% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <div class="mb-4">
+            <i
+              class="bi bi-clock-fill"
+              style="font-size: 5rem"
+              aria-hidden="true"
+            ></i>
+          </div>
+          <h2 class="card-title text-warning">تعداد درخواست‌ها زیاد است</h2>
+          <p class="card-text">
+            {{ message|default:"تعداد درخواست‌های شما از حد مجاز گذشته است.
+            لطفاً کمی صبر کنید." }}
+          </p>
+
+          {% if retry_after %}
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+            لطفاً {{ retry_after|floatformat:0 }} ثانیه صبر کنید و دوباره تلاش
+            کنید.
+          </div>
+          {% endif %}
+
+          <div class="mt-4">
+            <a href="{% url 'core:home' %}" class="btn btn-primary">
+              <i class="bi bi-house-door" aria-hidden="true"></i> بازگشت به صفحه
+              اصلی
+            </a>
+            <button
+              onclick="window.location.reload()"
+              class="btn btn-secondary"
+            >
+              <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> تلاش مجدد
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-refresh after retry_after seconds
+  {% if retry_after %}
+  setTimeout(function() {
+      window.location.reload();
+  }, {{ retry_after|floatformat:0 }} * 1000);
+  {% endif %}
+</script>
+{% endblock %}

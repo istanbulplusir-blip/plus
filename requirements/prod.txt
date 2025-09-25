@@ -1,0 +1,18 @@
+# Include base requirements
+-r base.txt
+
+# Production-specific packages
+gunicorn>=21.2.0
+psycopg2-binary>=2.9.0
+redis>=5.0.0
+celery>=5.3.0
+
+# Production monitoring and logging
+sentry-sdk>=1.32.0
+
+# Production security
+django-environ>=0.11.0
+
+# Production performance
+django-redis>=5.4.0
+whitenoise>=6.5.0

@@ -1,0 +1,1321 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="light" class="no-js">
+  <head>
+    <!-- Meta Tags and SEO -->
+    {% include "includes/head-meta.html" %}
+    
+    <!-- Resource Hints and Icons -->
+    {% include "includes/head-resources.html" %}
+    
+    <!-- Styles -->
+    {% include "includes/head-styles.html" %}
+    <meta
+      name="description"
+      content="{% block description %}فروشگاه آنلاین Istanbul Plus - محصولات با کیفیت و ارسال سریع{% endblock %}"
+    />
+    <meta
+      name="keywords"
+      content="{% block keywords %}فروشگاه آنلاین, خرید اینترنتی, Istanbul Plus{% endblock %}"
+    />
+    <meta name="author" content="Istanbul Plus" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta
+      property="og:title"
+      content="{% block og_title %}Istanbul Plus{% endblock %}"
+    />
+    <meta
+      property="og:description"
+      content="{% block og_description %}فروشگاه آنلاین Istanbul Plus - محصولات با کیفیت و ارسال سریع{% endblock %}"
+    />
+    <meta
+      property="og:image"
+      content="{% block og_image %}{% static 'img/og-image.jpg' %}{% endblock %}"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}" />
+    <meta
+      property="twitter:title"
+      content="{% block twitter_title %}Istanbul Plus{% endblock %}"
+    />
+    <meta
+      property="twitter:description"
+      content="{% block twitter_description %}فروشگاه آنلاین Istanbul Plus - محصولات با کیفیت و ارسال سریع{% endblock %}"
+    />
+    <meta
+      property="twitter:image"
+      content="{% block twitter_image %}{% static 'img/og-image.jpg' %}{% endblock %}"
+    />
+
+    <title>{% block title %}Istanbul Plus{% endblock %}</title>
+
+    <!-- Preconnect to external domains for better performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- DNS prefetch for better performance -->
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{% static 'img/apple-touch-icon.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{% static 'img/favicon-32x32.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'img/favicon-16x16.png' %}"
+    />
+    <link rel="manifest" href="{% static 'manifest.json' %}" />
+
+    <!-- Critical CSS - Inline for better performance -->
+    <style>
+      /* Critical styles for above-the-fold content */
+      :root {
+        --transition-fast: 150ms ease-in-out;
+        --backdrop-blur: blur(20px);
+      }
+
+      body {
+        font-family: "Inter", "Vazir", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, sans-serif;
+        transition: background-color var(--transition-fast),
+          color var(--transition-fast);
+        overflow-x: hidden;
+      }
+
+      .modern-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        opacity: 0.03;
+        pointer-events: none;
+      }
+
+      .modern-background::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            circle at 20% 80%,
+            rgba(120, 119, 198, 0.3) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 119, 198, 0.3) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(120, 219, 255, 0.3) 0%,
+            transparent 50%
+          );
+        animation: float 20s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        33% {
+          transform: translateY(-20px) rotate(1deg);
+        }
+        66% {
+          transform: translateY(10px) rotate(-1deg);
+        }
+      }
+
+      /* Glassmorphism navbar preview */
+      .navbar {
+        backdrop-filter: var(--backdrop-blur);
+        -webkit-backdrop-filter: var(--backdrop-blur);
+        transition: all var(--transition-fast);
+      }
+
+      /* Loading animation */
+      .page-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease-out;
+      }
+
+      .page-loader.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .loader-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+
+    <!-- External CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.min.css' %}" />
+
+    <!-- Optimized CSS Loading -->
+    {% include "css/css-template-tags.html" %}
+
+    <!-- Cross-browser support and feature detection - load early -->
+    <script>
+      // Remove no-js class immediately
+      document.documentElement.classList.remove("no-js");
+      document.documentElement.classList.add("js");
+    </script>
+    <script src="{% static 'js/cross-browser-support.js' %}" defer></script>
+
+    <!-- Theme detection script - inline for immediate execution -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = savedTheme || (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Page loader with accessibility -->
+    <div
+      class="page-loader"
+      id="pageLoader"
+      aria-hidden="false"
+      role="status"
+      aria-label="در حال بارگذاری صفحه"
+    >
+      <div class="loader-spinner" aria-hidden="true"></div>
+      <span class="visually-hidden">در حال بارگذاری، لطفاً صبر کنید...</span>
+    </div>
+
+    <!-- ARIA live regions for dynamic content -->
+    <div
+      id="aria-live-polite"
+      aria-live="polite"
+      aria-atomic="true"
+      class="visually-hidden"
+    ></div>
+    <div
+      id="aria-live-assertive"
+      aria-live="assertive"
+      aria-atomic="true"
+      class="visually-hidden"
+    ></div>
+
+    <!-- Modern background with animated gradients -->
+    <div class="modern-background" aria-hidden="true"></div>
+
+    <!-- Skip to main content for accessibility -->
+    <a
+      href="#main-content"
+      class="visually-hidden-focusable btn btn-primary position-absolute top-0 start-0 m-3"
+      style="z-index: 1100"
+    >
+      پرش به محتوای اصلی
+    </a>
+
+    <!-- Modern glassmorphism navigation -->
+    <nav
+      class="navbar navbar-expand-lg fixed-top glass-nav"
+      id="mainNavbar"
+      role="navigation"
+      aria-label="اصلی"
+    >
+      <div class="container">
+        <a
+          class="navbar-brand fw-bold d-flex align-items-center"
+          href="{% url 'core:home' %}"
+          aria-label="{% if LANGUAGE_CODE == 'fa' %}صفحه اصلی Istanbul Plus{% else %}Istanbul Plus Homepage{% endif %}"
+        >
+          <span
+            class="brand-icon {% if LANGUAGE_CODE == 'fa' %}me-2{% else %}ms-2{% endif %}"
+            >🏪</span
+          >
+          <span class="brand-text">Istanbul Plus</span>
+        </a>
+
+        <!-- Theme toggle button -->
+        <button
+          type="button"
+          class="btn btn-outline-light btn-sm {% if LANGUAGE_CODE == 'fa' %}me-2{% else %}ms-2{% endif %} d-lg-none theme-toggle"
+          id="themeToggleMobile"
+          aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر تم به حالت تاریک یا روشن{% else %}Toggle dark/light theme{% endif %}"
+          aria-describedby="theme-status"
+          title="{% if LANGUAGE_CODE == 'fa' %}تغییر تم{% else %}Toggle theme{% endif %}"
+        >
+          <i class="bi bi-sun-fill theme-icon-light" aria-hidden="true"></i>
+          <i class="bi bi-moon-fill theme-icon-dark" aria-hidden="true"></i>
+          <span class="visually-hidden" id="theme-status">
+            {% if LANGUAGE_CODE == 'fa' %}تم فعلی: روشن{% else %}Current theme:
+            light{% endif %}
+          </span>
+        </button>
+
+        <button
+          class="navbar-toggler border-0"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر منوی ناوبری{% else %}Toggle navigation menu{% endif %}"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul
+            class="navbar-nav me-auto{% if LANGUAGE_CODE == 'en' %} ms-auto me-0{% endif %}"
+          >
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="{% url 'core:home' %}"
+                aria-current="{% if request.resolver_match.url_name == 'home' %}page{% endif %}"
+                aria-describedby="home-desc"
+              >
+                <i
+                  class="bi bi-house-door {% if LANGUAGE_CODE == 'fa' %}me-1{% else %}ms-1{% endif %}"
+                  aria-hidden="true"
+                ></i>
+                {% if LANGUAGE_CODE == 'fa' %}خانه{% else %}Home{% endif %}
+                <span class="visually-hidden" id="home-desc">
+                  {% if LANGUAGE_CODE == 'fa' %}بازگشت به صفحه اصلی{% else
+                  %}Return to homepage{% endif %}
+                </span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="{% url 'products:product_list' %}"
+                aria-current="{% if 'products' in request.resolver_match.namespace %}page{% endif %}"
+                aria-describedby="products-desc"
+              >
+                <i
+                  class="bi bi-grid {% if LANGUAGE_CODE == 'fa' %}me-1{% else %}ms-1{% endif %}"
+                  aria-hidden="true"
+                ></i>
+                {% if LANGUAGE_CODE == 'fa' %}محصولات{% else %}Products{% endif
+                %}
+                <span class="visually-hidden" id="products-desc">
+                  {% if LANGUAGE_CODE == 'fa' %}مشاهده فهرست محصولات{% else
+                  %}View product catalog{% endif %}
+                </span>
+              </a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav align-items-center">
+            <!-- Language/Direction Toggle (for demo purposes) -->
+            <li class="nav-item d-none d-lg-block">
+              <div
+                class="btn-group btn-group-sm me-2"
+                role="group"
+                aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر زبان{% else %}Language toggle{% endif %}"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary {% if LANGUAGE_CODE == 'fa' %}active{% endif %}"
+                  onclick="setLanguage('fa')"
+                >
+                  <span class="d-none d-xl-inline">فا</span>
+                  <span class="d-xl-none">FA</span>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary {% if LANGUAGE_CODE == 'en' %}active{% endif %}"
+                  onclick="setLanguage('en')"
+                >
+                  <span class="d-none d-xl-inline">En</span>
+                  <span class="d-xl-none">EN</span>
+                </button>
+              </div>
+            </li>
+
+            <!-- Theme toggle for desktop -->
+            <li class="nav-item d-none d-lg-block">
+              <button
+                type="button"
+                class="btn btn-outline-light btn-sm {% if LANGUAGE_CODE == 'fa' %}me-3{% else %}ms-3{% endif %} theme-toggle"
+                id="themeToggleDesktop"
+                aria-label="{% if LANGUAGE_CODE == 'fa' %}تغییر تم به حالت تاریک یا روشن{% else %}Toggle dark/light theme{% endif %}"
+                aria-describedby="theme-status-desktop"
+                title="{% if LANGUAGE_CODE == 'fa' %}تغییر تم{% else %}Toggle theme{% endif %}"
+              >
+                <i
+                  class="bi bi-sun-fill theme-icon-light"
+                  aria-hidden="true"
+                ></i>
+                <i
+                  class="bi bi-moon-fill theme-icon-dark"
+                  aria-hidden="true"
+                ></i>
+                <span class="visually-hidden" id="theme-status-desktop">
+                  {% if LANGUAGE_CODE == 'fa' %}تم فعلی: روشن{% else %}Current
+                  theme: light{% endif %}
+                </span>
+              </button>
+            </li>
+
+            <!-- Shopping cart -->
+            <li class="nav-item">
+              <a
+                class="nav-link position-relative cart-link{% if cart_item_count %} has-items{% endif %}"
+                href="{% url 'cart:cart_detail' %}"
+                aria-label="{% if LANGUAGE_CODE == 'fa' %}سبد خرید{% if cart_item_count %} - {{ cart_item_count }} آیتم{% endif %}{% else %}Shopping cart{% if cart_item_count %} - {{ cart_item_count }} items{% endif %}{% endif %}"
+              >
+                <i class="bi bi-cart3 fs-5"></i>
+                {% if cart_item_count %}
+                <span
+                  class="position-absolute top-0 {% if LANGUAGE_CODE == 'fa' %}start-100{% else %}end-100{% endif %} translate-middle badge rounded-pill bg-danger cart-badge"
+                >
+                  {{ cart_item_count }}
+                  <span class="visually-hidden">
+                    {% if LANGUAGE_CODE == 'fa' %}آیتم در سبد خرید{% else
+                    %}items in cart{% endif %}
+                  </span>
+                </span>
+                {% endif %}
+              </a>
+            </li>
+
+            {% if user.is_authenticated %}
+            <!-- User dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle d-flex align-items-center"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="منوی کاربری - {{ user.get_full_name|default:user.phone }}"
+                aria-haspopup="true"
+              >
+                <i class="bi bi-person-circle fs-5 me-1" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">
+                  {{ user.get_full_name|default:user.phone|truncatechars:15 }}
+                </span>
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end glass-dropdown"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'users:profile' %}"
+                    aria-describedby="profile-desc"
+                  >
+                    <i class="bi bi-person me-2" aria-hidden="true"></i>
+                    پروفایل
+                    <span class="visually-hidden" id="profile-desc">
+                      مشاهده و ویرایش اطلاعات شخصی
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'orders:order_list' %}"
+                    aria-describedby="orders-desc"
+                  >
+                    <i class="bi bi-bag me-2" aria-hidden="true"></i>
+                    سفارش‌ها
+                    <span class="visually-hidden" id="orders-desc">
+                      مشاهده تاریخچه سفارشات
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <hr
+                    class="dropdown-divider"
+                    role="separator"
+                    aria-hidden="true"
+                  />
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item text-danger"
+                    href="{% url 'users:logout' %}"
+                    aria-describedby="logout-desc"
+                  >
+                    <i
+                      class="bi bi-box-arrow-right me-2"
+                      aria-hidden="true"
+                    ></i>
+                    خروج
+                    <span class="visually-hidden" id="logout-desc">
+                      خروج از حساب کاربری
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% else %}
+            <!-- Authentication links -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users:login' %}">
+                <i
+                  class="bi bi-box-arrow-in-right {% if LANGUAGE_CODE == 'fa' %}me-1{% else %}ms-1{% endif %}"
+                ></i>
+                {% if LANGUAGE_CODE == 'fa' %}ورود{% else %}Login{% endif %}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link btn btn-outline-primary btn-sm {% if LANGUAGE_CODE == 'fa' %}ms-2{% else %}me-2{% endif %} px-3"
+                href="{% url 'users:register' %}"
+              >
+                {% if LANGUAGE_CODE == 'fa' %}ثبت‌نام{% else %}Register{% endif
+                %}
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content area with semantic structure -->
+    <main id="main-content" class="main-content" role="main">
+      <!-- Messages with modern styling -->
+      {% if messages %}
+      <div class="container mt-4">
+        <div class="messages-container">
+          {% for message in messages %}
+          <div
+            class="alert alert-{{ message.tags }} alert-dismissible fade show glass-alert scroll-fade-down"
+            role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}"
+            aria-live="{% if message.tags == 'error' %}assertive{% else %}polite{% endif %}"
+            aria-atomic="true"
+          >
+            <div class="d-flex align-items-center">
+              {% if message.tags == 'success' %}
+              <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
+              <span class="visually-hidden">پیام موفقیت: </span>
+              {% elif message.tags == 'error' %}
+              <i
+                class="bi bi-exclamation-triangle-fill me-2"
+                aria-hidden="true"
+              ></i>
+              <span class="visually-hidden">پیام خطا: </span>
+              {% elif message.tags == 'warning' %}
+              <i
+                class="bi bi-exclamation-circle-fill me-2"
+                aria-hidden="true"
+              ></i>
+              <span class="visually-hidden">پیام هشدار: </span>
+              {% else %}
+              <i class="bi bi-info-circle-fill me-2" aria-hidden="true"></i>
+              <span class="visually-hidden">پیام اطلاعات: </span>
+              {% endif %}
+              <div class="flex-grow-1">{{ message }}</div>
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="بستن پیام {{ message.tags }}"
+            ></button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Page content -->
+      <div class="content-wrapper">{% block content %}{% endblock %}</div>
+    </main>
+
+    <!-- Enhanced modern footer with glassmorphism and 2025 design -->
+    <footer
+      class="modern-footer scroll-fade-up"
+      role="contentinfo"
+      aria-label="اطلاعات سایت"
+    >
+      <div class="container py-5">
+        <div class="row g-4">
+          <!-- Brand and social section -->
+          <div class="col-lg-4 col-md-6">
+            <div class="footer-brand">
+              <h5 class="d-flex align-items-center">
+                <span class="brand-icon me-2" aria-hidden="true">🏪</span>
+                Istanbul Plus
+              </h5>
+              <p>
+                فروشگاه آنلاین محصولات با کیفیت و ارسال سریع در سراسر کشور.
+                تجربه خرید مطمئن و آسان با بهترین قیمت‌ها.
+              </p>
+              <div
+                class="social-links"
+                role="group"
+                aria-label="شبکه‌های اجتماعی"
+              >
+                <a
+                  href="#"
+                  class="btn"
+                  aria-label="دنبال کردن در اینستاگرام"
+                  title="اینستاگرام Istanbul Plus"
+                >
+                  <i class="bi bi-instagram" aria-hidden="true"></i>
+                </a>
+                <a
+                  href="#"
+                  class="btn"
+                  aria-label="عضویت در کانال تلگرام"
+                  title="کانال تلگرام Istanbul Plus"
+                >
+                  <i class="bi bi-telegram" aria-hidden="true"></i>
+                </a>
+                <a
+                  href="#"
+                  class="btn"
+                  aria-label="تماس از طریق واتساپ"
+                  title="واتساپ Istanbul Plus"
+                >
+                  <i class="bi bi-whatsapp" aria-hidden="true"></i>
+                </a>
+                <a
+                  href="#"
+                  class="btn"
+                  aria-label="دنبال کردن در لینکدین"
+                  title="لینکدین Istanbul Plus"
+                >
+                  <i class="bi bi-linkedin" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick access links -->
+          <div class="col-lg-2 col-md-6">
+            <h6>دسترسی سریع</h6>
+            <nav aria-label="لینک‌های دسترسی سریع">
+              <ul class="footer-links">
+                <li>
+                  <a href="{% url 'core:home' %}">
+                    <i class="bi bi-house-door me-1" aria-hidden="true"></i>
+                    خانه
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'products:product_list' %}">
+                    <i class="bi bi-grid me-1" aria-hidden="true"></i>
+                    محصولات
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'core:about' %}">
+                    <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                    درباره ما
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'core:contact' %}">
+                    <i class="bi bi-envelope me-1" aria-hidden="true"></i>
+                    تماس با ما
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'cart:cart_detail' %}">
+                    <i class="bi bi-cart3 me-1" aria-hidden="true"></i>
+                    سبد خرید
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <!-- Customer services -->
+          <div class="col-lg-3 col-md-6">
+            <h6>خدمات مشتریان</h6>
+            <nav aria-label="خدمات مشتریان">
+              <ul class="footer-links">
+                <li>
+                  <a href="#">
+                    <i
+                      class="bi bi-question-circle me-1"
+                      aria-hidden="true"
+                    ></i>
+                    راهنمای خرید
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="bi bi-truck me-1" aria-hidden="true"></i>
+                    شیوه‌های ارسال
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i
+                      class="bi bi-arrow-return-left me-1"
+                      aria-hidden="true"
+                    ></i>
+                    مرجوعی کالا
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="bi bi-file-text me-1" aria-hidden="true"></i>
+                    شرایط استفاده
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="bi bi-shield-check me-1" aria-hidden="true"></i>
+                    حریم خصوصی
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <i class="bi bi-headset me-1" aria-hidden="true"></i>
+                    پشتیبانی ۲۴/۷
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <!-- Contact information -->
+          <div class="col-lg-3 col-md-6">
+            <h6>اطلاعات تماس</h6>
+            <div class="contact-info">
+              <div>
+                <i class="bi bi-envelope" aria-hidden="true"></i>
+                <a
+                  href="mailto:info@istanbulplus.ir"
+                  title="ارسال ایمیل به Istanbul Plus"
+                >
+                  info@istanbulplus.ir
+                </a>
+              </div>
+              <div>
+                <i class="bi bi-telephone" aria-hidden="true"></i>
+                <a href="tel:+982112345678" title="تماس تلفنی با Istanbul Plus">
+                  ۰۲۱-۱۲۳۴۵۶۷۸
+                </a>
+              </div>
+              <div>
+                <i class="bi bi-whatsapp" aria-hidden="true"></i>
+                <a
+                  href="https://wa.me/989123456789"
+                  title="تماس از طریق واتساپ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ۰۹۱۲-۳۴۵۶۷۸۹
+                </a>
+              </div>
+              <div>
+                <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                <span>
+                  تهران، خیابان ولیعصر، نرسیده به پل صدر، پلاک ۱۲۳، طبقه ۲
+                </span>
+              </div>
+              <div>
+                <i class="bi bi-clock" aria-hidden="true"></i>
+                <span> ساعات کاری: شنبه تا پنج‌شنبه ۹ تا ۱۸ </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced footer bottom section -->
+        <hr />
+
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p>
+              © {{ "now"|date:"Y" }} Istanbul Plus. تمامی حقوق محفوظ است.
+              <span class="visually-hidden">
+                کپی‌رایت سال {{ "now"|date:"Y" }} متعلق به Istanbul Plus
+              </span>
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p>
+              طراحی و توسعه با
+              <span class="text-danger" aria-label="عشق">❤️</span>
+              برای تجربه بهتر شما
+            </p>
+          </div>
+        </div>
+
+        <!-- Additional footer info for SEO and trust -->
+        <div class="row mt-4">
+          <div class="col-12 text-center">
+            <p class="small">
+              <span class="text-muted">
+                فروشگاه اینترنتی Istanbul Plus دارای مجوز رسمی از وزارت صنعت،
+                معدن و تجارت
+              </span>
+              <span class="mx-2">|</span>
+              <span class="text-muted"> نماد اعتماد الکترونیکی </span>
+              <span class="mx-2">|</span>
+              <span class="text-muted"> پرداخت امن </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button
+      type="button"
+      class="btn btn-primary btn-floating back-to-top"
+      id="backToTop"
+      aria-label="بازگشت به بالای صفحه"
+      title="بازگشت به بالا"
+      aria-hidden="true"
+    >
+      <i class="bi bi-arrow-up" aria-hidden="true"></i>
+      <span class="visually-hidden">بازگشت به بالای صفحه</span>
+    </button>
+
+    <!-- Scripts -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Theme switching and modern interactions -->
+    <script src="{% static 'js/theme-manager.js' %}"></script>
+
+    {% if debug %}
+    <!-- Theme testing script (development only) -->
+    <script src="{% static 'js/theme-test.js' %}"></script>
+    <script src="{% static 'js/theme-debug.js' %}"></script>
+    {% endif %}
+
+    <script>
+      // Legacy inline theme switching functionality (kept for compatibility)
+      // The main functionality is now in theme-manager.js
+      class ThemeManager {
+        constructor() {
+          this.theme =
+            localStorage.getItem("theme") ||
+            (window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light");
+          this.init();
+        }
+
+        init() {
+          this.applyTheme();
+          this.bindEvents();
+          this.updateThemeIcons();
+        }
+
+        applyTheme() {
+          document.documentElement.setAttribute("data-theme", this.theme);
+          localStorage.setItem("theme", this.theme);
+
+          // Update meta theme-color
+          const metaThemeColor = document.querySelector(
+            'meta[name="theme-color"]'
+          );
+          if (metaThemeColor) {
+            metaThemeColor.content =
+              this.theme === "dark" ? "#1a1a1a" : "#667eea";
+          }
+        }
+
+        toggleTheme() {
+          this.theme = this.theme === "light" ? "dark" : "light";
+          this.applyTheme();
+          this.updateThemeIcons();
+          this.updateThemeStatus();
+
+          // Add smooth transition effect (respect reduced motion)
+          const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches;
+          if (!prefersReducedMotion) {
+            document.body.style.transition =
+              "background-color 0.3s ease, color 0.3s ease";
+            setTimeout(() => {
+              document.body.style.transition = "";
+            }, 300);
+          }
+
+          // Announce theme change to screen readers
+          this.announceThemeChange();
+        }
+
+        updateThemeIcons() {
+          const lightIcons = document.querySelectorAll(".theme-icon-light");
+          const darkIcons = document.querySelectorAll(".theme-icon-dark");
+
+          if (this.theme === "dark") {
+            lightIcons.forEach((icon) => (icon.style.display = "inline-block"));
+            darkIcons.forEach((icon) => (icon.style.display = "none"));
+          } else {
+            lightIcons.forEach((icon) => (icon.style.display = "none"));
+            darkIcons.forEach((icon) => (icon.style.display = "inline-block"));
+          }
+        }
+
+        updateThemeStatus() {
+          // Update ARIA labels and status text
+          const themeButtons = document.querySelectorAll(".theme-toggle");
+          const themeStatus = document.querySelectorAll('[id^="theme-status"]');
+          const currentThemeText = this.theme === "dark" ? "تاریک" : "روشن";
+          const nextThemeText = this.theme === "dark" ? "روشن" : "تاریک";
+
+          themeButtons.forEach((button) => {
+            button.setAttribute(
+              "aria-label",
+              `تغییر تم به حالت ${nextThemeText}`
+            );
+            button.setAttribute("title", `تغییر به تم ${nextThemeText}`);
+          });
+
+          themeStatus.forEach((status) => {
+            status.textContent = `تم فعلی: ${currentThemeText}`;
+          });
+        }
+
+        announceThemeChange() {
+          // Announce theme change to screen readers
+          const liveRegion = document.getElementById("aria-live-polite");
+          if (liveRegion) {
+            const themeText = this.theme === "dark" ? "تاریک" : "روشن";
+            liveRegion.textContent = `تم به حالت ${themeText} تغییر کرد`;
+
+            // Clear the announcement after a delay
+            setTimeout(() => {
+              liveRegion.textContent = "";
+            }, 3000);
+          }
+        }
+
+        bindEvents() {
+          // Theme toggle buttons
+          document.querySelectorAll(".theme-toggle").forEach((button) => {
+            button.addEventListener("click", () => this.toggleTheme());
+          });
+
+          // Listen for system theme changes
+          window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", (e) => {
+              if (!localStorage.getItem("theme")) {
+                this.theme = e.matches ? "dark" : "light";
+                this.applyTheme();
+                this.updateThemeIcons();
+              }
+            });
+        }
+      }
+
+      // Modern interactions and animations
+      class ModernInteractions {
+        constructor() {
+          this.init();
+        }
+
+        init() {
+          this.setupPageLoader();
+          this.setupScrollEffects();
+          this.setupBackToTop();
+          this.setupNavbarEffects();
+          this.setupAnimations();
+          this.setupKeyboardNavigation();
+        }
+
+        setupPageLoader() {
+          window.addEventListener("load", () => {
+            const loader = document.getElementById("pageLoader");
+            if (loader) {
+              // Announce page load completion
+              const liveRegion = document.getElementById("aria-live-polite");
+              if (liveRegion) {
+                liveRegion.textContent = "صفحه بارگذاری شد";
+              }
+
+              // Hide loader with accessibility considerations
+              loader.setAttribute("aria-hidden", "true");
+              loader.classList.add("fade-out");
+
+              setTimeout(() => {
+                loader.style.display = "none";
+                // Clear the announcement
+                if (liveRegion) {
+                  liveRegion.textContent = "";
+                }
+              }, 500);
+            }
+          });
+        }
+
+        setupScrollEffects() {
+          let ticking = false;
+
+          const updateScrollEffects = () => {
+            const scrollY = window.scrollY;
+            const navbar = document.getElementById("mainNavbar");
+
+            if (navbar) {
+              if (scrollY > 50) {
+                navbar.classList.add("scrolled");
+              } else {
+                navbar.classList.remove("scrolled");
+              }
+            }
+
+            ticking = false;
+          };
+
+          window.addEventListener("scroll", () => {
+            if (!ticking) {
+              requestAnimationFrame(updateScrollEffects);
+              ticking = true;
+            }
+          });
+        }
+
+        setupBackToTop() {
+          const backToTop = document.getElementById("backToTop");
+          if (!backToTop) return;
+
+          let ticking = false;
+
+          const updateBackToTop = () => {
+            if (window.scrollY > 300) {
+              backToTop.classList.add("show");
+              backToTop.setAttribute("aria-hidden", "false");
+            } else {
+              backToTop.classList.remove("show");
+              backToTop.setAttribute("aria-hidden", "true");
+            }
+            ticking = false;
+          };
+
+          window.addEventListener("scroll", () => {
+            if (!ticking) {
+              requestAnimationFrame(updateBackToTop);
+              ticking = true;
+            }
+          });
+
+          backToTop.addEventListener("click", () => {
+            // Respect user's motion preferences
+            const prefersReducedMotion = window.matchMedia(
+              "(prefers-reduced-motion: reduce)"
+            ).matches;
+
+            window.scrollTo({
+              top: 0,
+              behavior: prefersReducedMotion ? "auto" : "smooth",
+            });
+
+            // Announce scroll action to screen readers
+            const liveRegion = document.getElementById("aria-live-polite");
+            if (liveRegion) {
+              liveRegion.textContent = "به بالای صفحه رفتید";
+              setTimeout(() => {
+                liveRegion.textContent = "";
+              }, 2000);
+            }
+
+            // Focus management - focus on main content after scroll
+            setTimeout(
+              () => {
+                const mainContent = document.getElementById("main-content");
+                if (mainContent) {
+                  mainContent.focus();
+                }
+              },
+              prefersReducedMotion ? 0 : 500
+            );
+          });
+
+          // Keyboard support
+          backToTop.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              backToTop.click();
+            }
+          });
+        }
+
+        setupNavbarEffects() {
+          // Add active state to current page nav links
+          const currentPath = window.location.pathname;
+          const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+          navLinks.forEach((link) => {
+            if (link.getAttribute("href") === currentPath) {
+              link.classList.add("active");
+            }
+          });
+        }
+
+        setupAnimations() {
+          // Respect user's motion preferences
+          const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches;
+
+          if (!prefersReducedMotion) {
+            // Add entrance animations to elements
+            const observerOptions = {
+              threshold: 0.1,
+              rootMargin: "0px 0px -50px 0px",
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("animate-in");
+                }
+              });
+            }, observerOptions);
+
+            // Observe elements that should animate in
+            document
+              .querySelectorAll(".card, .alert, .footer-brand")
+              .forEach((el) => {
+                observer.observe(el);
+              });
+          }
+        }
+
+        setupKeyboardNavigation() {
+          // Enhanced dropdown keyboard navigation
+          const dropdowns = document.querySelectorAll(".dropdown");
+
+          dropdowns.forEach((dropdown) => {
+            const toggle = dropdown.querySelector(".dropdown-toggle");
+            const menu = dropdown.querySelector(".dropdown-menu");
+            const items = menu ? menu.querySelectorAll(".dropdown-item") : [];
+
+            if (toggle && menu) {
+              toggle.addEventListener("keydown", (e) => {
+                if (
+                  e.key === "ArrowDown" ||
+                  e.key === "Enter" ||
+                  e.key === " "
+                ) {
+                  e.preventDefault();
+                  if (!menu.classList.contains("show")) {
+                    toggle.click();
+                  }
+                  setTimeout(() => {
+                    if (items.length > 0) {
+                      items[0].focus();
+                    }
+                  }, 100);
+                }
+              });
+
+              items.forEach((item, index) => {
+                item.addEventListener("keydown", (e) => {
+                  switch (e.key) {
+                    case "ArrowDown":
+                      e.preventDefault();
+                      const nextIndex = (index + 1) % items.length;
+                      items[nextIndex].focus();
+                      break;
+                    case "ArrowUp":
+                      e.preventDefault();
+                      const prevIndex =
+                        index === 0 ? items.length - 1 : index - 1;
+                      items[prevIndex].focus();
+                      break;
+                    case "Escape":
+                      e.preventDefault();
+                      toggle.click();
+                      toggle.focus();
+                      break;
+                  }
+                });
+              });
+            }
+          });
+
+          // Enhanced form navigation
+          this.setupFormAccessibility();
+
+          // Skip links functionality
+          this.setupSkipLinks();
+        }
+
+        setupFormAccessibility() {
+          // Focus first invalid field on form submission
+          const forms = document.querySelectorAll("form");
+
+          forms.forEach((form) => {
+            form.addEventListener("submit", (e) => {
+              setTimeout(() => {
+                const firstInvalid = form.querySelector(
+                  ".is-invalid, :invalid"
+                );
+                if (firstInvalid) {
+                  firstInvalid.focus();
+                  firstInvalid.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+                }
+              }, 100);
+            });
+
+            // Enhanced error announcements
+            const inputs = form.querySelectorAll("input, select, textarea");
+            inputs.forEach((input) => {
+              input.addEventListener("invalid", (e) => {
+                const liveRegion = document.getElementById(
+                  "aria-live-assertive"
+                );
+                if (liveRegion) {
+                  const label = form.querySelector(`label[for="${input.id}"]`);
+                  const fieldName = label ? label.textContent : "فیلد";
+                  liveRegion.textContent = `خطا در ${fieldName}: ${input.validationMessage}`;
+                }
+              });
+            });
+          });
+        }
+
+        setupSkipLinks() {
+          // Enhanced skip link functionality
+          const skipLinks = document.querySelectorAll('a[href^="#"]');
+
+          skipLinks.forEach((link) => {
+            link.addEventListener("click", (e) => {
+              const targetId = link.getAttribute("href").substring(1);
+              const target = document.getElementById(targetId);
+
+              if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+                // Set focus to target element
+                target.setAttribute("tabindex", "-1");
+                target.focus();
+
+                // Remove tabindex after focus
+                target.addEventListener(
+                  "blur",
+                  () => {
+                    target.removeAttribute("tabindex");
+                  },
+                  { once: true }
+                );
+
+                // Announce navigation to screen readers
+                const liveRegion = document.getElementById("aria-live-polite");
+                if (liveRegion) {
+                  liveRegion.textContent = `رفتید به بخش اصلی`;
+                  setTimeout(() => {
+                    liveRegion.textContent = "";
+                  }, 2000);
+                }
+              }
+            });
+          });
+        }
+      }
+
+      // Initialize when DOM is ready
+      document.addEventListener("DOMContentLoaded", () => {
+        new ThemeManager();
+        new ModernInteractions();
+      });
+
+      // Language/Direction switching function (for demonstration)
+      function setLanguage(lang) {
+        const html = document.documentElement;
+        const currentLang = html.getAttribute("lang");
+
+        if (lang === "fa") {
+          html.setAttribute("lang", "fa");
+          html.setAttribute("dir", "rtl");
+          localStorage.setItem("language", "fa");
+        } else {
+          html.setAttribute("lang", "en");
+          html.setAttribute("dir", "ltr");
+          localStorage.setItem("language", "en");
+        }
+
+        // Reload the page to apply language changes
+        // In a real application, you would use Django's i18n system
+        if (currentLang !== lang) {
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        }
+      }
+    </script>
+
+    <script src="{% static 'js/theme-manager.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
+    <script src="{% static 'js/forms.js' %}"></script>
+    <script src="{% static 'js/cards.js' %}"></script>
+    <script src="{% static 'js/animations.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

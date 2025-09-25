@@ -1,0 +1,37 @@
+[
+  {
+    "model": "products.category",
+    "pk": 1,
+    "fields": {"name": "کتاب دیجیتال", "slug": "digital-books", "parent": null}
+  },
+  {
+    "model": "products.category",
+    "pk": 2,
+    "fields": {"name": "لوازم جانبی", "slug": "accessories", "parent": null}
+  },
+  {
+    "model": "products.product",
+    "pk": 1,
+    "fields": {"name": "کتاب PDF آموزش Django", "slug": "django-pdf", "description": "کتاب دیجیتال آموزش جنگو.", "price": 120000, "stock": 100, "category": 1, "is_digital": true}
+  },
+  {
+    "model": "products.product",
+    "pk": 2,
+    "fields": {"name": "کتاب PDF آموزش React", "slug": "react-pdf", "description": "کتاب دیجیتال آموزش ری‌اکت.", "price": 110000, "stock": 100, "category": 1, "is_digital": true}
+  },
+  {
+    "model": "products.product",
+    "pk": 3,
+    "fields": {"name": "ماوس بی‌سیم", "slug": "wireless-mouse", "description": "ماوس بی‌سیم با کیفیت.", "price": 250000, "stock": 50, "category": 2, "is_digital": false}
+  },
+  {
+    "model": "products.product",
+    "pk": 4,
+    "fields": {"name": "کیبورد مکانیکی", "slug": "mechanical-keyboard", "description": "کیبورد مکانیکی حرفه‌ای.", "price": 600000, "stock": 30, "category": 2, "is_digital": false}
+  },
+  {
+    "model": "products.product",
+    "pk": 5,
+    "fields": {"name": "هدفون بلوتوث", "slug": "bluetooth-headphone", "description": "هدفون بلوتوث با صدای عالی.", "price": 400000, "stock": 40, "category": 2, "is_digital": false}
+  }
+]

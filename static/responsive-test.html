@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dev-mode">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Design Test - Istanbul Plus</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/utilities/responsive-test.css" />
+    <style>
+      body {
+        font-family: var(--font-family-primary);
+        line-height: var(--line-height-normal);
+        color: var(--color-gray-900);
+        background: var(--color-gray-50);
+        margin: 0;
+        padding: var(--space-4);
+      }
+
+      .test-section {
+        margin-bottom: var(--space-8);
+        background: var(--color-white);
+        padding: var(--space-6);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .test-title {
+        font-size: var(--font-size-2xl);
+        font-weight: var(--font-weight-bold);
+        margin-bottom: var(--space-4);
+        color: var(--color-primary);
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: var(--space-2);
+      }
+
+      .test-description {
+        color: var(--color-gray-600);
+        margin-bottom: var(--space-6);
+        font-size: var(--font-size-base);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Breakpoint Indicator -->
+    <div class="breakpoint-indicator"></div>
+
+    <!-- Grid Overlay (toggle with dev tools) -->
+    <div class="grid-overlay"></div>
+
+    <div class="container-responsive">
+      <header class="test-section">
+        <h1
+          class="text-fluid-4xl"
+          style="text-align: center; margin-bottom: var(--space-6)"
+        >
+          Responsive Design Test Suite
+        </h1>
+        <p
+          class="text-fluid-lg"
+          style="text-align: center; color: var(--color-gray-600)"
+        >
+          Testing modern responsive design enhancements for Istanbul Plus
+        </p>
+      </header>
+
+      <!-- Breakpoint Testing -->
+      <section class="test-section">
+        <h2 class="test-title">Breakpoint System Test</h2>
+        <p class="test-description">
+          This section tests the enhanced breakpoint system with CSS custom
+          properties. Resize your browser to see different layouts at various
+          screen sizes.
+        </p>
+
+        <div class="test-grid">
+          <div
+            class="test-grid-item xs:bg-red-100 sm:bg-blue-100 md:bg-green-100 lg:bg-yellow-100 xl:bg-purple-100 xxl:bg-pink-100"
+          >
+            Item 1
+          </div>
+          <div class="test-grid-item">Item 2</div>
+          <div class="test-grid-item">Item 3</div>
+          <div class="test-grid-item">Item 4</div>
+          <div class="test-grid-item">Item 5</div>
+          <div class="test-grid-item">Item 6</div>
+        </div>
+      </section>
+
+      <!-- Container Queries Test -->
+      <section class="test-section">
+        <h2 class="test-title">Container Queries Test</h2>
+        <p class="test-description">
+          This section demonstrates container queries for component-based
+          responsiveness. The content adapts based on its container size, not
+          the viewport size.
+        </p>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--space-6);
+          "
+        >
+          <div
+            class="test-container-query"
+            style="resize: horizontal; overflow: auto; min-width: 200px"
+          >
+            <div class="test-cq-content">
+              <span>Resize this container horizontally</span>
+            </div>
+          </div>
+
+          <div class="test-container-query">
+            <div class="test-cq-content">
+              <span>This container is larger</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Fluid Typography Test -->
+      <section class="test-section">
+        <h2 class="test-title">Fluid Typography Test</h2>
+        <p class="test-description">
+          Typography that scales smoothly with viewport size using clamp()
+          functions.
+        </p>
+
+        <div class="test-typography">
+          <h1 class="test-heading">Fluid Heading (clamp)</h1>
+          <h2 class="test-subheading">Fluid Subheading</h2>
+          <p class="test-body">
+            This paragraph uses fluid typography that scales smoothly between
+            minimum and maximum sizes based on the viewport width. The text
+            remains readable at all screen sizes while maintaining proper
+            proportions and hierarchy.
+          </p>
+        </div>
+      </section>
+
+      <!-- Responsive Spacing Test -->
+      <section class="test-section">
+        <h2 class="test-title">Responsive Spacing Test</h2>
+        <p class="test-description">
+          Spacing that adapts to screen size using CSS custom properties and
+          clamp() functions.
+        </p>
+
+        <div class="test-spacing">
+          <div class="test-spacing-inner">
+            <p>
+              This content has responsive padding and margins that scale with
+              the viewport.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modern Grid Patterns -->
+      <section class="test-section">
+        <h2 class="test-title">Modern Grid Patterns</h2>
+        <p class="test-description">
+          Advanced CSS Grid layouts with auto-fit, intrinsic sizing, and modern
+          patterns.
+        </p>
+
+        <div class="intrinsic-grid" style="margin-bottom: var(--space-6)">
+          <div
+            style="
+              background: var(--color-primary-light);
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            Auto-fit Grid Item 1
+          </div>
+          <div
+            style="
+              background: var(--color-secondary-light);
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            Auto-fit Grid Item 2
+          </div>
+          <div
+            style="
+              background: var(--color-success-light);
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            Auto-fit Grid Item 3
+          </div>
+          <div
+            style="
+              background: var(--color-warning-light);
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            Auto-fit Grid Item 4
+          </div>
+        </div>
+
+        <div class="grid-responsive-cards">
+          <div
+            style="
+              background: var(--color-white);
+              padding: var(--space-4);
+              border-radius: var(--radius-lg);
+              box-shadow: var(--shadow-sm);
+              text-align: center;
+            "
+          >
+            Responsive Card 1
+          </div>
+          <div
+            style="
+              background: var(--color-white);
+              padding: var(--space-4);
+              border-radius: var(--radius-lg);
+              box-shadow: var(--shadow-sm);
+              text-align: center;
+            "
+          >
+            Responsive Card 2
+          </div>
+          <div
+            style="
+              background: var(--color-white);
+              padding: var(--space-4);
+              border-radius: var(--radius-lg);
+              box-shadow: var(--shadow-sm);
+              text-align: center;
+            "
+          >
+            Responsive Card 3
+          </div>
+        </div>
+      </section>
+
+      <!-- Orientation and Device Testing -->
+      <section class="test-section">
+        <h2 class="test-title">Orientation & Device Detection</h2>
+        <p class="test-description">
+          Testing orientation detection and device-specific responsive behavior.
+        </p>
+
+        <div
+          class="orientation-test"
+          style="
+            background: var(--color-gray-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-4);
+          "
+        >
+          <p>Orientation detection will show above this text.</p>
+        </div>
+
+        <div
+          class="device-test"
+          style="
+            background: var(--color-gray-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+          "
+        >
+          <p>Device type detection will show above this text.</p>
+        </div>
+      </section>
+
+      <!-- RTL Support Test -->
+      <section class="test-section">
+        <h2 class="test-title">RTL Support Test</h2>
+        <p class="test-description">
+          Testing right-to-left language support and logical properties.
+        </p>
+
+        <div class="rtl-test">
+          <p>This section shows the current text direction mode.</p>
+          <button
+            onclick="toggleRTL()"
+            style="
+              margin-top: var(--space-2);
+              padding: var(--space-2) var(--space-4);
+              border: none;
+              background: var(--color-primary);
+              color: white;
+              border-radius: var(--radius-md);
+              cursor: pointer;
+            "
+          >
+            Toggle RTL/LTR
+          </button>
+        </div>
+      </section>
+
+      <!-- Accessibility Testing -->
+      <section class="test-section">
+        <h2 class="test-title">Accessibility & Preferences</h2>
+        <p class="test-description">
+          Testing user preference detection for motion, color scheme, and
+          contrast.
+        </p>
+
+        <div
+          class="motion-test"
+          style="
+            background: var(--color-gray-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-4);
+          "
+        >
+          <p>Motion preference detection will show above this text.</p>
+        </div>
+
+        <div
+          class="color-scheme-test"
+          style="
+            background: var(--color-gray-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-4);
+          "
+        >
+          <p>Color scheme preference detection will show above this text.</p>
+        </div>
+
+        <div
+          class="dpi-test"
+          style="
+            background: var(--color-gray-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+          "
+        >
+          <p>Display DPI detection will show above this text.</p>
+        </div>
+      </section>
+
+      <!-- Modern CSS Features Test -->
+      <section class="test-section">
+        <h2 class="test-title">Modern CSS Features</h2>
+        <p class="test-description">
+          Testing modern CSS features with progressive enhancement and
+          fallbacks.
+        </p>
+
+        <div
+          style="
+            display: grid;
+            gap: var(--space-4);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          "
+        >
+          <div
+            class="aspect-ratio-16-9"
+            style="
+              background: var(--color-primary-light);
+              border-radius: var(--radius-md);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: var(--color-primary-dark);
+            "
+          >
+            <span>16:9 Aspect Ratio</span>
+          </div>
+
+          <div
+            class="modern-colors"
+            style="
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            <span>Modern Color Functions</span>
+          </div>
+
+          <div class="nested-component">
+            <div class="title">Nested Component</div>
+            <div class="content">
+              This uses modern CSS nesting where supported.
+            </div>
+            <div class="actions">
+              <button
+                style="
+                  padding: var(--space-2) var(--space-4);
+                  border: none;
+                  background: var(--color-primary);
+                  color: white;
+                  border-radius: var(--radius-md);
+                "
+              >
+                Action
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Performance Testing -->
+      <section class="test-section">
+        <h2 class="test-title">Performance Optimizations</h2>
+        <p class="test-description">
+          Testing performance optimizations including containment, lazy loading,
+          and GPU acceleration.
+        </p>
+
+        <div
+          style="
+            display: grid;
+            gap: var(--space-4);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          "
+        >
+          <div
+            class="layout-contained gpu-accelerated"
+            style="
+              background: var(--color-success-light);
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            Layout Contained
+          </div>
+          <div
+            class="paint-contained"
+            style="
+              background: var(--color-warning-light);
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            Paint Contained
+          </div>
+          <div
+            class="perf-critical"
+            style="
+              background: var(--color-info-light);
+              padding: var(--space-4);
+              border-radius: var(--radius-md);
+              text-align: center;
+            "
+          >
+            Content Visibility
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      function toggleRTL() {
+        const html = document.documentElement;
+        const currentDir = html.getAttribute("dir");
+        html.setAttribute("dir", currentDir === "rtl" ? "ltr" : "rtl");
+      }
+
+      // Performance monitoring
+      if ("PerformanceObserver" in window) {
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === "paint") {
+              console.log(`${entry.name}: ${entry.startTime}ms`);
+            }
+          }
+        });
+        observer.observe({ entryTypes: ["paint"] });
+      }
+
+      // Responsive breakpoint logging
+      function logBreakpoint() {
+        const width = window.innerWidth;
+        let breakpoint = "xs";
+
+        if (width >= 1400) breakpoint = "2xl";
+        else if (width >= 1200) breakpoint = "xl";
+        else if (width >= 992) breakpoint = "lg";
+        else if (width >= 768) breakpoint = "md";
+        else if (width >= 576) breakpoint = "sm";
+
+        console.log(`Current breakpoint: ${breakpoint} (${width}px)`);
+      }
+
+      window.addEventListener("resize", logBreakpoint);
+      logBreakpoint(); // Initial log
+
+      // Container query support detection
+      if (CSS.supports("container-type", "inline-size")) {
+        console.log("✅ Container queries supported");
+      } else {
+        console.log("❌ Container queries not supported");
+      }
+
+      // Modern CSS feature detection
+      const features = [
+        { name: "CSS Grid", test: () => CSS.supports("display", "grid") },
+        { name: "CSS Flexbox", test: () => CSS.supports("display", "flex") },
+        {
+          name: "CSS Custom Properties",
+          test: () => CSS.supports("--test", "0"),
+        },
+        {
+          name: "CSS clamp()",
+          test: () => CSS.supports("width", "clamp(1px, 1vw, 1px)"),
+        },
+        {
+          name: "CSS aspect-ratio",
+          test: () => CSS.supports("aspect-ratio", "1/1"),
+        },
+        {
+          name: "CSS logical properties",
+          test: () => CSS.supports("margin-inline-start", "0"),
+        },
+        { name: "CSS nesting", test: () => CSS.supports("selector(&)") },
+        {
+          name: "CSS subgrid",
+          test: () => CSS.supports("grid-template-rows", "subgrid"),
+        },
+        {
+          name: "CSS masonry",
+          test: () => CSS.supports("grid-template-rows", "masonry"),
+        },
+      ];
+
+      console.log("CSS Feature Support:");
+      features.forEach((feature) => {
+        const supported = feature.test();
+        console.log(`${supported ? "✅" : "❌"} ${feature.name}`);
+      });
+    </script>
+  </body>
+</html>

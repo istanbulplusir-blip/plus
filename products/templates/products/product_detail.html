@@ -1,0 +1,685 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ product.name }} - Istanbul Plus{% endblock %}
+
+{% block description %}{{ product.description|truncatewords:20 }} - خرید {{ product.name }} از فروشگاه آنلاین Istanbul Plus با بهترین قیمت و کیفیت{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/cards.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/layouts/product-detail.css' %}" />
+{% endblock %}
+
+{% block content %}
+<!-- Modern Product Detail Page -->
+<div class="product-detail-page">
+  <!-- Hero Section with Product Image -->
+  <section class="product-hero-section">
+    <div class="product-hero-background">
+      <div class="product-hero-gradient"></div>
+      <div class="product-hero-particles"></div>
+    </div>
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="product-breadcrumb scroll-fade-up" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'products:product_list' %}">
+              <i class="bi bi-house" aria-hidden="true"></i>
+              محصولات
+            </a>
+          </li>
+          {% for category in product.categories.all %}
+          <li class="breadcrumb-item">
+            <a href="{% url 'products:category_detail' category.slug %}">{{ category.name }}</a>
+          </li>
+          {% endfor %}
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ product.name }}
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Product Main Content -->
+      <div class="product-main-content scroll-fade-up delay-100">
+        <div class="row align-items-center">
+          <!-- Product Images -->
+          <div class="col-lg-6">
+            <div class="product-image-gallery">
+              <div class="product-main-image-container">
+                {% if product.image %}
+                <img
+                  src="{{ product.image.url }}"
+                  class="product-main-image"
+                  alt="{{ product.name }}"
+                  loading="lazy"
+                />
+                {% else %}
+                <div class="product-image-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>تصویر محصول</span>
+                </div>
+                {% endif %}
+                
+                <!-- Product Badge -->
+                {% if product.type == 'digital' %}
+                <div class="product-badge digital">
+                  <i class="bi bi-download"></i>
+                  دیجیتال
+                </div>
+                {% elif product.stock > 0 %}
+                <div class="product-badge in-stock">
+                  <i class="bi bi-check-circle"></i>
+                  موجود
+                </div>
+                {% else %}
+                <div class="product-badge out-of-stock">
+                  <i class="bi bi-x-circle"></i>
+                  ناموجود
+                </div>
+                {% endif %}
+              </div>
+              
+              {% if product.images.exists %}
+              <div class="product-thumbnails">
+                {% for img in product.images.all %}
+                <div class="product-thumbnail-container">
+                  <img
+                    src="{{ img.image.url }}"
+                    class="product-thumbnail"
+                    alt="{{ img.alt_text|default:product.name }}"
+                    loading="lazy"
+                  />
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Product Information -->
+          <div class="col-lg-6">
+            <div class="product-info-content">
+              <!-- Product Title -->
+              <h1 class="product-title">{{ product.name }}</h1>
+              
+              <!-- Product Categories -->
+              <div class="product-categories">
+                {% for category in product.categories.all %}
+                <a
+                  href="{% url 'products:category_detail' category.slug %}"
+                  class="category-badge"
+                >
+                  <i class="bi bi-tag" aria-hidden="true"></i>
+                  {{ category.name }}
+                </a>
+                {% endfor %}
+              </div>
+
+              <!-- Product Price -->
+              <div class="product-price-section">
+                <div class="product-price">
+                  <span class="price-currency">تومان</span>
+                  <span class="price-amount">{{ product.price|intcomma }}</span>
+                </div>
+                {% if product.type == 'digital' %}
+                <div class="price-note">
+                  <i class="bi bi-info-circle"></i>
+                  محصول دیجیتال - قابل دانلود فوری
+                </div>
+                {% elif product.stock > 0 %}
+                <div class="price-note">
+                  <i class="bi bi-truck"></i>
+                  ارسال رایگان برای خریدهای بالای 500,000 تومان
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Product Description -->
+              <div class="product-description">
+                <h3 class="description-title">توضیحات محصول</h3>
+                <div class="description-content">
+                  {{ product.description|linebreaks }}
+                </div>
+              </div>
+
+              <!-- Product Features -->
+              <div class="product-features">
+                <h3 class="features-title">ویژگی‌های محصول</h3>
+                <div class="features-list">
+                  {% if product.type == 'digital' %}
+                  <div class="feature-item">
+                    <i class="bi bi-download feature-icon"></i>
+                    <span class="feature-text">محصول دیجیتال - قابل دانلود</span>
+                  </div>
+                  <div class="feature-item">
+                    <i class="bi bi-lightning feature-icon"></i>
+                    <span class="feature-text">دسترسی فوری پس از خرید</span>
+                  </div>
+                  {% else %}
+                  <div class="feature-item">
+                    <i class="bi bi-box feature-icon"></i>
+                    <span class="feature-text">محصول فیزیکی - ارسال پستی</span>
+                  </div>
+                  {% if product.stock > 0 %}
+                  <div class="feature-item">
+                    <i class="bi bi-check-circle feature-icon success"></i>
+                    <span class="feature-text">موجود در انبار ({{ product.stock }} عدد)</span>
+                  </div>
+                  {% else %}
+                  <div class="feature-item">
+                    <i class="bi bi-x-circle feature-icon danger"></i>
+                    <span class="feature-text">ناموجود</span>
+                  </div>
+                  {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Add to Cart Section -->
+              <div class="add-to-cart-section">
+                <form
+                  method="post"
+                  action="{% url 'api_cart:cart_item_create' %}"
+                  class="add-to-cart-form"
+                >
+                  {% csrf_token %}
+                  <input type="hidden" name="product_id" value="{{ product.id }}" />
+                  
+                  <div class="quantity-section">
+                    <label class="quantity-label">تعداد:</label>
+                    <div class="quantity-controls">
+                      <button type="button" class="quantity-btn quantity-decrease">
+                        <i class="bi bi-dash"></i>
+                      </button>
+                      <input
+                        type="number"
+                        name="quantity"
+                        value="1"
+                        min="1"
+                        max="{{ product.stock }}"
+                        class="quantity-input"
+                        aria-label="تعداد محصول"
+                      />
+                      <button type="button" class="quantity-btn quantity-increase">
+                        <i class="bi bi-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    type="submit" 
+                    class="btn-modern btn-primary btn-lg add-to-cart-button" 
+                    {% if product.stock == 0 and product.type != 'digital' %}disabled{% endif %}
+                  >
+                    <i class="bi bi-cart-plus" aria-hidden="true"></i>
+                    <span class="btn-text">
+                      {% if product.stock == 0 and product.type != 'digital' %}
+                        ناموجود
+                      {% else %}
+                        افزودن به سبد خرید
+                      {% endif %}
+                    </span>
+                  </button>
+                </form>
+                
+                {% if not user.is_authenticated %}
+                <div class="guest-cart-info">
+                  <p class="guest-message">
+                    <i class="bi bi-info-circle"></i>
+                    شما به عنوان مهمان خرید می‌کنید. برای ذخیره سبد خرید و ادامه خرید، 
+                    <a href="{% url 'users:login' %}?next={{ request.get_full_path|urlencode }}" class="login-link">وارد شوید</a>
+                    یا
+                    <a href="{% url 'users:register' %}?next={{ request.get_full_path|urlencode }}" class="register-link">ثبت نام کنید</a>
+                  </p>
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Product Actions -->
+              <div class="product-actions">
+                <button class="btn-modern btn-outline btn-wishlist" onclick="addToWishlist()">
+                  <i class="bi bi-heart" aria-hidden="true"></i>
+                  <span class="btn-text">افزودن به علاقه‌مندی‌ها</span>
+                </button>
+                <button class="btn-modern btn-outline btn-share" onclick="shareProduct()">
+                  <i class="bi bi-share" aria-hidden="true"></i>
+                  <span class="btn-text">اشتراک‌گذاری</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Products Section -->
+  {% if related_products %}
+  <section class="related-products-section">
+    <div class="container">
+      <div class="section-header scroll-fade-up">
+        <h2 class="section-title">محصولات مرتبط</h2>
+        <p class="section-subtitle">محصولات مشابه که ممکن است مورد علاقه شما باشد</p>
+      </div>
+      
+      <div class="related-products-grid scroll-stagger">
+        {% for related_product in related_products %}
+        <div class="related-product-item scroll-fade-up delay-{{ forloop.counter0|add:1 }}00">
+          <div class="card product-card h-100">
+            <div class="card-img-container">
+              {% if related_product.image %}
+              <img
+                src="{{ related_product.image.url }}"
+                class="card-img-top"
+                alt="{{ related_product.name }}"
+                loading="lazy"
+              />
+              {% else %}
+              <div class="card-img-placeholder">
+                <i class="bi bi-box"></i>
+                <span>{{ related_product.name }}</span>
+              </div>
+              {% endif %}
+              
+              <!-- Product Badge -->
+              {% if related_product.type == 'digital' %}
+              <div class="product-badge digital">دیجیتال</div>
+              {% elif related_product.stock > 0 %}
+              <div class="product-badge in-stock">موجود</div>
+              {% else %}
+              <div class="product-badge out-of-stock">ناموجود</div>
+              {% endif %}
+            </div>
+            
+            <div class="card-body">
+              <h5 class="card-title">{{ related_product.name }}</h5>
+              <p class="card-text">
+                {{ related_product.description|truncatewords:15 }}
+              </p>
+              <div class="price-display">
+                {{ related_product.price|intcomma }} تومان
+              </div>
+              <div class="card-actions">
+                <a
+                  href="{% url 'products:product_detail' related_product.slug %}"
+                  class="btn-modern btn-primary"
+                >
+                  <span class="btn-text">مشاهده محصول</span>
+                  <i class="bi bi-eye"></i>
+                </a>
+                <button class="btn-modern btn-outline btn-wishlist" title="افزودن به علاقه‌مندی‌ها">
+                  <i class="bi bi-heart"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+
+<!-- Image Modal -->
+<div class="image-modal" id="imageModal">
+  <span class="image-modal-close">&times;</span>
+  <img class="image-modal-content" id="modalImage">
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/product-detail.js' %}"></script>
+<script>
+  // Enhanced product detail functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize modern product detail features
+    initModernProductDetail();
+  });
+
+  function initModernProductDetail() {
+    // Initialize image gallery with modern effects
+    initModernImageGallery();
+    
+    // Initialize quantity controls with modern styling
+    initModernQuantityControls();
+    
+    // Initialize wishlist functionality
+    initWishlistFunctionality();
+    
+    // Initialize scroll animations
+    initScrollAnimations();
+    
+    // Initialize product actions
+    initProductActions();
+  }
+
+  function initModernImageGallery() {
+    const mainImage = document.querySelector('.product-main-image');
+    const thumbnails = document.querySelectorAll('.product-thumbnail');
+    
+    if (mainImage && thumbnails.length > 0) {
+      // Add click event to main image
+      mainImage.addEventListener('click', function() {
+        openImageModal(this.src, this.alt);
+      });
+      
+      // Add click events to thumbnails
+      thumbnails.forEach((thumbnail, index) => {
+        thumbnail.addEventListener('click', function() {
+          // Update main image with smooth transition
+          mainImage.style.opacity = '0';
+          setTimeout(() => {
+            mainImage.src = this.src;
+            mainImage.alt = this.alt;
+            mainImage.style.opacity = '1';
+          }, 150);
+          
+          // Update active thumbnail
+          thumbnails.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+        
+        // Set first thumbnail as active
+        if (index === 0) {
+          thumbnail.classList.add('active');
+        }
+      });
+    }
+  }
+
+  function initModernQuantityControls() {
+    const quantityInput = document.querySelector('.quantity-input');
+    const decreaseBtn = document.querySelector('.quantity-decrease');
+    const increaseBtn = document.querySelector('.quantity-increase');
+    
+    if (quantityInput && decreaseBtn && increaseBtn) {
+      decreaseBtn.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+          animateQuantityChange(quantityInput);
+        }
+      });
+      
+      increaseBtn.addEventListener('click', function() {
+        const currentValue = parseInt(quantityInput.value);
+        const maxValue = parseInt(quantityInput.max);
+        if (currentValue < maxValue) {
+          quantityInput.value = currentValue + 1;
+          animateQuantityChange(quantityInput);
+        }
+      });
+    }
+  }
+
+  function animateQuantityChange(input) {
+    input.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+      input.style.transform = 'scale(1)';
+    }, 150);
+  }
+
+  function initWishlistFunctionality() {
+    const wishlistBtns = document.querySelectorAll('.btn-wishlist');
+    
+    wishlistBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const icon = this.querySelector('i');
+        const isActive = this.classList.contains('active');
+        
+        if (isActive) {
+          this.classList.remove('active');
+          icon.classList.remove('bi-heart-fill');
+          icon.classList.add('bi-heart');
+          this.querySelector('.btn-text').textContent = 'افزودن به علاقه‌مندی‌ها';
+        } else {
+          this.classList.add('active');
+          icon.classList.remove('bi-heart');
+          icon.classList.add('bi-heart-fill');
+          this.querySelector('.btn-text').textContent = 'حذف از علاقه‌مندی‌ها';
+          
+          // Add animation
+          this.style.transform = 'scale(1.1)';
+          setTimeout(() => {
+            this.style.transform = 'scale(1)';
+          }, 200);
+        }
+      });
+    });
+  }
+
+  function initScrollAnimations() {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements
+    document.querySelectorAll('.scroll-fade-up').forEach(element => {
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(30px)';
+      element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+      observer.observe(element);
+    });
+  }
+
+  function initProductActions() {
+    // Add to cart form handling
+    const addToCartForm = document.querySelector('.add-to-cart-form');
+    if (addToCartForm) {
+      addToCartForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const button = this.querySelector('.add-to-cart-button');
+        const originalText = button.innerHTML;
+        const formData = new FormData(this);
+        
+        // Show loading state
+        button.innerHTML = '<i class="bi bi-hourglass-split"></i> <span class="btn-text">در حال افزودن...</span>';
+        button.disabled = true;
+        
+        // Make real API call
+        fetch(this.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            showNotification('محصول با موفقیت به سبد خرید اضافه شد!', 'success');
+            // Update cart count if needed
+            updateCartCount();
+          } else {
+            showNotification(data.message || 'خطا در افزودن محصول به سبد خرید', 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Add to cart error:', error);
+          showNotification('خطا در افزودن محصول به سبد خرید', 'error');
+        })
+        .finally(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        });
+      });
+    }
+  }
+  
+  function updateCartCount() {
+    // Update cart count in navigation if present
+    fetch('/api/cart/count/')
+      .then(response => response.json())
+      .then(data => {
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+          cartCountElement.textContent = data.count || 0;
+        }
+      })
+      .catch(error => {
+        console.error('Failed to update cart count:', error);
+      });
+  }
+
+  function openImageModal(src, alt) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    
+    modal.style.display = 'block';
+    modalImg.src = src;
+    modalImg.alt = alt;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
+  function shareProduct() {
+    if (navigator.share) {
+      navigator.share({
+        title: document.querySelector('.product-title')?.textContent || 'محصول',
+        text: document.querySelector('.product-description .description-content')?.textContent || '',
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showNotification('لینک محصول کپی شد!', 'success');
+      });
+    }
+  }
+
+  function addToWishlist() {
+    showNotification('محصول به لیست علاقه‌مندی‌ها اضافه شد!', 'success');
+  }
+
+  function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${type === 'success' ? 'var(--color-success)' : 'var(--color-error)'};
+      color: white;
+      padding: 15px 20px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      animation: slideInRight 0.3s ease-out;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+      notification.style.animation = 'slideOutRight 0.3s ease-out';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }, 3000);
+  }
+
+  // Close modal events
+  document.addEventListener('click', function(e) {
+    const modal = document.getElementById('imageModal');
+    const closeBtn = document.querySelector('.image-modal-close');
+    
+    if (e.target === modal || e.target === closeBtn) {
+      closeImageModal();
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeImageModal();
+    }
+  });
+</script>
+
+<style>
+  /* Additional inline styles for modern product detail */
+  @keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  
+  @keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+  }
+
+  .quantity-input {
+    transition: transform 0.15s ease;
+  }
+
+  .btn-wishlist.active {
+    background: var(--gradient-error);
+    border-color: transparent;
+    color: white;
+  }
+
+  .btn-wishlist.active i {
+    color: white;
+  }
+
+  .guest-cart-info {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--color-info-light, #e3f2fd);
+    border: 1px solid var(--color-info, #2196f3);
+    border-radius: var(--radius-md, 8px);
+    text-align: center;
+  }
+
+  .guest-message {
+    margin: 0;
+    color: var(--text-secondary, #666);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .guest-message .login-link,
+  .guest-message .register-link {
+    color: var(--color-primary, #667eea);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .guest-message .login-link:hover,
+  .guest-message .register-link:hover {
+    color: var(--color-primary-dark, #5a6fd8);
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}

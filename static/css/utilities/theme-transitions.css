@@ -1,0 +1,353 @@
+/* Theme Switching Transitions */
+
+/* Global theme transition support */
+:root {
+  --theme-transition-duration: 0.3s;
+  --theme-transition-easing: ease;
+  --theme-transition-properties: background-color, color, border-color, box-shadow, fill, stroke;
+}
+
+/* Apply smooth transitions to all theme-aware elements */
+html,
+body,
+.navbar,
+.card,
+.btn,
+.form-control,
+.form-select,
+.alert,
+.badge,
+.dropdown-menu,
+.modal,
+.offcanvas,
+.toast,
+.tooltip,
+.popover {
+  transition: var(--theme-transition-properties) var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Enhanced theme switching for specific components */
+.glass-nav,
+.glass-dropdown,
+.glass-alert {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    backdrop-filter var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware text elements */
+h1, h2, h3, h4, h5, h6,
+p, span, div, a,
+.text-primary, .text-secondary, .text-muted {
+  transition: color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware background elements */
+.bg-primary, .bg-secondary, .bg-light, .bg-dark,
+.bg-success, .bg-warning, .bg-danger, .bg-info {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware border elements */
+.border, .border-primary, .border-secondary,
+.border-light, .border-dark {
+  transition: border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Enhanced theme toggle animations */
+.theme-toggle {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-easing),
+    transform 0.2s var(--theme-transition-easing);
+}
+
+.theme-toggle .theme-icon-light,
+.theme-toggle .theme-icon-dark {
+  transition: 
+    opacity var(--theme-transition-duration) var(--theme-transition-easing),
+    transform var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme switching flash effect */
+.theme-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.theme-flash.light {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+}
+
+.theme-flash.dark {
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 0%, transparent 70%);
+}
+
+/* Smooth scrollbar theme transitions */
+::-webkit-scrollbar {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+::-webkit-scrollbar-track {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+::-webkit-scrollbar-thumb {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware shadows */
+.shadow-sm, .shadow, .shadow-lg {
+  transition: box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware form elements */
+.form-control,
+.form-select,
+.form-check-input,
+.form-range {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware buttons */
+.btn {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware cards */
+.card {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware navigation */
+.nav-link {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware dropdowns */
+.dropdown-menu {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.dropdown-item {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware alerts */
+.alert {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing),
+    color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware modals */
+.modal-content {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware tables */
+.table {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.table th,
+.table td {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware pagination */
+.page-link {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware breadcrumbs */
+.breadcrumb {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.breadcrumb-item a {
+  transition: color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware progress bars */
+.progress {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.progress-bar {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware list groups */
+.list-group-item {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware badges */
+.badge {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware tooltips and popovers */
+.tooltip-inner {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.popover {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.popover-header,
+.popover-body {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware custom components */
+.modern-footer {
+  transition: 
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+.social-links .btn {
+  transition: 
+    color var(--theme-transition-duration) var(--theme-transition-easing),
+    background-color var(--theme-transition-duration) var(--theme-transition-easing),
+    border-color var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Theme-aware SVG icons */
+svg {
+  transition: 
+    fill var(--theme-transition-duration) var(--theme-transition-easing),
+    stroke var(--theme-transition-duration) var(--theme-transition-easing);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --theme-transition-duration: 0.01ms;
+  }
+  
+  html,
+  body,
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  
+  .theme-flash {
+    display: none !important;
+  }
+  
+  .theme-toggle.switching i {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  :root {
+    --theme-transition-duration: 0.1s;
+  }
+  
+  .theme-toggle {
+    border-width: 2px;
+  }
+  
+  .theme-toggle:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Print mode - disable all transitions */
+@media print {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .theme-toggle {
+    display: none !important;
+  }
+}
+
+/* Theme switching performance optimizations */
+.theme-switching {
+  will-change: background-color, color, border-color;
+}
+
+.theme-switching * {
+  will-change: background-color, color, border-color;
+}
+
+/* Clean up will-change after theme switch */
+.theme-switched {
+  will-change: auto;
+}
+
+.theme-switched * {
+  will-change: auto;
+}

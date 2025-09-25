@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load site_tags %}
+{% block title %}درباره ما | {{ block.super }}{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h1 class="text-center mb-4">درباره {{ site_name|default:"Istanbul Plus" }}</h1>
+      <div class="card">
+        <div class="card-body">
+          {% get_site_content 'about' as about_content %}
+          {% if about_content %}
+            {{ about_content.content|safe }}
+          {% else %}
+            <h5 class="card-title">فروشگاه آنلاین محصولات با کیفیت</h5>
+            <p class="card-text">
+              {{ site_name|default:"Istanbul Plus" }} یک فروشگاه آنلاین است که در زمینه فروش محصولات با
+              کیفیت فعالیت می‌کند. هدف ما ارائه بهترین محصولات با قیمت مناسب به
+              مشتریان عزیز است.
+            </p>
+            <h5 class="card-title mt-4">ارزش‌های ما</h5>
+            <ul class="list-unstyled">
+              <li class="mb-2">✓ کیفیت برتر محصولات</li>
+              <li class="mb-2">✓ قیمت منصفانه</li>
+              <li class="mb-2">✓ پشتیبانی ۲۴/۷</li>
+              <li class="mb-2">✓ ارسال سریع</li>
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,830 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}ثبت‌نام مرحله‌ای - Istanbul Plus{% endblock %} 
+
+{% block description %}
+ثبت‌نام آسان و امن در فروشگاه آنلاین Istanbul Plus - فرآیند مرحله‌ای و کاربرپسند
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/forms.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/alerts.css' %}" />
+<link rel="stylesheet" href="{% static 'css/layouts/auth.css' %}" />
+<style>
+  /* Multi-step registration container */
+  .multistep-container {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-4);
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.05) 0%,
+      rgba(118, 75, 162, 0.05) 50%,
+      rgba(79, 172, 254, 0.05) 100%
+    );
+    position: relative;
+  }
+
+  .multistep-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 30% 30%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 50% 20%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
+    animation: floatBackground 25s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes floatBackground {
+    0%, 100% { 
+      opacity: 0.3;
+      transform: scale(1) rotate(0deg);
+    }
+    33% { 
+      opacity: 0.5;
+      transform: scale(1.05) rotate(1deg);
+    }
+    66% { 
+      opacity: 0.4;
+      transform: scale(0.95) rotate(-1deg);
+    }
+  }
+
+  /* Registration card */
+  .registration-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-3xl);
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      var(--shadow-glass);
+    overflow: hidden;
+    transition: all var(--transition-slow);
+    animation: slideInUp 0.8s var(--ease-out);
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .registration-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.6), 
+      transparent
+    );
+  }
+
+  .registration-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 32px 64px -16px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+      var(--shadow-glass);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Card header */
+  .registration-card .card-header {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--space-8);
+    text-align: center;
+    position: relative;
+  }
+
+  .registration-card .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: var(--gradient-primary);
+    opacity: 0.6;
+  }
+
+  .registration-card .card-header h3 {
+    color: var(--color-gray-900);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-2xl);
+    margin: 0;
+    font-family: var(--font-family-display);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .registration-card .card-body {
+    padding: var(--space-8);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Step indicator */
+  .step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-8);
+    padding: var(--space-4);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+  }
+
+  .step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .step::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  .step:first-child::before {
+    left: 50%;
+    width: 50%;
+  }
+
+  .step:last-child::before {
+    right: 50%;
+    width: 50%;
+    left: auto;
+  }
+
+  .step.completed::before {
+    background: var(--gradient-success);
+  }
+
+  .step.active::before {
+    background: linear-gradient(to right, var(--color-success) 50%, rgba(255, 255, 255, 0.2) 50%);
+  }
+
+  .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-bold);
+    position: relative;
+    z-index: 2;
+    margin: 0 auto var(--space-2);
+    font-size: var(--font-size-sm);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all var(--transition-base);
+  }
+
+  .step.completed .step-number {
+    background: var(--gradient-success);
+    border-color: var(--color-success);
+    transform: scale(1.1);
+  }
+
+  .step.active .step-number {
+    background: var(--gradient-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+  }
+
+  .step-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-600);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .step.completed .step-label,
+  .step.active .step-label {
+    color: var(--color-gray-800);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Step content */
+  .step-content {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .step-content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Form styling */
+  .modern-form-group {
+    margin-bottom: var(--space-5);
+    position: relative;
+  }
+
+  .modern-form-floating .form-control {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-xl);
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    min-height: 56px;
+  }
+
+  .modern-form-floating .form-control:focus {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--color-primary);
+    box-shadow: 
+      0 0 0 3px rgba(102, 126, 234, 0.15),
+      0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .modern-form-floating label {
+    color: var(--color-gray-700);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+  }
+
+  .modern-form-floating .form-control:focus ~ label,
+  .modern-form-floating .form-control:not(:placeholder-shown) ~ label {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Contact type indicator */
+  .contact-type-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-4);
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+  }
+
+  .contact-type-indicator i {
+    font-size: var(--font-size-lg);
+  }
+
+  /* OTP input styling */
+  .otp-input-group {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    margin: var(--space-6) 0;
+  }
+
+  .otp-input {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.9);
+    transition: all var(--transition-base);
+  }
+
+  .otp-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    transform: scale(1.05);
+  }
+
+  /* Buttons */
+  .modern-btn {
+    border-radius: var(--radius-xl);
+    padding: var(--space-4) var(--space-8);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .modern-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.2), 
+      transparent
+    );
+    transition: left var(--transition-base);
+  }
+
+  .modern-btn:hover::before {
+    left: 100%;
+  }
+
+  .modern-btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .modern-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #7c8df0 0%, #8659b8 100%);
+  }
+
+  .modern-btn-secondary {
+    background: rgba(108, 117, 125, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+
+  .modern-btn-secondary:hover {
+    transform: translateY(-3px);
+    background: rgba(108, 117, 125, 1);
+    box-shadow: 0 12px 35px rgba(108, 117, 125, 0.3);
+  }
+
+  /* Loading states */
+  .btn-loading {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Success state */
+  .success-state {
+    text-align: center;
+    padding: var(--space-8);
+  }
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-4);
+    animation: successPulse 2s ease-in-out infinite;
+  }
+
+  .success-icon i {
+    font-size: 2.5rem;
+    color: white;
+  }
+
+  @keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  /* Dark theme adjustments */
+  [data-theme="dark"] .registration-card {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .registration-card .card-header h3 {
+    color: var(--color-white);
+  }
+
+  [data-theme="dark"] .modern-form-floating .form-control {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--color-white);
+  }
+
+  /* Responsive design */
+  @media (max-width: 576px) {
+    .multistep-container {
+      padding: var(--space-4) var(--space-2);
+    }
+    
+    .registration-card {
+      border-radius: var(--radius-2xl);
+      margin: var(--space-2);
+    }
+    
+    .registration-card .card-header,
+    .registration-card .card-body {
+      padding: var(--space-6);
+    }
+    
+    .otp-input-group {
+      gap: var(--space-2);
+    }
+    
+    .otp-input {
+      width: 40px;
+      height: 40px;
+      font-size: var(--font-size-lg);
+    }
+    
+    .modern-btn {
+      padding: var(--space-3) var(--space-6);
+      min-height: 48px;
+    }
+  }
+
+  /* Accessibility enhancements */
+  @media (prefers-reduced-motion: reduce) {
+    .registration-card,
+    .modern-form-floating .form-control,
+    .modern-btn,
+    .step-content {
+      animation: none;
+      transition: none;
+    }
+    
+    .registration-card:hover,
+    .modern-btn:hover {
+      transform: none;
+    }
+
+    .step-number {
+      animation: none;
+    }
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="multistep-container">
+  <div class="registration-card">
+    <div class="card-header">
+      <h3>
+        <i class="bi bi-person-plus me-3" aria-hidden="true"></i>
+        ثبت‌نام مرحله‌ای
+      </h3>
+      <p class="mb-0 mt-2 text-muted">
+        فرآیند آسان و امن عضویت
+      </p>
+    </div>
+    
+    <div class="card-body">
+      <!-- Step indicator -->
+      <div class="step-indicator" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-label="مراحل ثبت‌نام">
+        <div class="step active" data-step="1">
+          <div class="step-number">1</div>
+          <div class="step-label">تماس</div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-number">2</div>
+          <div class="step-label">تأیید</div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-number">3</div>
+          <div class="step-label">اطلاعات</div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-number">4</div>
+          <div class="step-label">رمز عبور</div>
+        </div>
+      </div>
+
+      <!-- Alert container -->
+      <div id="alert-container" class="mb-4" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+      <!-- Step 1: Contact Info -->
+      <div class="step-content active" id="step-1">
+        <form id="contact-form">
+          {% csrf_token %}
+          <div class="modern-form-group">
+            <div class="modern-form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="contact_info"
+                name="contact_info"
+                placeholder="ایمیل یا شماره موبایل"
+                aria-describedby="contact-help"
+                aria-required="true"
+                required
+                autocomplete="email"
+              />
+              <label for="contact_info">
+                <i class="bi bi-envelope-at me-2" aria-hidden="true"></i>
+                ایمیل یا شماره موبایل *
+              </label>
+              <div id="contact-help" class="form-text">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                مثال: test@example.com یا 09123456789
+              </div>
+              <div class="invalid-feedback">
+                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>
+                لطفاً ایمیل یا شماره موبایل معتبر وارد کنید
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="modern-btn modern-btn-primary" id="send-otp-btn">
+              <span class="loading-spinner bi bi-arrow-clockwise d-none" aria-hidden="true"></span>
+              <i class="bi bi-send" aria-hidden="true"></i>
+              <span class="btn-text">ارسال کد تأیید</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 2: OTP Verification -->
+      <div class="step-content" id="step-2">
+        <div class="contact-type-indicator" id="contact-indicator">
+          <i class="bi bi-envelope" aria-hidden="true"></i>
+          <span id="contact-display">کد تأیید ارسال شد</span>
+        </div>
+
+        <form id="otp-form">
+          {% csrf_token %}
+          <input type="hidden" id="contact_info_verify" name="contact_info" />
+          
+          <div class="otp-input-group">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" />
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="modern-btn modern-btn-primary" id="verify-otp-btn">
+              <span class="loading-spinner bi bi-arrow-clockwise d-none" aria-hidden="true"></span>
+              <i class="bi bi-shield-check" aria-hidden="true"></i>
+              <span class="btn-text">تأیید کد</span>
+            </button>
+            <button type="button" class="modern-btn modern-btn-secondary" id="resend-otp-btn">
+              <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+              <span class="btn-text">ارسال مجدد</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Personal Information -->
+      <div class="step-content" id="step-3">
+        <form id="personal-form">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="modern-form-group">
+                <div class="modern-form-floating">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="first_name"
+                    name="first_name"
+                    placeholder="نام"
+                    autocomplete="given-name"
+                  />
+                  <label for="first_name">
+                    <i class="bi bi-person-badge me-2" aria-hidden="true"></i>
+                    نام
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="modern-form-group">
+                <div class="modern-form-floating">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="last_name"
+                    name="last_name"
+                    placeholder="نام خانوادگی"
+                    autocomplete="family-name"
+                  />
+                  <label for="last_name">
+                    <i class="bi bi-person-badge me-2" aria-hidden="true"></i>
+                    نام خانوادگی
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modern-form-group">
+            <div class="modern-form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                placeholder="نام کاربری"
+                aria-describedby="username-help"
+                aria-required="true"
+                required
+                autocomplete="username"
+              />
+              <label for="username">
+                <i class="bi bi-at me-2" aria-hidden="true"></i>
+                نام کاربری *
+              </label>
+              <div id="username-help" class="form-text">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                نام کاربری باید منحصر به فرد باشد
+              </div>
+              <div class="invalid-feedback">
+                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>
+                نام کاربری معتبر وارد کنید
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="modern-btn modern-btn-primary" id="save-personal-btn">
+              <span class="loading-spinner bi bi-arrow-clockwise d-none" aria-hidden="true"></span>
+              <i class="bi bi-person-check" aria-hidden="true"></i>
+              <span class="btn-text">ادامه</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 4: Password Creation -->
+      <div class="step-content" id="step-4">
+        <form id="password-form">
+          {% csrf_token %}
+          <div class="modern-form-group">
+            <div class="modern-form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="new_password"
+                name="new_password"
+                placeholder="رمز عبور جدید"
+                aria-describedby="password-help"
+                aria-required="true"
+                required
+                autocomplete="new-password"
+                minlength="8"
+              />
+              <label for="new_password">
+                <i class="bi bi-key me-2" aria-hidden="true"></i>
+                رمز عبور جدید *
+              </label>
+              <div id="password-help" class="form-text">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                حداقل 8 کاراکتر شامل حروف، اعداد و علامت
+              </div>
+              <div class="invalid-feedback">
+                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>
+                رمز عبور باید حداقل 8 کاراکتر باشد
+              </div>
+            </div>
+          </div>
+
+          <div class="modern-form-group">
+            <div class="modern-form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="confirm_password"
+                name="confirm_password"
+                placeholder="تکرار رمز عبور"
+                aria-describedby="confirm-help"
+                aria-required="true"
+                required
+                autocomplete="new-password"
+              />
+              <label for="confirm_password">
+                <i class="bi bi-key-fill me-2" aria-hidden="true"></i>
+                تکرار رمز عبور *
+              </label>
+              <div id="confirm-help" class="form-text">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                رمز عبور را مجدداً وارد کنید
+              </div>
+              <div class="invalid-feedback">
+                <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>
+                رمزهای عبور مطابقت ندارند
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="modern-btn modern-btn-primary" id="save-password-btn">
+              <span class="loading-spinner bi bi-arrow-clockwise d-none" aria-hidden="true"></span>
+              <i class="bi bi-check-circle" aria-hidden="true"></i>
+              <span class="btn-text">تکمیل ثبت‌نام</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Success State -->
+      <div class="step-content" id="step-success">
+        <div class="success-state">
+          <div class="success-icon">
+            <i class="bi bi-check-lg" aria-hidden="true"></i>
+          </div>
+          <h4 class="mb-3">ثبت‌نام با موفقیت تکمیل شد!</h4>
+          <p class="text-muted mb-4">خوش آمدید! حساب کاربری شما آماده استفاده است.</p>
+          <div class="d-grid">
+            <a href="/" class="modern-btn modern-btn-primary">
+              <i class="bi bi-house" aria-hidden="true"></i>
+              بازگشت به خانه
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login link -->
+      <nav class="text-center mt-4" aria-label="لینک‌های مرتبط">
+        <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap">
+          <span class="text-muted">قبلاً ثبت‌نام کرده‌اید؟</span>
+          <a href="{% url 'users:login' %}" class="text-decoration-none fw-semibold" style="color: var(--color-primary);">
+            <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+            ورود به حساب
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+{% endblock %} 
+
+{% block extra_js %}
+<script src="{% static 'js/multistep-registration.js' %}"></script>
+<script>
+// Pass next URL to JavaScript
+window.nextUrl = '{{ next|default:"" }}';
+</script>
+{% endblock %}

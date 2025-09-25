@@ -1,0 +1,27 @@
+{
+  "name": "Istanbul Plus",
+  "short_name": "IstanbulPlus",
+  "description": "Istanbul Plus - Premium Travel Services",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/Istanbulplusir-logo-highquality.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/Istanbulplusir-logo-highquality.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "tourism", "business"],
+  "lang": "fa",
+  "dir": "rtl"
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "model": "users.user",
+    "pk": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+    "fields": {
+      "username": "testuser",
+      "email": "test@example.com",
+      "phone": "+989121234567",
+      "password": "pbkdf2_sha256$600000$test$testhash",  
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": false
+    }
+  }
+]

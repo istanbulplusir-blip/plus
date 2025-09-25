@@ -1,0 +1,320 @@
+/* Theme Fixes and Enhancements */
+/* Fix for theme switching issues */
+
+/* Ensure theme variables are properly applied */
+:root {
+  /* Force theme transition on all elements */
+  --theme-transition-all: background-color 0.3s ease, 
+                         color 0.3s ease, 
+                         border-color 0.3s ease, 
+                         box-shadow 0.3s ease,
+                         backdrop-filter 0.3s ease;
+}
+
+/* Base body styling with proper theme support */
+body {
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+  transition: var(--theme-transition-all);
+}
+
+/* Navigation fixes */
+.navbar {
+  background-color: var(--color-nav-background) !important;
+  color: var(--color-nav-text) !important;
+  border-bottom-color: var(--color-nav-border) !important;
+  transition: var(--theme-transition-all);
+}
+
+.navbar .nav-link {
+  color: var(--color-nav-text) !important;
+  transition: var(--theme-transition-all);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: var(--color-nav-text-hover) !important;
+}
+
+.navbar-brand {
+  color: var(--color-nav-text) !important;
+}
+
+.navbar-toggler {
+  border-color: var(--color-border) !important;
+}
+
+/* Card fixes */
+.card {
+  background-color: var(--color-card-background) !important;
+  border-color: var(--color-card-border) !important;
+  color: var(--color-text-primary) !important;
+  transition: var(--theme-transition-all);
+}
+
+.card-body {
+  color: var(--color-text-primary) !important;
+}
+
+.card-title {
+  color: var(--color-text-primary) !important;
+}
+
+.card-text {
+  color: var(--color-text-secondary) !important;
+}
+
+/* Form element fixes */
+.form-control,
+.form-select {
+  background-color: var(--color-input-background) !important;
+  border-color: var(--color-input-border) !important;
+  color: var(--color-input-text) !important;
+  transition: var(--theme-transition-all);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--color-input-background) !important;
+  border-color: var(--color-input-border-focus) !important;
+  color: var(--color-input-text) !important;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+}
+
+.form-control::placeholder {
+  color: var(--color-input-placeholder) !important;
+}
+
+/* Button fixes */
+.btn-outline-light {
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+  transition: var(--theme-transition-all);
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus {
+  background-color: var(--color-surface-hover) !important;
+  border-color: var(--color-border-hover) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Dropdown fixes */
+.dropdown-menu {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+  transition: var(--theme-transition-all);
+}
+
+.dropdown-item {
+  color: var(--color-text-primary) !important;
+  transition: var(--theme-transition-all);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--color-surface-hover) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Footer fixes */
+.modern-footer {
+  background-color: var(--color-footer-background) !important;
+  color: var(--color-footer-text) !important;
+  transition: var(--theme-transition-all);
+}
+
+.modern-footer h5,
+.modern-footer h6 {
+  color: var(--color-footer-text) !important;
+}
+
+.modern-footer p {
+  color: var(--color-footer-text-secondary) !important;
+}
+
+.modern-footer a {
+  color: var(--color-primary) !important;
+  transition: var(--theme-transition-all);
+}
+
+.modern-footer a:hover {
+  color: var(--color-primary-dark) !important;
+}
+
+/* Alert fixes */
+.alert {
+  transition: var(--theme-transition-all);
+}
+
+/* Text color fixes */
+.text-muted {
+  color: var(--color-text-tertiary) !important;
+}
+
+.text-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+/* Link fixes */
+a {
+  color: var(--color-primary) !important;
+  transition: var(--theme-transition-all);
+}
+
+a:hover,
+a:focus {
+  color: var(--color-primary-dark) !important;
+}
+
+/* Glassmorphism fixes */
+.glass,
+.glass-nav,
+.glass-dropdown,
+.glass-alert {
+  background: var(--glass-background) !important;
+  border-color: var(--glass-border) !important;
+  transition: var(--theme-transition-all);
+}
+
+.glass:hover,
+.glass-nav:hover,
+.glass-dropdown:hover {
+  background: var(--glass-background-hover) !important;
+}
+
+/* Theme toggle button fixes */
+.theme-toggle {
+  transition: var(--theme-transition-all);
+}
+
+/* Ensure theme icons are properly shown/hidden */
+[data-theme="light"] .theme-icon-dark {
+  display: none !important;
+}
+
+[data-theme="light"] .theme-icon-light {
+  display: inline-block !important;
+}
+
+[data-theme="dark"] .theme-icon-light {
+  display: none !important;
+}
+
+[data-theme="dark"] .theme-icon-dark {
+  display: inline-block !important;
+}
+
+/* Bootstrap component overrides for dark theme */
+[data-theme="dark"] .bg-light {
+  background-color: var(--color-surface) !important;
+}
+
+[data-theme="dark"] .text-dark {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="dark"] .border-light {
+  border-color: var(--color-border) !important;
+}
+
+/* Ensure proper contrast in dark theme */
+[data-theme="dark"] .navbar-light .navbar-nav .nav-link {
+  color: var(--color-nav-text) !important;
+}
+
+[data-theme="dark"] .navbar-light .navbar-nav .nav-link:hover,
+[data-theme="dark"] .navbar-light .navbar-nav .nav-link:focus {
+  color: var(--color-nav-text-hover) !important;
+}
+
+[data-theme="dark"] .navbar-light .navbar-brand {
+  color: var(--color-nav-text) !important;
+}
+
+/* Fix for Bootstrap's default styles overriding theme */
+[data-theme="dark"] .bg-white {
+  background-color: var(--color-surface) !important;
+}
+
+[data-theme="dark"] .text-black {
+  color: var(--color-text-primary) !important;
+}
+
+/* Ensure visibility in both themes */
+.visually-hidden-focusable:focus {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-focus) !important;
+}
+
+/* Back to top button */
+.back-to-top {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  transition: var(--theme-transition-all);
+}
+
+.back-to-top:hover {
+  background-color: var(--color-primary-dark) !important;
+  border-color: var(--color-primary-dark) !important;
+}
+
+/* Message/Alert styling */
+.messages-container .alert {
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--glass-border);
+  transition: var(--theme-transition-all);
+}
+
+/* Ensure proper theme application on dynamic content */
+[data-theme="dark"] * {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a #2a2a2a;
+}
+
+/* Fix for any remaining white backgrounds in dark theme */
+[data-theme="dark"] .bg-body,
+[data-theme="dark"] .bg-body-secondary,
+[data-theme="dark"] .bg-body-tertiary {
+  background-color: var(--color-background) !important;
+}
+
+/* Ensure theme switching animation works properly */
+.theme-switching * {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease !important;
+}
+
+/* Performance optimization during theme switch */
+.theme-switched {
+  will-change: auto;
+}
+
+.theme-switched * {
+  will-change: auto;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .theme-switching *,
+  .theme-switched * {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  [data-theme="dark"] {
+    --color-background: #000000;
+    --color-text-primary: #ffffff;
+    --color-border: #ffffff;
+  }
+  
+  [data-theme="light"] {
+    --color-background: #ffffff;
+    --color-text-primary: #000000;
+    --color-border: #000000;
+  }
+}

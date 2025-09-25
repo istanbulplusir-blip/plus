@@ -1,0 +1,52 @@
+{% extends "emails/base.html" %} {% block title %}خوش آمدید - {{
+site_name|default:"استانبول پلاس" }}{% endblock %} {% block content %}
+<h2>خوش آمدید!</h2>
+
+<p>سلام {{ user.first_name|default:user.username }}،</p>
+
+<p>
+  به {{ site_name|default:"استانبول پلاس" }} خوش آمدید! ثبت‌نام شما با موفقیت
+  انجام شد و اکنون می‌توانید از تمام امکانات سایت استفاده کنید.
+</p>
+
+<div
+  style="
+    background-color: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 6px;
+    padding: 20px;
+    margin: 25px 0;
+  "
+>
+  <h3 style="margin-top: 0; color: #004085">امکانات در دسترس شما:</h3>
+  <ul style="margin: 10px 0; padding-right: 20px; color: #004085">
+    <li>مشاهده و خرید محصولات</li>
+    <li>مدیریت سبد خرید</li>
+    <li>پیگیری سفارشات</li>
+    <li>مدیریت پروفایل شخصی</li>
+    <li>دریافت اطلاعیه‌های ویژه</li>
+  </ul>
+</div>
+
+<div style="text-align: center; margin: 30px 0">
+  <a href="{{ login_url }}" class="button">ورود به حساب کاربری</a>
+</div>
+
+<div class="security-info">
+  <strong>نکات امنیتی:</strong>
+  <ul style="margin: 10px 0; padding-right: 20px">
+    <li>رمز عبور خود را با هیچ کس به اشتراک نگذارید</li>
+    <li>برای امنیت بیشتر، احراز هویت دو مرحله‌ای را فعال کنید</li>
+    <li>ایمیل و شماره موبایل خود را تأیید کنید</li>
+  </ul>
+</div>
+
+<p>اگر سؤالی دارید یا نیاز به کمک دارید، تیم پشتیبانی ما آماده کمک به شماست.</p>
+
+<p>امیدواریم تجربه خوبی از خرید داشته باشید!</p>
+
+<p>
+  با تشکر،<br />
+  تیم {{ site_name|default:"استانبول پلاس" }}
+</p>
+{% endblock %}

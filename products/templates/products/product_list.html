@@ -1,0 +1,547 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{% if category %}{{ category.name }}{% else %}محصولات{% endif %} - Istanbul Plus{% endblock %}
+
+{% block description %}{% if category %}مشاهده محصولات {{ category.name }} در فروشگاه آنلاین Istanbul Plus با بهترین قیمت و کیفیت{% else %}مجموعه کامل محصولات فروشگاه آنلاین Istanbul Plus - خرید آنلاین با ارسال سریع{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/cards.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/alerts.css' %}" />
+<link rel="stylesheet" href="{% static 'css/layouts/product-list.css' %}" />
+{% endblock %}
+
+{% block content %}
+<!-- Modern Product List Page -->
+<div class="product-list-page">
+  <!-- Hero Section -->
+  <section class="product-list-hero-section">
+    <div class="product-list-hero-background">
+      <div class="product-list-hero-gradient"></div>
+      <div class="product-list-hero-particles"></div>
+    </div>
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="product-list-breadcrumb scroll-fade-up" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'core:home' %}">
+              <i class="bi bi-house" aria-hidden="true"></i>
+              خانه
+            </a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {% if category %}{{ category.name }}{% else %}محصولات{% endif %}
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Page Header -->
+      <div class="product-list-header scroll-fade-up delay-100">
+        <h1 class="product-list-title">
+          {% if category %}{{ category.name }}{% else %}محصولات{% endif %}
+        </h1>
+        <p class="product-list-subtitle">
+          {% if category %}
+            مشاهده محصولات {{ category.name }} در فروشگاه آنلاین Istanbul Plus
+          {% else %}
+            مجموعه کامل محصولات فروشگاه آنلاین Istanbul Plus
+          {% endif %}
+        </p>
+        
+        <!-- Product Count -->
+        <div class="product-count">
+          <i class="bi bi-grid-3x3-gap"></i>
+          <span>{{ products|length }} محصول یافت شد</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="product-list-main-section">
+    <div class="container">
+      <div class="row">
+        <!-- Filter Sidebar -->
+        <div class="col-lg-3">
+          <div class="filter-sidebar scroll-fade-up delay-200">
+            <div class="filter-header">
+              <h3 class="filter-title">
+                <i class="bi bi-funnel" aria-hidden="true"></i>
+                فیلتر محصولات
+              </h3>
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">دسته‌بندی‌ها</h4>
+              <ul class="category-list">
+                <li class="category-item">
+                  <a
+                    href="{% url 'products:product_list' %}"
+                    class="category-link {% if not category %}active{% endif %}"
+                  >
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    <span>همه محصولات</span>
+                    <span class="category-count">{{ total_products|default:0 }}</span>
+                  </a>
+                </li>
+                {% for cat in categories %}
+                <li class="category-item">
+                  <a
+                    href="{% url 'products:category_detail' cat.slug %}"
+                    class="category-link {% if category and category.slug == cat.slug %}active{% endif %}"
+                  >
+                    <i class="bi bi-tag"></i>
+                    <span>{{ cat.name }}</span>
+                    <span class="category-count">{{ cat.product_count|default:0 }}</span>
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">عملیات سریع</h4>
+              <div class="quick-actions">
+                <a href="{% url 'products:product_list' %}?featured=true" class="quick-action-btn">
+                  <i class="bi bi-star"></i>
+                  محصولات ویژه
+                </a>
+                <a href="{% url 'products:product_list' %}?type=digital" class="quick-action-btn">
+                  <i class="bi bi-download"></i>
+                  محصولات دیجیتال
+                </a>
+                <a href="{% url 'products:product_list' %}?in_stock=true" class="quick-action-btn">
+                  <i class="bi bi-check-circle"></i>
+                  موجود در انبار
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="col-lg-9">
+          <div class="products-content scroll-fade-up delay-300">
+            <!-- Products Grid -->
+            <div class="products-grid scroll-stagger">
+              {% for product in products %}
+              <div class="product-item scroll-fade-up delay-{{ forloop.counter0|add:1 }}00">
+                <div class="card product-card h-100">
+                  <div class="card-img-container">
+                    {% if product.image %}
+                    <img
+                      src="{{ product.image.url }}"
+                      class="card-img-top"
+                      alt="{{ product.name }}"
+                      loading="lazy"
+                    />
+                    {% else %}
+                    <div class="card-img-placeholder">
+                      <i class="bi bi-box"></i>
+                      <span>{{ product.name }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Product Badge -->
+                    {% if product.type == 'digital' %}
+                    <div class="product-badge digital">
+                      <i class="bi bi-download"></i>
+                      دیجیتال
+                    </div>
+                    {% elif product.stock > 0 %}
+                    <div class="product-badge in-stock">
+                      <i class="bi bi-check-circle"></i>
+                      موجود
+                    </div>
+                    {% else %}
+                    <div class="product-badge out-of-stock">
+                      <i class="bi bi-x-circle"></i>
+                      ناموجود
+                    </div>
+                    {% endif %}
+
+                    <!-- Quick View Button -->
+                    <div class="quick-view-overlay">
+                      <a
+                        href="{% url 'products:product_detail' product.slug %}"
+                        class="btn-quick-view"
+                      >
+                        <i class="bi bi-eye"></i>
+                        مشاهده سریع
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">
+                      {{ product.description|truncatewords:15 }}
+                    </p>
+                    
+                    <!-- Product Categories -->
+                    <div class="product-categories">
+                      {% for category in product.categories.all|slice:":2" %}
+                      <span class="product-category-tag">{{ category.name }}</span>
+                      {% endfor %}
+                    </div>
+                    
+                    <div class="price-display">
+                      {{ product.price|intcomma }} تومان
+                    </div>
+                    
+                    <div class="card-actions">
+                      <a
+                        href="{% url 'products:product_detail' product.slug %}"
+                        class="btn-modern btn-primary"
+                      >
+                        <span class="btn-text">مشاهده محصول</span>
+                        <i class="bi bi-eye"></i>
+                      </a>
+                      <button class="btn-modern btn-outline btn-wishlist" title="افزودن به علاقه‌مندی‌ها">
+                        <i class="bi bi-heart"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <div class="col-12">
+                <div class="empty-state">
+                  <div class="empty-state-icon">
+                    <i class="bi bi-box-seam" aria-hidden="true"></i>
+                  </div>
+                  <h3 class="empty-state-title">محصولی یافت نشد</h3>
+                  <p class="empty-state-description">
+                    در حال حاضر محصولی در این دسته‌بندی موجود نیست.
+                  </p>
+                  <a
+                    href="{% url 'products:product_list' %}"
+                    class="btn-modern btn-primary"
+                  >
+                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    <span class="btn-text">مشاهده همه محصولات</span>
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <div class="pagination-container scroll-fade-up">
+              <nav aria-label="صفحه‌بندی محصولات">
+                <ul class="pagination">
+                  {% if page_obj.has_previous %}
+                  <li class="page-item">
+                    <a
+                      class="page-link"
+                      href="?page={{ page_obj.previous_page_number }}"
+                      aria-label="صفحه قبلی"
+                    >
+                      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                      قبلی
+                    </a>
+                  </li>
+                  {% endif %}
+                  
+                  {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                    <li class="page-item active">
+                      <span class="page-link" aria-current="page">{{ i }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% if page_obj.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="صفحه بعدی">
+                      بعدی
+                      <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                    </a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/product-list.js' %}"></script>
+<script>
+  // Enhanced product list functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    initModernProductList();
+  });
+
+  function initModernProductList() {
+    // Initialize scroll animations
+    initScrollAnimations();
+    
+    // Initialize wishlist functionality
+    initWishlistFunctionality();
+    
+    // Initialize filter interactions
+    initFilterInteractions();
+    
+    // Initialize product card effects
+    initProductCardEffects();
+  }
+
+  function initScrollAnimations() {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements
+    document.querySelectorAll('.scroll-fade-up').forEach(element => {
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(30px)';
+      element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+      observer.observe(element);
+    });
+  }
+
+  function initWishlistFunctionality() {
+    const wishlistBtns = document.querySelectorAll('.btn-wishlist');
+    
+    wishlistBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const icon = this.querySelector('i');
+        const isActive = this.classList.contains('active');
+        
+        if (isActive) {
+          this.classList.remove('active');
+          icon.classList.remove('bi-heart-fill');
+          icon.classList.add('bi-heart');
+          this.setAttribute('title', 'افزودن به علاقه‌مندی‌ها');
+        } else {
+          this.classList.add('active');
+          icon.classList.remove('bi-heart');
+          icon.classList.add('bi-heart-fill');
+          this.setAttribute('title', 'حذف از علاقه‌مندی‌ها');
+          
+          // Add animation
+          this.style.transform = 'scale(1.2)';
+          setTimeout(() => {
+            this.style.transform = 'scale(1)';
+          }, 200);
+        }
+      });
+    });
+  }
+
+  function initFilterInteractions() {
+    const categoryLinks = document.querySelectorAll('.category-link');
+    
+    categoryLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        // Add loading state
+        const sidebar = document.querySelector('.filter-sidebar');
+        sidebar.style.opacity = '0.7';
+        
+        // Remove loading state after navigation
+        setTimeout(() => {
+          sidebar.style.opacity = '1';
+        }, 1000);
+      });
+    });
+  }
+
+  function initProductCardEffects() {
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+      // Add hover effects
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px) scale(1.02)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+      
+      // Add click tracking
+      const productLink = card.querySelector('a[href*="product_detail"]');
+      if (productLink) {
+        productLink.addEventListener('click', function(e) {
+          const productTitle = card.querySelector('.card-title')?.textContent;
+          if (productTitle) {
+            console.log('Product clicked:', productTitle);
+          }
+        });
+      }
+    });
+  }
+
+  // Search functionality
+  function searchProducts(query) {
+    const productCards = document.querySelectorAll('.product-card');
+    const searchTerm = query.toLowerCase();
+    
+    productCards.forEach(card => {
+      const title = card.querySelector('.card-title')?.textContent.toLowerCase();
+      const description = card.querySelector('.card-text')?.textContent.toLowerCase();
+      
+      if (title.includes(searchTerm) || description.includes(searchTerm)) {
+        card.style.display = 'block';
+        card.style.animation = 'fadeInUp 0.3s ease-out';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Sort functionality
+  function sortProducts(sortBy) {
+    const productsGrid = document.querySelector('.products-grid');
+    const productItems = Array.from(productsGrid.querySelectorAll('.product-item'));
+    
+    productItems.sort((a, b) => {
+      const aPrice = parseFloat(a.querySelector('.price-display')?.textContent.replace(/[^\d]/g, '') || 0);
+      const bPrice = parseFloat(b.querySelector('.price-display')?.textContent.replace(/[^\d]/g, '') || 0);
+      
+      switch (sortBy) {
+        case 'price-low':
+          return aPrice - bPrice;
+        case 'price-high':
+          return bPrice - aPrice;
+        case 'name':
+          const aName = a.querySelector('.card-title')?.textContent || '';
+          const bName = b.querySelector('.card-title')?.textContent || '';
+          return aName.localeCompare(bName);
+        default:
+          return 0;
+      }
+    });
+    
+    // Re-append sorted items
+    productItems.forEach(item => {
+      productsGrid.appendChild(item);
+    });
+  }
+
+  // Export functions for global access
+  window.ProductList = {
+    searchProducts,
+    sortProducts
+  };
+</script>
+
+<style>
+  /* Additional inline styles for modern product list */
+  .product-category-tag {
+    display: inline-block;
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--color-primary);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    margin: 2px;
+  }
+
+  .category-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    margin-right: auto;
+  }
+
+  .quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    color: white;
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-base);
+    margin-bottom: var(--space-2);
+  }
+
+  .quick-action-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
+    transform: translateX(4px);
+  }
+
+  .btn-wishlist.active {
+    background: var(--gradient-error);
+    border-color: transparent;
+    color: white;
+  }
+
+  .btn-wishlist.active i {
+    color: white;
+  }
+
+  .quick-view-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .product-card:hover .quick-view-overlay {
+    opacity: 1;
+  }
+
+  .btn-quick-view {
+    background: white;
+    color: var(--color-primary);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+  }
+
+  .btn-quick-view:hover {
+    background: var(--color-primary);
+    color: white;
+    text-decoration: none;
+    transform: scale(1.05);
+  }
+</style>
+{% endblock %}

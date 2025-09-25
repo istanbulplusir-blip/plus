@@ -1,0 +1,69 @@
+{% extends "emails/base.html" %} {% block title %}هشدار امنیتی - {{
+site_name|default:"استانبول پلاس" }}{% endblock %} {% block content %}
+<h2>هشدار امنیتی</h2>
+
+<p>سلام {{ user.first_name|default:user.username }}،</p>
+
+<p>رویداد امنیتی زیر در حساب کاربری شما رخ داده است:</p>
+
+<div class="security-info">
+  <strong>جزئیات رویداد:</strong>
+  <ul style="margin: 15px 0; padding-right: 20px">
+    <li><strong>نوع رویداد:</strong> {{ event_title }}</li>
+    <li><strong>آدرس IP:</strong> {{ ip_address }}</li>
+    <li><strong>زمان:</strong> {{ details.timestamp|default:"همین الان" }}</li>
+    {% if details.location %}
+    <li><strong>مکان تقریبی:</strong> {{ details.location }}</li>
+    {% endif %} {% if details.user_agent %}
+    <li><strong>مرورگر:</strong> {{ details.user_agent }}</li>
+    {% endif %}
+  </ul>
+</div>
+
+{% if event == 'login_from_new_location' %}
+<p>
+  اگر این ورود توسط شما انجام شده، نیازی به اقدام خاصی ندارید. در غیر این صورت،
+  فوراً رمز عبور خود را تغییر دهید.
+</p>
+{% elif event == 'multiple_failed_logins' %}
+<p>
+  چندین تلاش ناموفق برای ورود به حساب شما انجام شده است. اگر این تلاش‌ها توسط
+  شما نبوده، لطفاً رمز عبور خود را تغییر دهید.
+</p>
+{% elif event == 'account_locked' %}
+<p>
+  حساب کاربری شما به دلیل تلاش‌های مکرر ناموفق موقتاً قفل شده است. اگر این
+  تلاش‌ها توسط شما نبوده، لطفاً با پشتیبانی تماس بگیرید.
+</p>
+{% elif event == 'password_changed' %}
+<p>
+  رمز عبور حساب کاربری شما تغییر کرده است. اگر این تغییر توسط شما انجام نشده،
+  فوراً با پشتیبانی تماس بگیرید.
+</p>
+{% endif %}
+
+<div class="warning">
+  <strong>اقدامات پیشنهادی:</strong>
+  <ul style="margin: 10px 0; padding-right: 20px">
+    <li>رمز عبور قوی و منحصر به فرد استفاده کنید</li>
+    <li>احراز هویت دو مرحله‌ای را فعال کنید</li>
+    <li>از شبکه‌های Wi-Fi عمومی برای ورود استفاده نکنید</li>
+    <li>مرورگر خود را به‌روزرسانی کنید</li>
+  </ul>
+</div>
+
+<div style="text-align: center; margin: 30px 0">
+  <a href="{{ site_url|default:'#' }}/auth/profile/" class="button"
+    >مدیریت حساب کاربری</a
+  >
+</div>
+
+<p>
+  اگر سؤالی دارید یا نیاز به کمک دارید، لطفاً با تیم پشتیبانی ما تماس بگیرید.
+</p>
+
+<p>
+  با تشکر،<br />
+  تیم امنیت {{ site_name|default:"استانبول پلاس" }}
+</p>
+{% endblock %}

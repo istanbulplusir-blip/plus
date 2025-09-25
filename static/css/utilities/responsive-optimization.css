@@ -1,0 +1,528 @@
+/* Responsive Design Performance Optimizations */
+
+/* Modern CSS Features with Fallbacks */
+
+/* CSS Logical Properties for Better RTL Support */
+.logical-margin-inline {
+  margin-inline-start: var(--space-4);
+  margin-inline-end: var(--space-4);
+  /* Fallback for older browsers */
+  margin-left: var(--space-4);
+  margin-right: var(--space-4);
+}
+
+.logical-padding-inline {
+  padding-inline-start: var(--space-4);
+  padding-inline-end: var(--space-4);
+  /* Fallback for older browsers */
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.logical-border-inline {
+  border-inline-start: 1px solid var(--color-gray-300);
+  border-inline-end: 1px solid var(--color-gray-300);
+  /* Fallback for older browsers */
+  border-left: 1px solid var(--color-gray-300);
+  border-right: 1px solid var(--color-gray-300);
+}
+
+/* Modern Intrinsic Web Design */
+.intrinsic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: var(--space-6);
+}
+
+.intrinsic-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.intrinsic-flex > * {
+  flex: 1 1 min(300px, 100%);
+}
+
+/* Modern Aspect Ratio with Fallbacks */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+/* Fallback for browsers without aspect-ratio support */
+@supports not (aspect-ratio: 16 / 9) {
+  .aspect-ratio-16-9 {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .aspect-ratio-16-9::before {
+    content: '';
+    display: block;
+    padding-bottom: 56.25%; /* 16:9 ratio */
+  }
+  
+  .aspect-ratio-16-9 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* CSS Subgrid Support with Fallbacks */
+@supports (grid-template-rows: subgrid) {
+  .subgrid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+  
+  .subgrid-item {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
+  }
+}
+
+@supports not (grid-template-rows: subgrid) {
+  .subgrid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+    align-items: start;
+  }
+  
+  .subgrid-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
+
+/* Modern CSS Math Functions */
+.responsive-width {
+  width: clamp(300px, 50vw, 800px);
+}
+
+.responsive-padding {
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.responsive-font-size {
+  font-size: clamp(1rem, 2.5vw, 2rem);
+}
+
+.responsive-gap {
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+/* CSS Container Units (where supported) */
+@supports (width: 1cqw) {
+  .container-responsive-text {
+    font-size: clamp(1rem, 4cqw, 2rem);
+  }
+  
+  .container-responsive-padding {
+    padding: clamp(1rem, 5cqw, 3rem);
+  }
+  
+  .container-responsive-gap {
+    gap: clamp(0.5rem, 2cqw, 1.5rem);
+  }
+}
+
+/* Modern Viewport Units with Fallbacks */
+.full-height-modern {
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
+  height: 100svh; /* Small viewport height */
+}
+
+.full-width-modern {
+  width: 100vw;
+  width: 100dvw; /* Dynamic viewport width */
+  width: 100svw; /* Small viewport width */
+}
+
+/* CSS Grid Areas for Complex Layouts */
+.layout-grid {
+  display: grid;
+  grid-template-areas: 
+    "header header"
+    "sidebar main"
+    "footer footer";
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  gap: var(--space-6);
+}
+
+.layout-header { grid-area: header; }
+.layout-sidebar { grid-area: sidebar; }
+.layout-main { grid-area: main; }
+.layout-footer { grid-area: footer; }
+
+@media (max-width: 768px) {
+  .layout-grid {
+    grid-template-areas: 
+      "header"
+      "main"
+      "sidebar"
+      "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto auto;
+  }
+}
+
+/* Modern Flexbox Patterns */
+.flex-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.flex-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.flex-sidebar > :first-child {
+  flex-basis: 250px;
+  flex-grow: 1;
+}
+
+.flex-sidebar > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: 50%;
+}
+
+/* CSS Grid Auto-Placement Optimization */
+.auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: var(--space-6);
+}
+
+.auto-grid-dense {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+  grid-auto-flow: dense;
+  gap: var(--space-4);
+}
+
+/* Performance Optimized Animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smooth-scroll {
+    scroll-behavior: auto;
+  }
+}
+
+/* Modern Image Optimization */
+.responsive-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  loading: lazy;
+}
+
+.responsive-image-contain {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  loading: lazy;
+}
+
+/* CSS Containment for Performance */
+.layout-contained {
+  contain: layout;
+}
+
+.style-contained {
+  contain: style;
+}
+
+.paint-contained {
+  contain: paint;
+}
+
+.size-contained {
+  contain: size;
+}
+
+.strict-contained {
+  contain: strict;
+}
+
+/* Modern Focus Management */
+.focus-visible-only:focus {
+  outline: none;
+}
+
+.focus-visible-only:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* CSS Custom Properties for Dynamic Theming */
+.theme-aware {
+  background-color: var(--surface-color, var(--color-white));
+  color: var(--text-color, var(--color-gray-900));
+  border-color: var(--border-color, var(--color-gray-300));
+}
+
+/* Modern CSS Nesting (where supported) */
+@supports (selector(&)) {
+  .nested-component {
+    padding: var(--space-4);
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    
+    & .title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-2);
+    }
+    
+    & .content {
+      color: var(--color-gray-600);
+      line-height: var(--line-height-relaxed);
+    }
+    
+    & .actions {
+      margin-top: var(--space-4);
+      display: flex;
+      gap: var(--space-2);
+    }
+  }
+}
+
+/* Fallback for browsers without CSS nesting */
+@supports not (selector(&)) {
+  .nested-component {
+    padding: var(--space-4);
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+  }
+  
+  .nested-component .title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-2);
+  }
+  
+  .nested-component .content {
+    color: var(--color-gray-600);
+    line-height: var(--line-height-relaxed);
+  }
+  
+  .nested-component .actions {
+    margin-top: var(--space-4);
+    display: flex;
+    gap: var(--space-2);
+  }
+}
+
+/* Modern CSS Color Functions */
+.modern-colors {
+  background: oklch(0.7 0.15 180);
+  color: oklch(0.2 0.02 180);
+  border-color: oklch(0.5 0.1 180);
+}
+
+/* Fallback for browsers without oklch support */
+@supports not (color: oklch(0.7 0.15 180)) {
+  .modern-colors {
+    background: hsl(180, 50%, 70%);
+    color: hsl(180, 10%, 20%);
+    border-color: hsl(180, 30%, 50%);
+  }
+}
+
+/* CSS Cascade Layers for Better Specificity Management */
+@layer base, components, utilities;
+
+@layer base {
+  .base-styles {
+    font-family: var(--font-family-primary);
+    line-height: var(--line-height-normal);
+    color: var(--color-gray-900);
+  }
+}
+
+@layer components {
+  .component-styles {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+  }
+}
+
+@layer utilities {
+  .utility-styles {
+    margin-top: var(--space-4) !important;
+  }
+}
+
+/* Modern CSS Scroll Snap */
+.scroll-snap-container {
+  scroll-snap-type: x mandatory;
+  overflow-x: auto;
+  display: flex;
+  gap: var(--space-4);
+}
+
+.scroll-snap-item {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  width: 300px;
+}
+
+/* CSS Anchor Positioning (future feature) */
+@supports (anchor-name: --anchor) {
+  .anchor-element {
+    anchor-name: --my-anchor;
+  }
+  
+  .positioned-element {
+    position: absolute;
+    position-anchor: --my-anchor;
+    top: anchor(bottom);
+    left: anchor(center);
+  }
+}
+
+/* Modern CSS Masonry Layout */
+@supports (grid-template-rows: masonry) {
+  .masonry-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: masonry;
+    gap: var(--space-6);
+  }
+}
+
+/* Fallback for browsers without masonry support */
+@supports not (grid-template-rows: masonry) {
+  .masonry-layout {
+    columns: 300px;
+    column-gap: var(--space-6);
+  }
+  
+  .masonry-layout > * {
+    break-inside: avoid;
+    margin-bottom: var(--space-6);
+  }
+}
+
+/* CSS View Transitions (future feature) */
+@supports (view-transition-name: slide) {
+  .view-transition {
+    view-transition-name: slide;
+  }
+}
+
+/* Modern CSS Scroll-driven Animations */
+@supports (animation-timeline: scroll()) {
+  .scroll-animation {
+    animation: fadeIn linear;
+    animation-timeline: scroll();
+    animation-range: entry 0% cover 50%;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* CSS Style Queries (future feature) */
+@supports (container-type: style) {
+  .style-query-container {
+    container-type: style;
+  }
+  
+  @container style(--theme: dark) {
+    .style-query-content {
+      background: var(--color-gray-900);
+      color: var(--color-white);
+    }
+  }
+}
+
+/* Performance Monitoring Utilities */
+.perf-critical {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px;
+}
+
+.perf-lazy {
+  content-visibility: auto;
+  contain-intrinsic-size: 200px 300px;
+}
+
+/* Modern CSS Reset Enhancements */
+.modern-reset {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.modern-reset *,
+.modern-reset *::before,
+.modern-reset *::after {
+  box-sizing: inherit;
+}
+
+.modern-reset img,
+.modern-reset picture,
+.modern-reset video,
+.modern-reset canvas,
+.modern-reset svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.modern-reset input,
+.modern-reset button,
+.modern-reset textarea,
+.modern-reset select {
+  font: inherit;
+}
+
+/* CSS Environment Variables for Safe Areas */
+.safe-area-padding {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-margin {
+  margin-top: env(safe-area-inset-top);
+  margin-right: env(safe-area-inset-right);
+  margin-bottom: env(safe-area-inset-bottom);
+  margin-left: env(safe-area-inset-left);
+}

@@ -1,0 +1,977 @@
+{% extends 'base.html' %} {% load static %} 
+
+{% block title %}ورود - Istanbul Plus{% endblock %} 
+
+{% block description %}
+ورود به حساب کاربری فروشگاه آنلاین Istanbul Plus - ورود ساده و امن با رمز عبور یا کد تأیید
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/components/forms.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/components/alerts.css' %}" />
+<link rel="stylesheet" href="{% static 'css/layouts/auth.css' %}" />
+<style>
+  /* Enhanced authentication container */
+  .auth-container {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-4);
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.05) 0%,
+      rgba(118, 75, 162, 0.05) 50%,
+      rgba(102, 126, 234, 0.05) 100%
+    );
+    position: relative;
+  }
+
+  .auth-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
+    animation: floatBackground 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes floatBackground {
+    0%, 100% { 
+      opacity: 0.3;
+      transform: scale(1) rotate(0deg);
+    }
+    33% { 
+      opacity: 0.5;
+      transform: scale(1.1) rotate(1deg);
+    }
+    66% { 
+      opacity: 0.4;
+      transform: scale(0.9) rotate(-1deg);
+    }
+  }
+
+  /* Enhanced auth card with better glassmorphism */
+  .modern-auth-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-3xl);
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+      var(--shadow-glass);
+    overflow: hidden;
+    transition: all var(--transition-slow);
+    animation: slideInUp 0.8s var(--ease-out);
+    position: relative;
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .modern-auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.6), 
+      transparent
+    );
+  }
+
+  .modern-auth-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 32px 64px -16px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+      var(--shadow-glass);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Enhanced card header */
+  .modern-auth-card .card-header {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--space-8);
+    text-align: center;
+    position: relative;
+  }
+
+  .modern-auth-card .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: var(--gradient-primary);
+    opacity: 0.6;
+  }
+
+  .modern-auth-card .card-header h1 {
+    color: var(--color-gray-900);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-2xl);
+    margin: 0;
+    font-family: var(--font-family-display);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .modern-auth-card .card-body {
+    padding: var(--space-8);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Enhanced form styling */
+  .modern-form-group {
+    margin-bottom: var(--space-6);
+    position: relative;
+  }
+
+  .modern-form-floating .form-control {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-xl);
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .modern-form-floating .form-control:focus {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--color-primary);
+    box-shadow: 
+      0 0 0 3px rgba(102, 126, 234, 0.15),
+      0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .modern-form-floating label {
+    color: var(--color-gray-700);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+  }
+
+  .modern-form-floating .form-control:focus ~ label,
+  .modern-form-floating .form-control:not(:placeholder-shown) ~ label {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Enhanced delivery method buttons */
+  .modern-delivery-group {
+    display: flex;
+    gap: var(--space-3);
+    margin: var(--space-4) 0;
+    padding: var(--space-2);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .modern-delivery-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-700);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modern-delivery-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.3), 
+      transparent
+    );
+    transition: left var(--transition-base);
+  }
+
+  .modern-delivery-btn:hover::before {
+    left: 100%;
+  }
+
+  .modern-delivery-btn:hover {
+    border-color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .modern-delivery-btn.active {
+    border-color: var(--color-primary);
+    background: linear-gradient(
+      135deg, 
+      rgba(102, 126, 234, 0.2) 0%, 
+      rgba(118, 75, 162, 0.2) 100%
+    );
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    transform: scale(1.02);
+  }
+
+  .modern-delivery-btn i {
+    font-size: var(--font-size-lg);
+  }
+
+  /* Enhanced OTP field */
+  .otp-field {
+    animation: slideDown 0.4s var(--ease-out);
+  }
+
+  @keyframes slideDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+      max-height: 0;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 200px;
+    }
+  }
+
+  .modern-otp-input {
+    text-align: center;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.3em;
+    font-family: var(--font-family-mono);
+    background: linear-gradient(
+      135deg, 
+      rgba(255, 255, 255, 0.95) 0%, 
+      rgba(255, 255, 255, 0.8) 100%
+    );
+    border: 3px solid rgba(102, 126, 234, 0.3);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .modern-otp-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 
+      0 0 0 3px rgba(102, 126, 234, 0.2),
+      0 12px 35px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+  }
+
+  /* Enhanced buttons */
+  .modern-btn {
+    border-radius: var(--radius-xl);
+    padding: var(--space-4) var(--space-8);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .modern-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.2), 
+      transparent
+    );
+    transition: left var(--transition-base);
+  }
+
+  .modern-btn:hover::before {
+    left: 100%;
+  }
+
+  .modern-btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .modern-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #7c8df0 0%, #8659b8 100%);
+  }
+
+  .modern-btn-secondary {
+    background: rgba(108, 117, 125, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+
+  .modern-btn-secondary:hover {
+    transform: translateY(-3px);
+    background: rgba(108, 117, 125, 1);
+    box-shadow: 0 12px 35px rgba(108, 117, 125, 0.3);
+  }
+
+  /* Loading states */
+  .btn-loading {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .loading-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Success animation */
+  .form-success-animation {
+    animation: successPulse 0.6s var(--ease-out);
+  }
+
+  @keyframes successPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+  }
+
+  /* Enhanced links */
+  .modern-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .modern-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+  }
+
+  .modern-link:hover {
+    color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+
+  .modern-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Dark theme adjustments */
+  [data-theme="dark"] .modern-auth-card {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  [data-theme="dark"] .modern-auth-card .card-header h1 {
+    color: var(--color-white);
+  }
+
+  [data-theme="dark"] .modern-form-floating .form-control {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--color-white);
+  }
+
+  [data-theme="dark"] .modern-delivery-btn {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--color-gray-300);
+  }
+
+  /* Responsive design */
+  @media (max-width: 576px) {
+    .auth-container {
+      padding: var(--space-4) var(--space-2);
+    }
+    
+    .modern-auth-card {
+      border-radius: var(--radius-2xl);
+      margin: var(--space-2);
+    }
+    
+    .modern-auth-card .card-header,
+    .modern-auth-card .card-body {
+      padding: var(--space-6);
+    }
+    
+    .modern-delivery-group {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    
+    .modern-btn {
+      padding: var(--space-3) var(--space-6);
+      min-height: 48px;
+    }
+  }
+
+  /* Accessibility enhancements */
+  @media (prefers-reduced-motion: reduce) {
+    .modern-auth-card,
+    .modern-form-floating .form-control,
+    .modern-delivery-btn,
+    .modern-btn {
+      animation: none;
+      transition: none;
+    }
+    
+    .modern-auth-card:hover,
+    .modern-btn:hover {
+      transform: none;
+    }
+  }
+
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .modern-auth-card {
+      background: var(--color-white);
+      border: 3px solid var(--color-gray-800);
+    }
+    
+    .modern-form-floating .form-control {
+      border-width: 3px;
+      background: var(--color-white);
+    }
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card modern-auth-card">
+    <div class="card-header">
+      <h1>
+        <i class="bi bi-box-arrow-in-right me-3" aria-hidden="true"></i>
+        ورود به حساب کاربری
+      </h1>
+      <p class="mb-0 mt-2 text-muted">
+        به فروشگاه Istanbul Plus خوش آمدید
+      </p>
+    </div>
+    
+    <div class="card-body">
+      <!-- Modern alerts will be handled by the ModernAlerts system -->
+
+      <form 
+        id="login-form" 
+        novalidate 
+        aria-labelledby="login-heading"
+        class="modern-form"
+      >
+        {% csrf_token %}
+        <div class="visually-hidden" id="login-heading">
+          فرم ورود به حساب کاربری Istanbul Plus
+        </div>
+
+        <!-- Username/Email/Phone field -->
+        <div class="modern-form-group">
+          <div class="modern-form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="نام کاربری، ایمیل یا شماره موبایل"
+              aria-describedby="username-help"
+              aria-required="true"
+              required
+              autocomplete="username"
+              autofocus
+            />
+            <label for="username">
+              <i class="bi bi-person me-2" aria-hidden="true"></i>
+              نام کاربری، ایمیل یا شماره موبایل
+            </label>
+            <div id="username-help" class="form-text">
+              می‌توانید با نام کاربری، ایمیل یا شماره موبایل وارد شوید
+            </div>
+            <div class="invalid-feedback">
+              <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>
+              لطفاً نام کاربری، ایمیل یا شماره موبایل معتبر وارد کنید
+            </div>
+          </div>
+        </div>
+
+        <!-- Password field -->
+        <div class="modern-form-group">
+          <div class="modern-form-floating">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="رمز عبور"
+              aria-describedby="password-help"
+              autocomplete="current-password"
+            />
+            <label for="password">
+              <i class="bi bi-key me-2" aria-hidden="true"></i>
+              رمز عبور (اختیاری)
+            </label>
+            <div id="password-help" class="form-text">
+              <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+              رمز عبور اختیاری است. می‌توانید با کد تأیید وارد شوید
+            </div>
+            <div class="invalid-feedback">
+              <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>
+              رمز عبور نامعتبر است
+            </div>
+          </div>
+        </div>
+
+        <!-- OTP Delivery Method Selection -->
+        <fieldset class="modern-form-group">
+          <legend class="form-label fw-medium mb-3">
+            <i class="bi bi-send me-2" aria-hidden="true"></i>
+            روش دریافت کد تأیید:
+          </legend>
+          <div
+            class="modern-delivery-group"
+            role="radiogroup"
+            aria-labelledby="delivery-method-legend"
+          >
+            <div
+              class="modern-delivery-btn active"
+              data-method="sms"
+              role="radio"
+              aria-checked="true"
+              tabindex="0"
+              aria-describedby="sms-desc"
+              aria-label="انتخاب پیامک برای دریافت کد تأیید"
+            >
+              <i class="bi bi-phone" aria-hidden="true"></i>
+              <span>پیامک</span>
+              <span class="visually-hidden" id="sms-desc">
+                دریافت کد تأیید از طریق پیامک به شماره موبایل
+              </span>
+            </div>
+            <div
+              class="modern-delivery-btn"
+              data-method="email"
+              role="radio"
+              aria-checked="false"
+              tabindex="-1"
+              aria-describedby="email-desc"
+              aria-label="انتخاب ایمیل برای دریافت کد تأیید"
+            >
+              <i class="bi bi-envelope" aria-hidden="true"></i>
+              <span>ایمیل</span>
+              <span class="visually-hidden" id="email-desc">
+                دریافت کد تأیید از طریق ایمیل
+              </span>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- OTP field (initially hidden) -->
+        <div
+          class="modern-form-group otp-field"
+          style="display: none"
+          aria-hidden="true"
+        >
+          <div class="modern-form-floating">
+            <input
+              type="text"
+              class="form-control modern-otp-input"
+              id="otp_code"
+              name="otp_code"
+              placeholder="کد تأیید"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              inputmode="numeric"
+              aria-describedby="otp-help"
+              autocomplete="one-time-code"
+            />
+            <label for="otp_code">
+              <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
+              کد تأیید
+            </label>
+            <div id="otp-help" class="form-text">
+              <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+              کد 6 رقمی ارسال شده را وارد کنید
+            </div>
+            <div class="invalid-feedback">
+              <i class="bi bi-exclamation-circle me-1" aria-hidden="true"></i>
+              کد تأیید نامعتبر است
+            </div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="d-grid gap-3 mb-4">
+          <button
+            type="button"
+            class="modern-btn modern-btn-secondary send-otp-btn"
+            aria-describedby="send-otp-desc"
+            id="send-otp-button"
+          >
+            <span class="loading-spinner bi bi-arrow-clockwise d-none" aria-hidden="true"></span>
+            <i class="bi bi-send" aria-hidden="true"></i>
+            <span class="btn-text">ارسال کد تأیید</span>
+            <span class="visually-hidden" id="send-otp-desc">
+              ارسال کد تأیید به شماره موبایل یا ایمیل انتخاب شده
+            </span>
+          </button>
+          
+          <button
+            type="submit"
+            class="modern-btn modern-btn-primary"
+            aria-describedby="login-desc"
+            id="login-button"
+          >
+            <span class="loading-spinner bi bi-arrow-clockwise d-none" aria-hidden="true"></span>
+            <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+            <span class="btn-text">ورود به حساب</span>
+            <span class="visually-hidden" id="login-desc">
+              ورود به حساب کاربری با اطلاعات وارد شده
+            </span>
+          </button>
+        </div>
+
+        <!-- Additional links -->
+        <nav class="text-center" aria-label="لینک‌های مرتبط و اضافی">
+          <div class="mb-3">
+            <a
+              href="{% url 'users:password-reset-request' %}"
+              class="modern-link"
+              aria-describedby="forgot-password-desc"
+            >
+              <i class="bi bi-key" aria-hidden="true"></i>
+              فراموشی رمز عبور
+              <span class="visually-hidden" id="forgot-password-desc">
+                بازیابی رمز عبور فراموش شده از طریق ایمیل یا پیامک
+              </span>
+            </a>
+          </div>
+          
+          <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap">
+            <span class="text-muted">حساب کاربری ندارید؟</span>
+            <a
+              href="{% url 'users:register' %}"
+              class="modern-link fw-semibold"
+              aria-describedby="register-desc"
+            >
+              <i class="bi bi-person-plus" aria-hidden="true"></i>
+              ثبت‌نام رایگان
+              <span class="visually-hidden" id="register-desc">
+                ایجاد حساب کاربری جدید در فروشگاه Istanbul Plus
+              </span>
+            </a>
+          </div>
+        </nav>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %} 
+
+{% block extra_js %}
+<script src="{% static 'js/auth.js' %}"></script>
+<script src="{% static 'js/modern-alerts.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Enhanced form interactions
+  const form = document.getElementById('login-form');
+  const sendOtpBtn = document.getElementById('send-otp-button');
+  const loginBtn = document.getElementById('login-button');
+  const otpField = document.querySelector('.otp-field');
+  const deliveryBtns = document.querySelectorAll('.modern-delivery-btn');
+  
+  // Delivery method selection
+  deliveryBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      deliveryBtns.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-checked', 'false');
+        b.setAttribute('tabindex', '-1');
+      });
+      
+      this.classList.add('active');
+      this.setAttribute('aria-checked', 'true');
+      this.setAttribute('tabindex', '0');
+      this.focus();
+    });
+    
+    btn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  });
+  
+  // OTP button click
+  sendOtpBtn.addEventListener('click', async function() {
+    const spinner = this.querySelector('.loading-spinner');
+    const icon = this.querySelector('.bi-send');
+    const text = this.querySelector('.btn-text');
+    
+    // Validate username field
+    const usernameField = form.querySelector('#username');
+    if (!usernameField.value.trim()) {
+      if (window.ModernAlerts) {
+        window.ModernAlerts.error('لطفاً نام کاربری، ایمیل یا شماره موبایل را وارد کنید', 'خطا');
+      }
+      usernameField.focus();
+      return;
+    }
+    
+    // Show loading state
+    this.classList.add('btn-loading');
+    spinner.classList.remove('d-none');
+    icon.classList.add('d-none');
+    text.textContent = 'در حال ارسال...';
+    
+    try {
+      // Get selected delivery method
+      const selectedMethod = document.querySelector('.modern-delivery-btn.active');
+      const deliveryMethod = selectedMethod ? selectedMethod.dataset.method : 'sms';
+      
+      // Determine contact info based on username field
+      const username = usernameField.value.trim();
+      let contactInfo = username;
+      
+      // If username looks like a phone number, use it directly
+      // If it looks like an email, use it directly
+      // Otherwise, try to find user and get their phone/email
+      
+      // Send OTP request to API
+      const response = await fetch('/api/users/send-otp/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+          contact_info: contactInfo,
+          delivery_method: deliveryMethod,
+          purpose: 'login'
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Show OTP field
+        otpField.style.display = 'block';
+        otpField.setAttribute('aria-hidden', 'false');
+        otpField.querySelector('input').focus();
+        
+        // Show success message
+        if (window.ModernAlerts) {
+          window.ModernAlerts.success('کد تأیید با موفقیت ارسال شد', 'موفق');
+        }
+        
+        // Update button text
+        text.textContent = 'ارسال مجدد کد';
+      } else {
+        // Show error message
+        if (window.ModernAlerts) {
+          window.ModernAlerts.error(result.message || 'خطا در ارسال کد تأیید', 'خطا');
+        }
+      }
+    } catch (error) {
+      console.error('OTP send error:', error);
+      
+      // Show error message
+      if (window.ModernAlerts) {
+        window.ModernAlerts.error('خطا در ارتباط با سرور', 'خطا');
+      }
+    } finally {
+      // Reset button state
+      this.classList.remove('btn-loading');
+      spinner.classList.add('d-none');
+      icon.classList.remove('d-none');
+    }
+  });
+  
+  // Form submission
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const spinner = loginBtn.querySelector('.loading-spinner');
+    const icon = loginBtn.querySelector('.bi-box-arrow-in-right');
+    const text = loginBtn.querySelector('.btn-text');
+    
+    // Show loading state
+    loginBtn.classList.add('btn-loading');
+    spinner.classList.remove('d-none');
+    icon.classList.add('d-none');
+    text.textContent = 'در حال ورود...';
+    
+    try {
+      // Prepare form data
+      const formData = new FormData(form);
+      const loginData = {
+        username: formData.get('username'),
+        password: formData.get('password'),
+        otp_code: formData.get('otp_code')
+      };
+      
+      // Remove empty fields
+      Object.keys(loginData).forEach(key => {
+        if (!loginData[key]) {
+          delete loginData[key];
+        }
+      });
+      
+      // Send login request to API
+      const response = await fetch('/api/users/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(loginData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Show success state with modern animation
+        form.classList.add('form-success-animation');
+        
+        // Show modern success message
+        if (window.ModernAlerts) {
+          window.ModernAlerts.success('ورود با موفقیت انجام شد. در حال انتقال...', 'خوش آمدید');
+        }
+        
+        // Show success animation in form (with null check)
+        const formBody = form.querySelector('.card-body');
+        if (formBody && window.modernAlerts && window.modernAlerts.showSuccessAnimation) {
+          window.modernAlerts.showSuccessAnimation(formBody);
+        }
+        
+        // Store tokens if provided
+        if (result.access) {
+          localStorage.setItem('access_token', result.access);
+        }
+        if (result.refresh) {
+          localStorage.setItem('refresh_token', result.refresh);
+        }
+        
+        // Redirect after success animation
+          setTimeout(() => {
+            // Use the smart redirect URL from the server response
+            // Priority: 1. result.redirect_url, 2. next parameter, 3. fallback to home
+            if (result.redirect_url && result.redirect_url !== '' && result.redirect_url !== null) {
+              window.location.href = result.redirect_url;
+            } else if ('{{ next }}' && '{{ next }}' !== '' && '{{ next }}' !== '/') {
+              window.location.href = '{{ next }}';
+            } else {
+              window.location.href = '/';
+            }
+          }, 2000);
+      } else {
+        // Show error message
+        if (window.ModernAlerts) {
+          window.ModernAlerts.error(result.message || 'خطا در ورود', 'خطا');
+        }
+        
+        // Reset button state
+        loginBtn.classList.remove('btn-loading');
+        spinner.classList.add('d-none');
+        icon.classList.remove('d-none');
+        text.textContent = 'ورود به حساب';
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      // Show error message
+      if (window.ModernAlerts) {
+        window.ModernAlerts.error('خطا در ارتباط با سرور', 'خطا');
+      }
+      
+      // Reset button state
+      loginBtn.classList.remove('btn-loading');
+      spinner.classList.add('d-none');
+      icon.classList.remove('d-none');
+      text.textContent = 'ورود به حساب';
+    }
+  });
+  
+  // Enhanced input interactions
+  const inputs = form.querySelectorAll('.form-control');
+  inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+      this.closest('.modern-form-floating').classList.add('focused');
+    });
+    
+    input.addEventListener('blur', function() {
+      this.closest('.modern-form-floating').classList.remove('focused');
+    });
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,125 @@
+/* Logo Component Styles */
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.logo-container:hover {
+  transform: translateY(-1px);
+}
+
+.logo {
+  display: block;
+  transition: all 0.2s ease-in-out;
+  border-radius: 4px;
+}
+
+.logo-container:hover .logo {
+  transform: scale(1.05);
+  filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.2));
+}
+
+.logo-text {
+  font-family: "Poppins", "Vazir", sans-serif;
+  font-weight: 700;
+  color: #667eea;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.logo-container:hover .logo-text {
+  color: var(--color-primary-dark);
+}
+
+/* Size variants */
+.logo-small {
+  width: 24px;
+  height: 24px;
+}
+
+.logo-medium {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-large {
+  width: 48px;
+  height: 48px;
+}
+
+.logo-xlarge {
+  width: 64px;
+  height: 64px;
+}
+
+/* Context-specific styling */
+.logo-navbar .logo-text {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.logo-footer .logo-text {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+.logo-hero .logo-text {
+  font-size: var(--font-size-2xl);
+}
+
+.logo-card .logo-text {
+  font-size: var(--font-size-sm);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .logo-text {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .logo-container:hover .logo-text {
+  color: var(--color-primary-light, #8a9eff);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .logo-navbar .logo-text {
+    font-size: var(--font-size-base);
+  }
+  
+  .logo-hero .logo-text {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .logo-container {
+  flex-direction: row-reverse;
+}
+
+/* Focus states for accessibility */
+.logo-container:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Loading states */
+.logo[loading="lazy"] {
+  opacity: 0;
+  animation: logoFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes logoFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

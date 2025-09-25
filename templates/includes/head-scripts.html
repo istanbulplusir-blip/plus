@@ -1,0 +1,20 @@
+{% load static %}
+<!-- Cross-browser support and feature detection - load early -->
+<script>
+  // Remove no-js class immediately
+  document.documentElement.classList.remove("no-js");
+  document.documentElement.classList.add("js");
+</script>
+<script src="{% static 'js/cross-browser-support.js' %}" defer></script>
+
+<!-- Theme detection script - inline for immediate execution -->
+<script>
+  (function () {
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    const theme = savedTheme || (prefersDark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>

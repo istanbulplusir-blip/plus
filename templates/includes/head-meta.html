@@ -1,0 +1,56 @@
+{% load static %}
+<!-- Basic HTML5 Meta Tags -->
+<meta charset="UTF-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+/>
+<meta name="theme-color" content="#667eea" />
+<meta name="color-scheme" content="light dark" />
+
+<!-- SEO Meta Tags -->
+<meta
+  name="description"
+  content="{% block description %}{{ default_meta_description|default:'فروشگاه آنلاین Istanbul Plus - محصولات با کیفیت و ارسال سریع' }}{% endblock %}"
+/>
+<meta
+  name="keywords"
+  content="{% block keywords %}{{ default_meta_keywords|default:'فروشگاه آنلاین, خرید اینترنتی, Istanbul Plus' }}{% endblock %}"
+/>
+<meta name="author" content="{{ site_name|default:'Istanbul Plus' }}" />
+<meta name="robots" content="{% block robots %}index, follow{% endblock %}" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta
+  property="og:title"
+  content="{% block og_title %}{{ site_name|default:'Istanbul Plus' }}{% endblock %}"
+/>
+<meta
+  property="og:description"
+  content="{% block og_description %}{{ default_meta_description|default:'فروشگاه آنلاین Istanbul Plus - محصولات با کیفیت و ارسال سریع' }}{% endblock %}"
+/>
+<meta
+  property="og:image"
+  content="{% block og_image %}{% if default_og_image %}{{ default_og_image.url }}{% else %}{% static 'Istanbulplusir-logo-highquality.png' %}{% endif %}{% endblock %}"
+/>
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="{{ request.build_absolute_uri }}" />
+<meta
+  property="twitter:title"
+  content="{% block twitter_title %}{{ site_name|default:'Istanbul Plus' }}{% endblock %}"
+/>
+<meta
+  property="twitter:description"
+  content="{% block twitter_description %}{{ default_meta_description|default:'فروشگاه آنلاین Istanbul Plus - محصولات با کیفیت و ارسال سریع' }}{% endblock %}"
+/>
+<meta
+  property="twitter:image"
+  content="{% block twitter_image %}{% if default_og_image %}{{ default_og_image.url }}{% else %}{% static 'Istanbulplusir-logo-highquality.png' %}{% endif %}{% endblock %}"
+/>
+
+<!-- Page Title -->
+<title>{% block title %}{{ site_name|default:'Istanbul Plus' }}{% endblock %}</title>

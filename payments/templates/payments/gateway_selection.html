@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}انتخاب درگاه پرداخت{% endblock %}
+{% block extra_css %}
+<style>
+  .gateway-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  .gateway-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  .gateway-card.selected {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+  .gateway-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+  }
+  .order-summary {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 25px;
+  }
+  .amount-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="text-center mb-5">
+        <h2 class="mb-3">انتخاب درگاه پرداخت</h2>
+        <p class="text-muted">لطفاً درگاه پرداخت مورد نظر خود را انتخاب کنید</p>
+      </div>
+      
+      {% if order %}
+        <!-- Order Summary -->
+        <div class="order-summary mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h5 class="mb-2">خلاصه سفارش</h5>
+              <p class="mb-1"><strong>شماره سفارش:</strong> {{ order.id }}</p>
+              <p class="mb-1"><strong>تعداد محصولات:</strong> {{ order.items.count }}</p>
+              <p class="mb-0"><strong>تحویل گیرنده:</strong> {{ order.billing_name }}</p>
+            </div>
+            <div class="col-md-4 text-end">
+              <div class="amount-display">{{ total_amount|floatformat:0 }} تومان</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Gateway Selection Form -->
+        <form method="post" id="gatewayForm">
+          {% csrf_token %}
+          <div class="row">
+            {% for gateway in gateways %}
+              <div class="col-md-4 mb-4">
+                <div class="card gateway-card h-100" onclick="selectGateway('{{ gateway.name }}')">
+                  <div class="card-body text-center">
+                    <div class="gateway-icon">
+                      <i class="bi {{ gateway.icon }} text-{{ gateway.color }}"></i>
+                    </div>
+                    <h5 class="card-title">{{ gateway.title }}</h5>
+                    <p class="card-text">{{ gateway.description }}</p>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="gateway" 
+                             id="gateway_{{ gateway.name }}" value="{{ gateway.name }}">
+                      <label class="form-check-label" for="gateway_{{ gateway.name }}">
+                        انتخاب {{ gateway.title }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          
+          <!-- Payment Button -->
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg" id="payButton" disabled>
+              <i class="bi bi-credit-card me-2"></i>
+              پرداخت {{ total_amount|floatformat:0 }} تومان
+            </button>
+          </div>
+        </form>
+        
+      {% else %}
+        <div class="alert alert-danger text-center">
+          <h4>خطا در بارگذاری اطلاعات</h4>
+          <p>لطفاً دوباره تلاش کنید</p>
+          <a href="{% url 'orders:order_list' %}" class="btn btn-primary">
+            بازگشت به لیست سفارشات
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectGateway(gatewayName) {
+    // Remove selected class from all cards
+    document.querySelectorAll('.gateway-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked card
+    event.currentTarget.classList.add('selected');
+    
+    // Check the radio button
+    document.getElementById('gateway_' + gatewayName).checked = true;
+    
+    // Enable pay button
+    document.getElementById('payButton').disabled = false;
+}
+
+// Form submission
+document.getElementById('gatewayForm').addEventListener('submit', function(e) {
+    const selectedGateway = document.querySelector('input[name="gateway"]:checked');
+    if (!selectedGateway) {
+        e.preventDefault();
+        alert('لطفاً درگاه پرداخت را انتخاب کنید');
+        return;
+    }
+    
+    // Show loading state
+    const button = document.getElementById('payButton');
+    button.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>در حال انتقال به درگاه پرداخت...';
+    button.disabled = true;
+});
+</script>
+{% endblock %}

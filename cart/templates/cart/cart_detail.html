@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% block title %}سبد خرید{% endblock %}
+
+{% block extra_css %}
+<style>
+  .cart-item {
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px 0;
+    transition: all 0.3s ease-out;
+  }
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+  .cart-item.removing {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  
+  /* Animation for cart summary updates */
+  .cart-summary-updating {
+    animation: highlightUpdate 0.5s ease-in-out;
+  }
+  
+  @keyframes highlightUpdate {
+    0% { background-color: rgba(40, 167, 69, 0.1); }
+    50% { background-color: rgba(40, 167, 69, 0.3); }
+    100% { background-color: transparent; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">
+            <i class="bi bi-cart3 me-2"></i>
+            سبد خرید شما
+          </h5>
+        </div>
+        <div class="card-body">
+          {% if cart and cart.items.all %}
+            {% for item in cart.items.all %}
+              <div class="cart-item" data-item-id="{{ item.id }}">
+                <div class="row align-items-center">
+                  <div class="col-md-6">
+                    <h6 class="mb-1">{{ item.product.name }}</h6>
+                    <small class="text-muted">{{ item.product.description|truncatechars:100 }}</small>
+                  </div>
+                  <div class="col-md-2 text-center">
+                    <span class="fw-bold">{{ item.quantity }} عدد</span>
+                  </div>
+                  <div class="col-md-2 text-center">
+                    <span class="fw-bold">{{ item.product.price|floatformat:0 }} تومان</span>
+                  </div>
+                  <div class="col-md-2 text-end">
+                    <span class="fw-bold text-primary">{{ item.product.price|floatformat:0 }} تومان</span>
+                    <br>
+                    <button class="btn btn-sm btn-outline-danger mt-1" onclick="removeItem({{ item.id }})">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-center py-5">
+              <i class="bi bi-cart-x display-1 text-muted"></i>
+              <h5 class="mt-3">سبد خرید شما خالی است</h5>
+              <p class="text-muted">محصولات مورد نظر خود را به سبد خرید اضافه کنید</p>
+              <a href="{% url 'products:product_list' %}" class="btn btn-primary">
+                <i class="bi bi-arrow-left me-2"></i>
+                ادامه خرید
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">خلاصه سفارش</h5>
+        </div>
+        <div class="card-body">
+          {% if cart and cart.items.all %}
+            <div class="d-flex justify-content-between mb-2">
+              <span>جمع کل:</span>
+              <span id="cart-subtotal">{{ cart.total_price|floatformat:0 }} تومان</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span>تخفیف:</span>
+              <span id="cart-discount">{{ cart.discount_amount|floatformat:0 }} تومان</span>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between mb-3">
+              <strong>مبلغ قابل پرداخت:</strong>
+              <strong id="cart-total">{{ cart.final_price|floatformat:0 }} تومان</strong>
+            </div>
+            {% if user.is_authenticated %}
+              <a href="{% url 'orders:checkout' %}" class="btn btn-primary w-100">
+                ادامه فرآیند خرید
+              </a>
+            {% else %}
+              <div class="alert alert-info">
+                <p class="mb-2">برای تکمیل خرید، ابتدا وارد حساب کاربری خود شوید یا ثبت‌نام کنید.</p>
+                <div class="d-flex gap-2">
+                  <a href="{% url 'users:login' %}" class="btn btn-outline-primary">
+                    ورود
+                  </a>
+                  <a href="{% url 'users:register' %}" class="btn btn-primary">
+                    ثبت‌نام
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+          {% else %}
+            <p class="text-muted">سبد خرید خالی است</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Helper function to update cart count
+  function updateCartCount() {
+    fetch('/api/cart/count/')
+      .then(response => response.json())
+      .then(data => {
+        // Update cart count in navigation if element exists
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(element => {
+          element.textContent = data.count;
+        });
+      })
+      .catch(error => {
+        console.error('Error updating cart count:', error);
+      });
+  }
+
+  // Helper function to update cart summary
+  function updateCartSummary() {
+    fetch('/api/cart/total/')
+      .then(response => response.json())
+      .then(data => {
+        // Update cart summary elements
+        const subtotalElement = document.getElementById('cart-subtotal');
+        const discountElement = document.getElementById('cart-discount');
+        const totalElement = document.getElementById('cart-total');
+        
+        if (subtotalElement) {
+          subtotalElement.textContent = data.total + ' تومان';
+          // Add animation
+          subtotalElement.classList.add('cart-summary-updating');
+          setTimeout(() => subtotalElement.classList.remove('cart-summary-updating'), 500);
+        }
+        if (discountElement) {
+          discountElement.textContent = '0 تومان'; // No discount for now
+        }
+        if (totalElement) {
+          totalElement.textContent = data.total + ' تومان';
+          // Add animation
+          totalElement.classList.add('cart-summary-updating');
+          setTimeout(() => totalElement.classList.remove('cart-summary-updating'), 500);
+        }
+      })
+      .catch(error => {
+        console.error('Error updating cart summary:', error);
+      });
+  }
+
+  // Helper function to show success message
+  function showSuccessMessage(message) {
+    // Create a temporary success message
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed';
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+      <i class="bi bi-check-circle me-2"></i>
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      if (alertDiv.parentNode) {
+        alertDiv.remove();
+      }
+    }, 3000);
+  }
+
+
+  function removeItem(itemId) {
+    if (confirm('آیا از حذف این محصول اطمینان دارید؟')) {
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+      if (!csrfToken) {
+        alert('خطا: توکن امنیتی یافت نشد');
+        return;
+      }
+      
+      fetch(`/api/cart/items/${itemId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRFToken': csrfToken.value,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        if (response.ok) {
+          // For DELETE requests, we don't need to parse JSON
+          // Status 204 (No Content) means successful deletion
+          console.log('Item deleted successfully');
+          
+          // Remove the item from DOM with animation
+          const cartItem = document.querySelector(`[data-item-id="${itemId}"]`);
+          if (cartItem) {
+            // Add removing class for animation
+            cartItem.classList.add('removing');
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+              cartItem.remove();
+            }, 300);
+          }
+          
+          // Update cart count and summary
+          updateCartCount();
+          updateCartSummary();
+          
+          // Show success message
+          showSuccessMessage('محصول با موفقیت از سبد خرید حذف شد');
+          
+          // Check if cart is empty and show message
+          const remainingItems = document.querySelectorAll('.cart-item');
+          if (remainingItems.length === 0) {
+            setTimeout(() => {
+              location.reload(); // Reload to show empty cart message
+            }, 1000);
+          }
+        } else {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+      })
+      .catch(error => {
+        console.error('Delete error:', error);
+        alert('خطا در حذف محصول: ' + error.message);
+      });
+    }
+  }
+</script>
+{% endblock %}

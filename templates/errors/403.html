@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}دسترسی مجاز نیست{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <div class="mb-4">
+            <i
+              class="bi bi-x-circle-fill"
+              style="font-size: 5rem"
+              aria-hidden="true"
+            ></i>
+          </div>
+          <h2 class="card-title text-danger">دسترسی مجاز نیست</h2>
+          <p class="card-text">
+            {{ message|default:"شما اجازه دسترسی به این صفحه را ندارید." }}
+          </p>
+          <div class="mt-4">
+            <a href="{% url 'core:home' %}" class="btn btn-primary">
+              <i class="bi bi-house-door" aria-hidden="true"></i> بازگشت به صفحه
+              اصلی
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

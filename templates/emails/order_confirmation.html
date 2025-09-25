@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تایید سفارش</title>
+    <style>
+        body {
+            font-family: 'Tahoma', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .order-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .product-item {
+            border-bottom: 1px solid #dee2e6;
+            padding: 15px 0;
+        }
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        .total {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #495057;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background-color: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>تایید سفارش</h1>
+            <p>سفارش شما با موفقیت ثبت شد</p>
+        </div>
+        
+        <p>سلام {{ user.get_full_name|default:user.username }}،</p>
+        
+        <p>سفارش شما با موفقیت ثبت شد. جزئیات سفارش در زیر آمده است:</p>
+        
+        <div class="order-info">
+            <h3>اطلاعات سفارش</h3>
+            <p><strong>شماره سفارش:</strong> {{ order.id }}</p>
+            <p><strong>تاریخ سفارش:</strong> {{ order.created_at|date:"Y/m/d H:i" }}</p>
+            <p><strong>وضعیت:</strong> {{ order.get_status_display }}</p>
+        </div>
+        
+        <h3>محصولات سفارش:</h3>
+        {% for item in order.items.all %}
+        <div class="product-item">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ item.product.name }}</strong>
+                    <br>
+                    <small>تعداد: {{ item.quantity }}</small>
+                </div>
+                <div>
+                    <strong>{{ item.price|floatformat:0 }} تومان</strong>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="total">
+            مجموع: {{ order.items.all|length }} محصول
+        </div>
+        
+        <div class="order-info">
+            <h3>اطلاعات تحویل</h3>
+            <p><strong>نام تحویل گیرنده:</strong> {{ order.billing_name }}</p>
+            <p><strong>شماره تماس:</strong> {{ order.billing_phone }}</p>
+            <p><strong>آدرس:</strong> {{ order.billing_address }}</p>
+            <p><strong>شهر:</strong> {{ order.billing_city }}</p>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ site_url }}/orders/{{ order.id }}/" class="btn">مشاهده سفارش</a>
+            <a href="{{ site_url }}/orders/" class="btn">لیست سفارشات</a>
+        </div>
+        
+        <div class="footer">
+            <p>با تشکر از انتخاب شما</p>
+            <p>تیم پشتیبانی Istanbul Plus</p>
+            <p><small>این ایمیل به صورت خودکار ارسال شده است. لطفاً پاسخ ندهید.</small></p>
+        </div>
+    </div>
+</body>
+</html>

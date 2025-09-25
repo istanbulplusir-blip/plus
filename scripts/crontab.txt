@@ -1,0 +1,17 @@
+# Crontab configuration for Istanbul Plus E-commerce
+# Install with: crontab scripts/crontab.txt
+
+# Clean up expired data every hour
+0 * * * * /path/to/venv/bin/python /path/to/project/manage.py cleanup_expired_data
+
+# Optimize database daily at 2 AM
+0 2 * * * /path/to/venv/bin/python /path/to/project/manage.py optimize_db --analyze
+
+# Weekly database vacuum (PostgreSQL only) - Sundays at 3 AM
+0 3 * * 0 /path/to/venv/bin/python /path/to/project/manage.py optimize_db --vacuum --analyze
+
+# Clear Django cache daily at 4 AM
+0 4 * * * /path/to/venv/bin/python /path/to/project/manage.py shell -c "from django.core.cache import cache; cache.clear()"
+
+# Generate security reports weekly - Mondays at 9 AM
+0 9 * * 1 /path/to/venv/bin/python /path/to/project/manage.py generate_security_report

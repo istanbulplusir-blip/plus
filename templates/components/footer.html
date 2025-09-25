@@ -1,0 +1,176 @@
+{% load static %}
+<!-- Enhanced modern footer with glassmorphism and 2025 design -->
+<footer
+  class="modern-footer scroll-fade-up"
+  role="contentinfo"
+  aria-label="اطلاعات سایت"
+>
+  <div class="container py-5">
+    <div class="row g-4">
+      <!-- Brand and social section -->
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand">
+          <h5 class="d-flex align-items-center">
+            {% load site_tags %}
+            {% render_logo size="small" quality="high" logo_context="footer" show_text=true %}
+          </h5>
+          {% get_site_content 'footer_description' as footer_desc %}
+          <p>
+            {% if footer_desc %}
+              {{ footer_desc.content|safe }}
+            {% else %}
+              فروشگاه آنلاین محصولات با کیفیت و ارسال سریع در سراسر کشور. تجربه
+              خرید مطمئن و آسان با بهترین قیمت‌ها.
+            {% endif %}
+          </p>
+          {% render_social_links show_icons=True %}
+        </div>
+      </div>
+
+      <!-- Quick access links -->
+      <div class="col-lg-2 col-md-6">
+        <h6>دسترسی سریع</h6>
+        <nav aria-label="لینک‌های دسترسی سریع">
+          <ul class="footer-links">
+            {% for item in quick_access_menu %}
+            <li>
+              <a href="{{ item.url }}" {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                {% if item.icon_class %}
+                <i class="{{ item.icon_class }} me-1" aria-hidden="true"></i>
+                {% endif %}
+                {{ item.title }}
+              </a>
+            </li>
+            {% empty %}
+            <!-- Fallback links -->
+            <li>
+              <a href="{% url 'core:home' %}">
+                <i class="bi bi-house-door me-1" aria-hidden="true"></i>
+                خانه
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'products:product_list' %}">
+                <i class="bi bi-grid me-1" aria-hidden="true"></i>
+                محصولات
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'core:about' %}">
+                <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+                درباره ما
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'core:contact' %}">
+                <i class="bi bi-envelope me-1" aria-hidden="true"></i>
+                تماس با ما
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Customer services -->
+      <div class="col-lg-3 col-md-6">
+        <h6>خدمات مشتریان</h6>
+        <nav aria-label="خدمات مشتریان">
+          <ul class="footer-links">
+            {% for item in customer_service_menu %}
+            <li>
+              <a href="{{ item.url }}" {% if item.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                {% if item.icon_class %}
+                <i class="{{ item.icon_class }} me-1" aria-hidden="true"></i>
+                {% endif %}
+                {{ item.title }}
+              </a>
+            </li>
+            {% empty %}
+            <!-- Fallback links -->
+            <li>
+              <a href="#">
+                <i class="bi bi-question-circle me-1" aria-hidden="true"></i>
+                راهنمای خرید
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="bi bi-truck me-1" aria-hidden="true"></i>
+                شیوه‌های ارسال
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="bi bi-arrow-return-left me-1" aria-hidden="true"></i>
+                مرجوعی کالا
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="bi bi-file-text me-1" aria-hidden="true"></i>
+                شرایط استفاده
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="bi bi-shield-check me-1" aria-hidden="true"></i>
+                حریم خصوصی
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="bi bi-headset me-1" aria-hidden="true"></i>
+                پشتیبانی ۲۴/۷
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Contact information -->
+      <div class="col-lg-3 col-md-6">
+        <h6>اطلاعات تماس</h6>
+        {% render_contact_info show_icons=True %}
+      </div>
+    </div>
+
+    <!-- Enhanced footer bottom section -->
+    <hr />
+
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <p>
+          © {% get_current_year %} {{ site_name|default:"Istanbul Plus" }}. تمامی حقوق محفوظ است.
+          <span class="visually-hidden">
+            کپی‌رایت سال {% get_current_year %} متعلق به {{ site_name|default:"Istanbul Plus" }}
+          </span>
+        </p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <p>
+          طراحی و توسعه با
+          <span class="text-danger" aria-label="عشق">❤️</span>
+          برای تجربه بهتر شما
+        </p>
+      </div>
+    </div>
+
+    <!-- Additional footer info for SEO and trust -->
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <p class="small">
+          <span class="text-muted">
+            فروشگاه اینترنتی Istanbul Plus دارای مجوز رسمی از وزارت صنعت، معدن و
+            تجارت
+          </span>
+          <span class="mx-2">|</span>
+          <span class="text-muted"> نماد اعتماد الکترونیکی </span>
+          <span class="mx-2">|</span>
+          <span class="text-muted"> پرداخت امن </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

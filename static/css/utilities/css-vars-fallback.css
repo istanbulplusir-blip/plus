@@ -1,0 +1,437 @@
+/* CSS Variables Fallback for IE11 and older browsers */
+/* Task 15: Implement cross-browser compatibility and testing */
+
+/* This file provides static fallback values for CSS custom properties */
+/* It should be loaded conditionally for browsers that don't support CSS variables */
+
+/* Button Fallbacks */
+.btn-modern {
+  background: #667eea; /* Fallback for --color-primary */
+  color: #ffffff;
+  border-radius: 12px; /* Fallback for --radius-xl */
+  padding: 12px 24px; /* Fallback for --space-3 --space-6 */
+  font-family: "Inter", "Vazir", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px; /* Fallback for --font-size-base */
+  font-weight: 500; /* Fallback for --font-weight-medium */
+  line-height: 1.25; /* Fallback for --line-height-tight */
+  transition: all 0.2s ease-in-out; /* Fallback for --transition-base */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn-modern:hover {
+  background: #7c8df0;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.btn-modern.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.btn-modern.btn-secondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.btn-modern.btn-success {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.btn-modern.btn-warning {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+  color: #343a40;
+}
+
+.btn-modern.btn-danger {
+  background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+}
+
+.btn-modern.btn-outline {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-modern.btn-outline:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* Button Sizes */
+.btn-modern.btn-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.btn-modern.btn-lg {
+  padding: 16px 32px;
+  font-size: 18px;
+  border-radius: 16px;
+}
+
+.btn-modern.btn-xl {
+  padding: 20px 40px;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 16px;
+}
+
+/* Card Fallbacks */
+.card {
+  background: rgba(255, 255, 255, 0.9); /* Fallback for glassmorphism */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px; /* Fallback for --radius-2xl */
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.card-body {
+  padding: 24px; /* Fallback for --space-6 */
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.card-title {
+  font-family: "Poppins", "Vazir", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 18px; /* Fallback for --font-size-lg */
+  font-weight: 600; /* Fallback for --font-weight-semibold */
+  color: #212529; /* Fallback for --color-gray-900 */
+  margin-bottom: 12px; /* Fallback for --space-3 */
+  line-height: 1.25;
+}
+
+.card:hover .card-title {
+  color: #667eea;
+}
+
+.card-text {
+  font-size: 14px; /* Fallback for --font-size-sm */
+  color: #6c757d; /* Fallback for --color-gray-600 */
+  line-height: 1.625;
+  margin-bottom: 16px; /* Fallback for --space-4 */
+}
+
+.card-img-top {
+  border-radius: 12px 12px 0 0; /* Fallback for --radius-xl */
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+/* Price Display Fallbacks */
+.price-display {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 20px; /* Fallback for --font-size-xl */
+  font-weight: 700; /* Fallback for --font-weight-bold */
+  font-family: "Poppins", "Vazir", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin-bottom: 16px;
+}
+
+/* For browsers that don't support background-clip: text */
+.no-background-clip-text .price-display {
+  background: none;
+  color: #667eea;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  background-clip: initial;
+}
+
+/* Navigation Fallbacks */
+.navbar {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Form Fallbacks */
+.form-control {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: "Inter", "Vazir", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  outline: none;
+}
+
+/* Typography Fallbacks */
+h1, .h1 {
+  font-size: 40px; /* Fallback for --font-size-5xl */
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 24px;
+}
+
+h2, .h2 {
+  font-size: 32px; /* Fallback for --font-size-4xl */
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+
+h3, .h3 {
+  font-size: 24px; /* Fallback for --font-size-2xl */
+  font-weight: 600;
+  line-height: 1.375;
+  margin-bottom: 16px;
+}
+
+body {
+  font-family: "Inter", "Vazir", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #212529;
+}
+
+/* Spacing Fallbacks */
+.mb-1 { margin-bottom: 4px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.mb-5 { margin-bottom: 20px; }
+.mb-6 { margin-bottom: 24px; }
+
+.mt-1 { margin-top: 4px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mt-5 { margin-top: 20px; }
+.mt-6 { margin-top: 24px; }
+
+.p-1 { padding: 4px; }
+.p-2 { padding: 8px; }
+.p-3 { padding: 12px; }
+.p-4 { padding: 16px; }
+.p-5 { padding: 20px; }
+.p-6 { padding: 24px; }
+
+/* Color Fallbacks */
+.text-primary { color: #667eea; }
+.text-secondary { color: #764ba2; }
+.text-success { color: #28a745; }
+.text-warning { color: #ffc107; }
+.text-danger { color: #dc3545; }
+.text-info { color: #17a2b8; }
+.text-light { color: #f8f9fa; }
+.text-dark { color: #343a40; }
+.text-muted { color: #6c757d; }
+
+.bg-primary { background-color: #667eea; }
+.bg-secondary { background-color: #764ba2; }
+.bg-success { background-color: #28a745; }
+.bg-warning { background-color: #ffc107; }
+.bg-danger { background-color: #dc3545; }
+.bg-info { background-color: #17a2b8; }
+.bg-light { background-color: #f8f9fa; }
+.bg-dark { background-color: #343a40; }
+
+/* Border Radius Fallbacks */
+.rounded-sm { border-radius: 2px; }
+.rounded { border-radius: 4px; }
+.rounded-md { border-radius: 6px; }
+.rounded-lg { border-radius: 8px; }
+.rounded-xl { border-radius: 12px; }
+.rounded-2xl { border-radius: 16px; }
+.rounded-3xl { border-radius: 24px; }
+.rounded-full { border-radius: 9999px; }
+
+/* Shadow Fallbacks */
+.shadow-sm { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+.shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+.shadow-md { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.shadow-lg { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+.shadow-xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+
+/* Transition Fallbacks */
+.transition-fast { transition: all 0.15s ease-in-out; }
+.transition { transition: all 0.2s ease-in-out; }
+.transition-slow { transition: all 0.3s ease-in-out; }
+
+/* Grid Fallbacks for IE11 */
+.grid-fallback {
+  display: -ms-grid;
+  display: grid;
+}
+
+.grid-cols-1 {
+  -ms-grid-columns: 1fr;
+  grid-template-columns: 1fr;
+}
+
+.grid-cols-2 {
+  -ms-grid-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  -ms-grid-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-cols-4 {
+  -ms-grid-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Flexbox Fallbacks */
+.flex { display: -ms-flexbox; display: flex; }
+.flex-col { -ms-flex-direction: column; flex-direction: column; }
+.flex-row { -ms-flex-direction: row; flex-direction: row; }
+.flex-wrap { -ms-flex-wrap: wrap; flex-wrap: wrap; }
+.items-center { -ms-flex-align: center; align-items: center; }
+.items-start { -ms-flex-align: start; align-items: flex-start; }
+.items-end { -ms-flex-align: end; align-items: flex-end; }
+.justify-center { -ms-flex-pack: center; justify-content: center; }
+.justify-start { -ms-flex-pack: start; justify-content: flex-start; }
+.justify-end { -ms-flex-pack: end; justify-content: flex-end; }
+.justify-between { -ms-flex-pack: justify; justify-content: space-between; }
+
+/* Aspect Ratio Fallbacks */
+.aspect-ratio-16-9 {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+}
+
+.aspect-ratio-4-3 {
+  position: relative;
+  width: 100%;
+  padding-bottom: 75%; /* 4:3 aspect ratio */
+}
+
+.aspect-ratio-1-1 {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%; /* 1:1 aspect ratio */
+}
+
+.aspect-ratio-16-9 > *,
+.aspect-ratio-4-3 > *,
+.aspect-ratio-1-1 > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* IE11 Specific Fixes */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  /* IE11 flexbox fixes */
+  .flex-ie11 {
+    display: -ms-flexbox;
+    display: flex;
+  }
+  
+  .flex-ie11 > * {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+  }
+  
+  /* IE11 doesn't support object-fit */
+  .card-img-top {
+    width: 100%;
+    height: 200px; /* Fixed height fallback */
+  }
+  
+  /* IE11 doesn't support CSS Grid */
+  .product-grid {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  
+  .product-grid > * {
+    -ms-flex: 1 1 300px;
+    flex: 1 1 300px;
+    margin: 8px;
+  }
+}
+
+/* Legacy button styles for older browsers */
+.btn-legacy {
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.btn-legacy:hover {
+  background: #5a6fd8;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-legacy:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+.btn-legacy:active {
+  background: #4c63d2;
+}
+
+.btn-legacy:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Legacy card styles */
+.card-legacy {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-legacy:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-legacy .card-body {
+  padding: 20px;
+}
+
+.card-legacy .card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.card-legacy .card-text {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}

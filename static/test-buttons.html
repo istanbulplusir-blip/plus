@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Button Component Test</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: var(--font-family-primary);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      .test-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      }
+      .test-section {
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .test-section h2 {
+        color: white;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .button-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .demo-text {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1
+        style="
+          color: white;
+          text-align: center;
+          margin-bottom: 3rem;
+          font-size: 2.5rem;
+        "
+      >
+        Modern Button Component System Test
+      </h1>
+
+      <!-- Modern Button Variants -->
+      <div class="test-section">
+        <h2>Modern Button Variants</h2>
+        <p class="demo-text">
+          Primary, secondary, outline, and semantic button styles with gradient
+          backgrounds and hover effects.
+        </p>
+        <div class="button-grid">
+          <button class="btn-modern btn-primary">Primary Button</button>
+          <button class="btn-modern btn-secondary">Secondary Button</button>
+          <button class="btn-modern btn-outline">Outline Button</button>
+          <button class="btn-modern btn-outline-secondary">
+            Outline Secondary
+          </button>
+          <button class="btn-modern btn-success">Success Button</button>
+          <button class="btn-modern btn-warning">Warning Button</button>
+          <button class="btn-modern btn-danger">Danger Button</button>
+        </div>
+      </div>
+
+      <!-- Button Sizes -->
+      <div class="test-section">
+        <h2>Button Sizes</h2>
+        <p class="demo-text">
+          Different button sizes with consistent styling and proper touch
+          targets.
+        </p>
+        <div class="button-row">
+          <button class="btn-modern btn-primary btn-sm">Small Button</button>
+          <button class="btn-modern btn-primary">Default Button</button>
+          <button class="btn-modern btn-primary btn-lg">Large Button</button>
+          <button class="btn-modern btn-primary btn-xl">Extra Large</button>
+        </div>
+      </div>
+
+      <!-- Glassmorphism Buttons -->
+      <div class="test-section">
+        <h2>Glassmorphism Buttons</h2>
+        <p class="demo-text">
+          Modern glassmorphism effects with backdrop-filter blur and
+          transparency.
+        </p>
+        <div class="button-row">
+          <button class="btn-modern btn-glass">Glass Button</button>
+          <button class="btn-modern btn-glass-dark">Dark Glass</button>
+          <button class="btn-modern btn-glass btn-lg">Large Glass</button>
+        </div>
+      </div>
+
+      <!-- Buttons with Icons -->
+      <div class="test-section">
+        <h2>Buttons with Icons</h2>
+        <p class="demo-text">
+          Buttons with Bootstrap Icons for enhanced visual communication.
+        </p>
+        <div class="button-row">
+          <button class="btn-modern btn-primary">
+            <i class="bi bi-download btn-icon icon-start"></i>
+            <span class="btn-text">Download</span>
+          </button>
+          <button class="btn-modern btn-success">
+            <span class="btn-text">Save</span>
+            <i class="bi bi-check-circle btn-icon icon-end"></i>
+          </button>
+          <button class="btn-modern btn-outline">
+            <i class="bi bi-heart btn-icon icon-start"></i>
+            <span class="btn-text">Like</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Icon Only Buttons -->
+      <div class="test-section">
+        <h2>Icon Only Buttons</h2>
+        <p class="demo-text">
+          Compact icon-only buttons for actions and controls.
+        </p>
+        <div class="button-row">
+          <button class="btn-modern btn-primary btn-icon-only">
+            <i class="bi bi-heart"></i>
+          </button>
+          <button class="btn-modern btn-secondary btn-icon-only">
+            <i class="bi bi-share"></i>
+          </button>
+          <button class="btn-modern btn-glass btn-icon-only">
+            <i class="bi bi-gear"></i>
+          </button>
+          <button class="btn-modern btn-outline btn-icon-only btn-sm">
+            <i class="bi bi-plus"></i>
+          </button>
+          <button class="btn-modern btn-danger btn-icon-only btn-lg">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading States -->
+      <div class="test-section">
+        <h2>Loading States</h2>
+        <p class="demo-text">
+          Buttons with loading spinners and disabled states.
+        </p>
+        <div class="button-row">
+          <button class="btn-modern btn-primary btn-loading">
+            <span class="btn-text">Loading...</span>
+          </button>
+          <button class="btn-modern btn-secondary btn-loading">
+            <span class="btn-text">Processing</span>
+          </button>
+          <button class="btn-modern btn-glass btn-loading">
+            <span class="btn-text">Please wait</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Disabled States -->
+      <div class="test-section">
+        <h2>Disabled States</h2>
+        <p class="demo-text">
+          Disabled buttons with reduced opacity and no interactions.
+        </p>
+        <div class="button-row">
+          <button class="btn-modern btn-primary" disabled>
+            Disabled Primary
+          </button>
+          <button class="btn-modern btn-secondary btn-disabled">
+            Disabled Secondary
+          </button>
+          <button class="btn-modern btn-outline" disabled>
+            Disabled Outline
+          </button>
+        </div>
+      </div>
+
+      <!-- Legacy Button Compatibility -->
+      <div class="test-section">
+        <h2>Legacy Button Compatibility</h2>
+        <p class="demo-text">
+          Existing .btn-auth and .btn-secondary-auth classes with modern
+          enhancements.
+        </p>
+        <div class="button-row">
+          <button class="btn-auth">
+            <i
+              class="bi bi-box-arrow-in-right"
+              style="margin-right: 0.5rem"
+            ></i>
+            Login Button
+          </button>
+          <button class="btn-secondary-auth">
+            <i class="bi bi-house" style="margin-right: 0.5rem"></i>
+            Secondary Auth
+          </button>
+          <button class="btn-auth btn-loading">
+            <span class="btn-text">Authenticating...</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Delivery Method Buttons -->
+      <div class="test-section">
+        <h2>Delivery Method Selection</h2>
+        <p class="demo-text">
+          Special buttons used in authentication forms for method selection.
+        </p>
+        <div style="display: flex; gap: 10px; max-width: 400px">
+          <div class="delivery-method-btn active">
+            <i class="bi bi-phone"></i>
+            <span>SMS</span>
+          </div>
+          <div class="delivery-method-btn">
+            <i class="bi bi-envelope"></i>
+            <span>Email</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Button Groups -->
+      <div class="test-section">
+        <h2>Button Groups</h2>
+        <p class="demo-text">Grouped buttons for related actions.</p>
+        <div class="btn-group">
+          <button class="btn-modern btn-outline">Left</button>
+          <button class="btn-modern btn-outline">Center</button>
+          <button class="btn-modern btn-outline">Right</button>
+        </div>
+      </div>
+
+      <!-- Full Width Button -->
+      <div class="test-section">
+        <h2>Full Width Button</h2>
+        <p class="demo-text">
+          Block-level buttons that span the full width of their container.
+        </p>
+        <button class="btn-modern btn-primary btn-block">
+          <i class="bi bi-check-circle btn-icon icon-start"></i>
+          <span class="btn-text">Full Width Button</span>
+        </button>
+      </div>
+
+      <!-- Floating Action Button -->
+      <div class="test-section">
+        <h2>Floating Action Button</h2>
+        <p class="demo-text">
+          Fixed positioned floating action button (check bottom right corner).
+        </p>
+        <p style="color: rgba(255, 255, 255, 0.7)">
+          The FAB is positioned at the bottom right of the viewport.
+        </p>
+      </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="btn-modern btn-primary btn-fab">
+      <i class="bi bi-plus"></i>
+    </button>
+
+    <script>
+      // Add some interactivity for testing
+      document.addEventListener("DOMContentLoaded", function () {
+        // Delivery method button toggle
+        const deliveryBtns = document.querySelectorAll(".delivery-method-btn");
+        deliveryBtns.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            deliveryBtns.forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+          });
+        });
+
+        // Simulate loading state toggle
+        const loadingBtns = document.querySelectorAll(".btn-loading");
+        loadingBtns.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            // Toggle loading state for demo
+            setTimeout(() => {
+              this.classList.remove("btn-loading");
+              this.querySelector(".btn-text").textContent = "Completed!";
+              setTimeout(() => {
+                this.classList.add("btn-loading");
+                this.querySelector(".btn-text").textContent = "Loading...";
+              }, 2000);
+            }, 3000);
+          });
+        });
+
+        // Add click feedback to all buttons
+        const allBtns = document.querySelectorAll(
+          ".btn-modern, .btn-auth, .btn-secondary-auth"
+        );
+        allBtns.forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            if (!this.disabled && !this.classList.contains("btn-disabled")) {
+              // Create ripple effect
+              const ripple = document.createElement("span");
+              const rect = this.getBoundingClientRect();
+              const size = Math.max(rect.width, rect.height);
+              const x = e.clientX - rect.left - size / 2;
+              const y = e.clientY - rect.top - size / 2;
+
+              ripple.style.cssText = `
+                            position: absolute;
+                            width: ${size}px;
+                            height: ${size}px;
+                            left: ${x}px;
+                            top: ${y}px;
+                            background: rgba(255, 255, 255, 0.3);
+                            border-radius: 50%;
+                            transform: scale(0);
+                            animation: ripple 0.6s linear;
+                            pointer-events: none;
+                        `;
+
+              this.appendChild(ripple);
+
+              setTimeout(() => {
+                ripple.remove();
+              }, 600);
+            }
+          });
+        });
+      });
+
+      // Add ripple animation
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>

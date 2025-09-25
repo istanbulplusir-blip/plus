@@ -1,0 +1,80 @@
+{% load static %}
+<div class="hero-card-showcase {{ css_class }}"
+     {% if hero_config and hero_config.animation_enabled %}
+     data-animation-speed="{{ hero_config.animation_speed }}"
+     {% endif %}>
+  {% for card in hero_cards %}
+    <div class="showcase-card card-{{ forloop.counter }}">
+      {% if card.image %}
+        <img
+          src="{{ card.image.url }}"
+          alt="{{ card.title }}"
+          class="showcase-image"
+          loading="lazy"
+          decoding="async"
+        />
+      {% else %}
+        <div class="showcase-image-placeholder">
+          <i class="bi bi-image"></i>
+        </div>
+      {% endif %}
+      <div class="showcase-overlay">
+        <h3>{{ card.title }}</h3>
+        {% if card.subtitle %}
+          <p>{{ card.subtitle }}</p>
+        {% endif %}
+        {% if card.price %}
+          <div class="showcase-price">{{ card.price }}</div>
+        {% endif %}
+        {% if card.link_url %}
+          <a href="{{ card.link_url }}" 
+             class="showcase-link"
+             {% if card.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+            {{ card.link_text|default:"مشاهده" }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <!-- Fallback cards if no cards are configured -->
+    <div class="showcase-card card-1">
+      <img
+        src="{% static 'img/vip-tour.png' %}"
+        alt="تور ویژه VIP"
+        class="showcase-image"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="showcase-overlay">
+        <h3>تور ویژه VIP</h3>
+        <p>تجربه‌ای منحصر به فرد</p>
+      </div>
+    </div>
+    <div class="showcase-card card-2">
+      <img
+        src="{% static 'img/vip-tour.png' %}"
+        alt="سفر لوکس"
+        class="showcase-image"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="showcase-overlay">
+        <h3>سفر لوکس</h3>
+        <p>بهترین خدمات</p>
+      </div>
+    </div>
+    <div class="showcase-card card-3">
+      <img
+        src="{% static 'img/vip-tour.png' %}"
+        alt="پکیج ویژه"
+        class="showcase-image"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="showcase-overlay">
+        <h3>پکیج ویژه</h3>
+        <p>ارزش واقعی</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>

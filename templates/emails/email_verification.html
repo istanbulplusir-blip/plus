@@ -1,0 +1,49 @@
+{% extends "emails/base.html" %} {% block title %}تأیید ایمیل - {{
+site_name|default:"استانبول پلاس" }}{% endblock %} {% block content %}
+<h2>تأیید آدرس ایمیل</h2>
+
+<p>سلام {{ user.first_name|default:user.username }}،</p>
+
+<p>
+  برای تکمیل فرآیند ثبت‌نام در {{ site_name|default:"استانبول پلاس" }}، لطفاً
+  آدرس ایمیل خود را تأیید کنید.
+</p>
+
+<div style="text-align: center; margin: 30px 0">
+  <a href="{{ verification_url }}" class="button">تأیید ایمیل</a>
+</div>
+
+<p>یا می‌توانید لینک زیر را کپی کرده و در مرورگر خود باز کنید:</p>
+
+<div
+  style="
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    word-break: break-all;
+    font-family: monospace;
+    font-size: 14px;
+    margin: 20px 0;
+  "
+>
+  {{ verification_url }}
+</div>
+
+<div class="security-info">
+  <strong>نکات مهم:</strong>
+  <ul style="margin: 10px 0; padding-right: 20px">
+    <li>این لینک فقط یک بار قابل استفاده است</li>
+    <li>
+      اگر این درخواست را شما انجام نداده‌اید، لطفاً این ایمیل را نادیده بگیرید
+    </li>
+    <li>برای امنیت بیشتر، لینک را در مرورگر خود تایپ کنید</li>
+  </ul>
+</div>
+
+<p>پس از تأیید ایمیل، می‌توانید از تمام امکانات سایت استفاده کنید.</p>
+
+<p>
+  با تشکر،<br />
+  تیم {{ site_name|default:"استانبول پلاس" }}
+</p>
+{% endblock %}

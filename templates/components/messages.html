@@ -1,0 +1,39 @@
+{% load static %}
+<!-- Messages with modern styling -->
+{% if messages %}
+<div class="container mt-4">
+  <div class="messages-container">
+    {% for message in messages %}
+    <div
+      class="alert alert-{{ message.tags }} alert-dismissible fade show glass-alert scroll-fade-down"
+      role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}"
+      aria-live="{% if message.tags == 'error' %}assertive{% else %}polite{% endif %}"
+      aria-atomic="true"
+    >
+      <div class="d-flex align-items-center">
+        {% if message.tags == 'success' %}
+        <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
+        <span class="visually-hidden">پیام موفقیت: </span>
+        {% elif message.tags == 'error' %}
+        <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+        <span class="visually-hidden">پیام خطا: </span>
+        {% elif message.tags == 'warning' %}
+        <i class="bi bi-exclamation-circle-fill me-2" aria-hidden="true"></i>
+        <span class="visually-hidden">پیام هشدار: </span>
+        {% else %}
+        <i class="bi bi-info-circle-fill me-2" aria-hidden="true"></i>
+        <span class="visually-hidden">پیام اطلاعات: </span>
+        {% endif %}
+        <div class="flex-grow-1">{{ message }}</div>
+      </div>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="بستن پیام {{ message.tags }}"
+      ></button>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}

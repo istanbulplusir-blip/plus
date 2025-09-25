@@ -1,0 +1,22 @@
+{% load site_tags %}
+<div class="contact-info {{ css_class }}">
+  {% for contact in contact_info %}
+    <div>
+      {% if show_icons and contact.icon_class %}
+        <i class="{{ contact.icon_class }}" aria-hidden="true"></i>
+      {% endif %}
+      {% if contact.is_clickable %}
+        {% get_contact_url contact as contact_url %}
+        {% if contact_url %}
+          <a href="{{ contact_url }}" title="{{ contact.title }}">
+            {{ contact.value }}
+          </a>
+        {% else %}
+          <span>{{ contact.value }}</span>
+        {% endif %}
+      {% else %}
+        <span>{{ contact.value }}</span>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>

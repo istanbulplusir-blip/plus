@@ -1,0 +1,19 @@
+{% load static %}
+<div class="social-links {{ css_class }}" role="group" aria-label="شبکه‌های اجتماعی">
+  {% for social in social_links %}
+    <a
+      href="{{ social.url }}"
+      class="btn"
+      aria-label="دنبال کردن در {{ social.display_name }}"
+      title="{{ social.display_name }} {{ site_name|default:'Istanbul Plus' }}"
+      {% if social.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+    >
+      {% if show_icons %}
+        <i class="{{ social.icon_class }}" aria-hidden="true"></i>
+      {% endif %}
+      {% if show_text %}
+        <span class="ms-1">{{ social.display_name }}</span>
+      {% endif %}
+    </a>
+  {% endfor %}
+</div>

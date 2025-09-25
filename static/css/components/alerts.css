@@ -1,0 +1,597 @@
+/*
+=================================
+MODERN ALERTS & STATES - 2025
+=================================
+Comprehensive error/success state presentations with 
+glassmorphism effects and micro-animations.
+*/
+
+/* ===== MODERN ALERT CONTAINER ===== */
+.modern-alert-container {
+  position: fixed;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  z-index: 9999;
+  max-width: 400px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.modern-alert {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  transform: translateX(120%);
+  opacity: 0;
+  transition: all var(--transition-medium);
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-alert.show {
+  transform: translateX(0);
+  opacity: 1;
+  animation: slideInAlert 0.5s ease-out;
+}
+
+.modern-alert.hide {
+  transform: translateX(120%);
+  opacity: 0;
+  animation: slideOutAlert 0.3s ease-in;
+}
+
+@keyframes slideInAlert {
+  0% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutAlert {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+/* ===== ALERT TYPES ===== */
+.modern-alert.success {
+  border-left: 4px solid rgb(34, 197, 94);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.modern-alert.error {
+  border-left: 4px solid rgb(239, 68, 68);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.modern-alert.warning {
+  border-left: 4px solid rgb(251, 191, 36);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.modern-alert.info {
+  border-left: 4px solid rgb(59, 130, 246);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* ===== ALERT ICON ===== */
+.modern-alert-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.modern-alert.success .modern-alert-icon {
+  background: rgb(34, 197, 94);
+  color: white;
+}
+
+.modern-alert.error .modern-alert-icon {
+  background: rgb(239, 68, 68);
+  color: white;
+}
+
+.modern-alert.warning .modern-alert-icon {
+  background: rgb(251, 191, 36);
+  color: white;
+}
+
+.modern-alert.info .modern-alert-icon {
+  background: rgb(59, 130, 246);
+  color: white;
+}
+
+/* ===== ALERT CONTENT ===== */
+.modern-alert-content {
+  flex: 1;
+}
+
+.modern-alert-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  font-size: 0.95rem;
+}
+
+.modern-alert-message {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.modern-alert-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.modern-alert-action {
+  padding: var(--space-xs) var(--space-sm);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.modern-alert-action.primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.modern-alert-action.primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.modern-alert-action.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-glass);
+}
+
+.modern-alert-action.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+/* ===== ALERT CLOSE BUTTON ===== */
+.modern-alert-close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.modern-alert-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* ===== PROGRESS BAR ===== */
+.modern-alert-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.modern-alert-progress-bar {
+  height: 100%;
+  width: 0;
+  transition: width linear;
+}
+
+.modern-alert.success .modern-alert-progress-bar {
+  background: rgb(34, 197, 94);
+}
+
+.modern-alert.error .modern-alert-progress-bar {
+  background: rgb(239, 68, 68);
+}
+
+.modern-alert.warning .modern-alert-progress-bar {
+  background: rgb(251, 191, 36);
+}
+
+.modern-alert.info .modern-alert-progress-bar {
+  background: rgb(59, 130, 246);
+}
+
+/* ===== FORM STATE INDICATORS ===== */
+.modern-form-state {
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-glass);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  backdrop-filter: blur(10px);
+  transform: translateY(10px);
+  opacity: 0;
+  transition: all var(--transition-medium);
+}
+
+.modern-form-state.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modern-form-state.success {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: rgb(34, 197, 94);
+}
+
+.modern-form-state.error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: rgb(239, 68, 68);
+}
+
+.modern-form-state.warning {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: rgb(251, 191, 36);
+}
+
+.modern-form-state-icon {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.modern-form-state-content {
+  flex: 1;
+}
+
+.modern-form-state-title {
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.modern-form-state-message {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* ===== FIELD VALIDATION STATES ===== */
+.modern-field-error {
+  position: relative;
+}
+
+.modern-field-error .form-control {
+  border-color: rgb(239, 68, 68);
+  box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25);
+  animation: shakeError 0.5s ease-in-out;
+}
+
+.modern-field-success .form-control {
+  border-color: rgb(34, 197, 94);
+  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.modern-field-feedback {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.875rem;
+  margin-top: var(--space-xs);
+  animation: slideUpFeedback 0.3s ease-out;
+}
+
+@keyframes slideUpFeedback {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modern-field-feedback.error {
+  color: rgb(239, 68, 68);
+}
+
+.modern-field-feedback.success {
+  color: rgb(34, 197, 94);
+}
+
+.modern-field-feedback.warning {
+  color: rgb(251, 191, 36);
+}
+
+/* ===== LOADING STATES ===== */
+.modern-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity var(--transition-medium);
+}
+
+.modern-loading-overlay.show {
+  opacity: 1;
+}
+
+.modern-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: modernSpin 1s linear infinite;
+}
+
+.modern-btn.loading {
+  position: relative;
+  pointer-events: none;
+  color: transparent;
+}
+
+.modern-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: modernSpin 0.8s linear infinite;
+}
+
+/* ===== SUCCESS ANIMATIONS ===== */
+.modern-success-checkmark {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 2;
+  stroke: rgb(34, 197, 94);
+  stroke-miterlimit: 10;
+  margin: var(--space-lg) auto;
+  box-shadow: inset 0px 0px 0px rgb(34, 197, 94);
+  animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+}
+
+.modern-success-checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: rgb(34, 197, 94);
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.modern-success-checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scale {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 30px rgb(34, 197, 94);
+  }
+}
+
+/* ===== TOAST NOTIFICATIONS ===== */
+.modern-toast-container {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  max-width: 500px;
+  width: 90%;
+}
+
+.modern-toast {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all var(--transition-medium);
+}
+
+.modern-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modern-toast.hide {
+  transform: translateY(100px);
+  opacity: 0;
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 768px) {
+  .modern-alert-container {
+    top: var(--space-md);
+    right: var(--space-md);
+    left: var(--space-md);
+    max-width: none;
+  }
+
+  .modern-alert {
+    padding: var(--space-md);
+  }
+
+  .modern-toast-container {
+    bottom: var(--space-md);
+    width: 95%;
+  }
+
+  .modern-toast {
+    padding: var(--space-md);
+  }
+}
+
+/* ===== RTL SUPPORT ===== */
+[dir="rtl"] .modern-alert-container {
+  right: auto;
+  left: var(--space-lg);
+}
+
+[dir="rtl"] .modern-alert {
+  transform: translateX(-120%);
+}
+
+[dir="rtl"] .modern-alert.show {
+  transform: translateX(0);
+}
+
+[dir="rtl"] .modern-alert.hide {
+  transform: translateX(-120%);
+}
+
+[dir="rtl"] .modern-alert-close {
+  right: auto;
+  left: var(--space-sm);
+}
+
+@media (max-width: 768px) {
+  [dir="rtl"] .modern-alert-container {
+    left: var(--space-md);
+    right: var(--space-md);
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  .modern-alert,
+  .modern-form-state,
+  .modern-field-feedback,
+  .modern-loading-spinner,
+  .modern-success-checkmark,
+  .modern-toast {
+    animation: none;
+  }
+
+  .modern-alert.show,
+  .modern-form-state.show,
+  .modern-toast.show {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+  .modern-alert,
+  .modern-form-state,
+  .modern-toast {
+    border-width: 2px;
+    backdrop-filter: none;
+    background: var(--bg-primary);
+  }
+
+  .modern-alert.success,
+  .modern-form-state.success {
+    background: rgba(34, 197, 94, 0.2);
+  }
+
+  .modern-alert.error,
+  .modern-form-state.error {
+    background: rgba(239, 68, 68, 0.2);
+  }
+
+  .modern-alert.warning,
+  .modern-form-state.warning {
+    background: rgba(251, 191, 36, 0.2);
+  }
+
+  .modern-alert.info {
+    background: rgba(59, 130, 246, 0.2);
+  }
+}

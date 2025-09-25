@@ -1,0 +1,461 @@
+/* Responsive Design Testing Utilities */
+
+/* Visual Breakpoint Indicators (for development/testing only) */
+.breakpoint-indicator {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: var(--color-primary);
+  color: white;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  z-index: 9999;
+  border-radius: 0 0 0 var(--radius-md);
+  opacity: 0.8;
+}
+
+.breakpoint-indicator::before {
+  content: "XS: < 576px";
+}
+
+@media (min-width: 576px) {
+  .breakpoint-indicator::before {
+    content: "SM: ≥ 576px";
+  }
+}
+
+@media (min-width: 768px) {
+  .breakpoint-indicator::before {
+    content: "MD: ≥ 768px";
+  }
+}
+
+@media (min-width: 992px) {
+  .breakpoint-indicator::before {
+    content: "LG: ≥ 992px";
+  }
+}
+
+@media (min-width: 1200px) {
+  .breakpoint-indicator::before {
+    content: "XL: ≥ 1200px";
+  }
+}
+
+@media (min-width: 1400px) {
+  .breakpoint-indicator::before {
+    content: "2XL: ≥ 1400px";
+  }
+}
+
+/* Grid Overlay for Layout Testing */
+.grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.1;
+}
+
+.grid-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 0, 0, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 0, 0, 0.5) 1px, transparent 1px);
+  background-size: var(--space-4) var(--space-4);
+}
+
+/* Responsive Testing Grid */
+.test-grid {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+  margin: var(--space-4) 0;
+}
+
+.test-grid-item {
+  background: var(--color-white);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 2px solid var(--color-gray-200);
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Mobile First Test Grid */
+.test-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 576px) {
+  .test-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .test-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .test-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .test-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 1400px) {
+  .test-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Container Query Test */
+.test-container-query {
+  container-type: inline-size;
+  background: var(--color-gray-50);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin: var(--space-4) 0;
+}
+
+.test-cq-content {
+  background: var(--color-white);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 2px solid var(--color-primary);
+}
+
+.test-cq-content::before {
+  content: "Container < 300px";
+  display: block;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+@container (min-width: 300px) {
+  .test-cq-content::before {
+    content: "Container ≥ 300px";
+  }
+  
+  .test-cq-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@container (min-width: 500px) {
+  .test-cq-content::before {
+    content: "Container ≥ 500px";
+  }
+  
+  .test-cq-content {
+    background: var(--color-success-light);
+    border-color: var(--color-success);
+  }
+}
+
+@container (min-width: 700px) {
+  .test-cq-content::before {
+    content: "Container ≥ 700px";
+  }
+  
+  .test-cq-content {
+    background: var(--color-info-light);
+    border-color: var(--color-info);
+  }
+}
+
+/* Responsive Typography Test */
+.test-typography {
+  padding: var(--space-6);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  margin: var(--space-4) 0;
+}
+
+.test-heading {
+  font-size: var(--text-responsive-3xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
+  color: var(--color-primary);
+}
+
+.test-subheading {
+  font-size: var(--text-responsive-xl);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-3);
+  color: var(--color-gray-700);
+}
+
+.test-body {
+  font-size: var(--text-responsive-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-gray-600);
+}
+
+/* Responsive Spacing Test */
+.test-spacing {
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+  margin: var(--space-4) 0;
+}
+
+.test-spacing-inner {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: var(--space-responsive-md);
+  margin: var(--space-responsive-sm);
+  border: 2px dashed var(--color-primary);
+  text-align: center;
+}
+
+/* Orientation Testing */
+@media (orientation: portrait) {
+  .orientation-test::before {
+    content: "Portrait Orientation";
+    display: block;
+    background: var(--color-success);
+    color: white;
+    padding: var(--space-2);
+    text-align: center;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+  }
+}
+
+@media (orientation: landscape) {
+  .orientation-test::before {
+    content: "Landscape Orientation";
+    display: block;
+    background: var(--color-info);
+    color: white;
+    padding: var(--space-2);
+    text-align: center;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+  }
+}
+
+/* Device-specific Testing */
+@media (max-width: 480px) and (orientation: portrait) {
+  .device-test::before {
+    content: "Mobile Portrait";
+    background: var(--color-error);
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .device-test::before {
+    content: "Mobile Landscape";
+    background: var(--color-warning);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .device-test::before {
+    content: "Tablet";
+    background: var(--color-info);
+  }
+}
+
+@media (min-width: 1024px) {
+  .device-test::before {
+    content: "Desktop";
+    background: var(--color-success);
+  }
+}
+
+.device-test::before {
+  display: block;
+  color: white;
+  padding: var(--space-2);
+  text-align: center;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-weight: var(--font-weight-bold);
+}
+
+/* RTL Testing */
+[dir="rtl"] .rtl-test {
+  background: var(--color-warning-light);
+  border-left: 4px solid var(--color-warning);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  border-radius: var(--radius-md);
+}
+
+[dir="rtl"] .rtl-test::before {
+  content: "RTL Mode Active";
+  font-weight: var(--font-weight-bold);
+  color: var(--color-warning-dark);
+}
+
+[dir="ltr"] .rtl-test {
+  background: var(--color-success-light);
+  border-left: 4px solid var(--color-success);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  border-radius: var(--radius-md);
+}
+
+[dir="ltr"] .rtl-test::before {
+  content: "LTR Mode Active";
+  font-weight: var(--font-weight-bold);
+  color: var(--color-success-dark);
+}
+
+/* Accessibility Testing */
+@media (prefers-reduced-motion: reduce) {
+  .motion-test::before {
+    content: "Reduced Motion Preferred";
+    background: var(--color-info);
+    color: white;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    display: block;
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-test::before {
+    content: "Motion Allowed";
+    background: var(--color-success);
+    color: white;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    display: block;
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .color-scheme-test::before {
+    content: "Dark Mode Preferred";
+    background: var(--color-gray-800);
+    color: white;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    display: block;
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .color-scheme-test::before {
+    content: "Light Mode Preferred";
+    background: var(--color-gray-200);
+    color: var(--color-gray-800);
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    display: block;
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+}
+
+/* High DPI Testing */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .dpi-test::before {
+    content: "High DPI Display (Retina)";
+    background: var(--color-primary);
+    color: white;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    display: block;
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+}
+
+@media (-webkit-max-device-pixel-ratio: 1.9), (max-resolution: 191dpi) {
+  .dpi-test::before {
+    content: "Standard DPI Display";
+    background: var(--color-gray-600);
+    color: white;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    display: block;
+    text-align: center;
+    margin-bottom: var(--space-4);
+  }
+}
+
+/* Performance Testing Indicators */
+.perf-test {
+  background: var(--color-gray-50);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin: var(--space-4) 0;
+  border: 2px solid var(--color-gray-200);
+}
+
+.perf-test::before {
+  content: "Performance: " attr(data-perf-score);
+  display: block;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-2);
+  color: var(--color-primary);
+}
+
+/* Hide testing utilities in production */
+@media not screen {
+  .breakpoint-indicator,
+  .grid-overlay,
+  .test-grid,
+  .test-container-query,
+  .test-typography,
+  .test-spacing,
+  .orientation-test::before,
+  .device-test::before,
+  .rtl-test::before,
+  .motion-test::before,
+  .color-scheme-test::before,
+  .dpi-test::before,
+  .perf-test::before {
+    display: none !important;
+  }
+}
+
+/* Development mode only (remove in production) */
+.dev-mode .breakpoint-indicator,
+.dev-mode .grid-overlay {
+  display: block;
+}
+
+.production .breakpoint-indicator,
+.production .grid-overlay,
+.production .test-grid,
+.production .test-container-query,
+.production .test-typography,
+.production .test-spacing {
+  display: none !important;
+}

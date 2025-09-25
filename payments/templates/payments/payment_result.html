@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% block title %}نتیجه پرداخت{% endblock %}
+{% block extra_css %}
+<style>
+  .result-container {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .result-card {
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  .success-card {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+  }
+  .error-card {
+    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+    color: white;
+  }
+  .result-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+  }
+  .result-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  .result-message {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+  }
+  .payment-details {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-white {
+    background: white;
+    color: #333;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  .btn-white:hover {
+    background: #f8f9fa;
+    color: #333;
+    transform: translateY(-2px);
+  }
+  .btn-outline-white {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  .btn-outline-white:hover {
+    background: white;
+    color: #333;
+    transform: translateY(-2px);
+  }
+</style>
+{% endblock %}
+{% block content %}
+<div class="result-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        {% if payment and payment.status == 'success' %}
+          <!-- Success Result -->
+          <div class="result-card success-card">
+            <div class="result-icon">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="result-title">پرداخت موفق!</div>
+            <div class="result-message">
+              پرداخت شما با موفقیت انجام شد و سفارش شما ثبت گردید.
+            </div>
+            
+            {% if payment %}
+            <div class="payment-details">
+              <div class="detail-row">
+                <span>شماره سفارش:</span>
+                <span class="fw-bold">{{ order.id }}</span>
+              </div>
+              <div class="detail-row">
+                <span>مبلغ پرداخت:</span>
+                <span class="fw-bold">{{ payment.amount|floatformat:0 }} تومان</span>
+              </div>
+              {% if payment.tracking_code %}
+              <div class="detail-row">
+                <span>شماره پیگیری:</span>
+                <span class="fw-bold font-monospace">{{ payment.tracking_code }}</span>
+              </div>
+              {% endif %}
+              <div class="detail-row">
+                <span>تاریخ پرداخت:</span>
+                <span>{{ payment.created_at|date:"Y/m/d H:i" }}</span>
+              </div>
+            </div>
+            {% endif %}
+            
+            <div class="action-buttons">
+              <a href="{% url 'orders:order_detail' order.id %}" class="btn-white">
+                <i class="bi bi-eye me-2"></i>
+                مشاهده سفارش
+              </a>
+              <a href="{% url 'orders:order_list' %}" class="btn-outline-white">
+                <i class="bi bi-list me-2"></i>
+                لیست سفارشات
+              </a>
+            </div>
+          </div>
+          
+        {% elif payment and payment.status == 'failed' %}
+          <!-- Failed Result -->
+          <div class="result-card error-card">
+            <div class="result-icon">
+              <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <div class="result-title">پرداخت ناموفق</div>
+            <div class="result-message">
+              متأسفانه پرداخت شما انجام نشد. لطفاً دوباره تلاش کنید.
+            </div>
+            
+            <div class="payment-details">
+              <div class="detail-row">
+                <span>شماره سفارش:</span>
+                <span class="fw-bold">{{ order.id }}</span>
+              </div>
+              <div class="detail-row">
+                <span>مبلغ:</span>
+                <span class="fw-bold">{{ payment.amount|floatformat:0 }} تومان</span>
+              </div>
+              <div class="detail-row">
+                <span>تاریخ تلاش:</span>
+                <span>{{ payment.created_at|date:"Y/m/d H:i" }}</span>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <a href="{% url 'orders:order_detail' order.id %}" class="btn-white">
+                <i class="bi bi-arrow-clockwise me-2"></i>
+                تلاش مجدد
+              </a>
+              <a href="{% url 'orders:order_list' %}" class="btn-outline-white">
+                <i class="bi bi-list me-2"></i>
+                لیست سفارشات
+              </a>
+            </div>
+          </div>
+          
+        {% else %}
+          <!-- Error Result -->
+          <div class="result-card error-card">
+            <div class="result-icon">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <div class="result-title">خطا در پردازش</div>
+            <div class="result-message">
+              خطایی در پردازش پرداخت رخ داده است. لطفاً با پشتیبانی تماس بگیرید.
+            </div>
+            
+            <div class="action-buttons">
+              <a href="{% url 'orders:order_list' %}" class="btn-white">
+                <i class="bi bi-house me-2"></i>
+                صفحه اصلی
+              </a>
+              <a href="{% url 'orders:order_list' %}" class="btn-outline-white">
+                <i class="bi bi-list me-2"></i>
+                لیست سفارشات
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Additional Information -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="bi bi-info-circle me-2"></i>
+            اطلاعات مهم
+          </h5>
+          <div class="row">
+            <div class="col-md-6">
+              <h6>پس از پرداخت موفق:</h6>
+              <ul class="list-unstyled">
+                <li><i class="bi bi-check text-success me-2"></i>سفارش شما ثبت می‌شود</li>
+                <li><i class="bi bi-check text-success me-2"></i>اطلاعات پرداخت ذخیره می‌شود</li>
+                <li><i class="bi bi-check text-success me-2"></i>شماره پیگیری ارسال می‌شود</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h6>در صورت مشکل:</h6>
+              <ul class="list-unstyled">
+                <li><i class="bi bi-telephone text-primary me-2"></i>تماس با پشتیبانی</li>
+                <li><i class="bi bi-envelope text-primary me-2"></i>ارسال ایمیل</li>
+                <li><i class="bi bi-chat text-primary me-2"></i>چت آنلاین</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

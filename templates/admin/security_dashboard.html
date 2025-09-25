@@ -1,0 +1,498 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+{% block title %}Security Monitoring Dashboard{% endblock %}
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  .security-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .stat-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .stat-number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .stat-label {
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .stat-card.critical .stat-number {
+    color: #dc3545;
+  }
+  .stat-card.warning .stat-number {
+    color: #fd7e14;
+  }
+  .stat-card.info .stat-number {
+    color: #0dcaf0;
+  }
+  .stat-card.success .stat-number {
+    color: #198754;
+  }
+
+  .dashboard-section {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+
+  .dashboard-section h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+
+  .ip-list,
+  .event-list,
+  .user-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .ip-item,
+  .event-item,
+  .user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .severity-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+
+  .severity-low {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+  .severity-medium {
+    background: #fff3cd;
+    color: #856404;
+  }
+  .severity-high {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  .severity-critical {
+    background: #d1ecf1;
+    color: #721c24;
+    background: #f5c6cb;
+  }
+
+  .btn-sm {
+    padding: 4px 8px;
+    font-size: 0.8em;
+    margin-left: 5px;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 300px;
+    margin: 20px 0;
+  }
+
+  .error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<h1>Security Monitoring Dashboard</h1>
+
+{% if error %}
+<div class="error-message">{{ error }}</div>
+{% else %}
+
+<!-- Security Statistics -->
+<div class="security-stats">
+  <div class="stat-card info">
+    <div class="stat-number">{{ stats.total_events_24h }}</div>
+    <div class="stat-label">Total Events (24h)</div>
+  </div>
+  <div class="stat-card warning">
+    <div class="stat-number">{{ stats.failed_logins_24h }}</div>
+    <div class="stat-label">Failed Logins (24h)</div>
+  </div>
+  <div class="stat-card critical">
+    <div class="stat-number">{{ stats.suspicious_activities_24h }}</div>
+    <div class="stat-label">Suspicious Activities (24h)</div>
+  </div>
+  <div class="stat-card warning">
+    <div class="stat-number">{{ stats.rate_limit_violations_24h }}</div>
+    <div class="stat-label">Rate Limit Violations (24h)</div>
+  </div>
+  <div class="stat-card critical">
+    <div class="stat-number">{{ stats.account_locks_24h }}</div>
+    <div class="stat-label">Account Locks (24h)</div>
+  </div>
+  <div class="stat-card critical">
+    <div class="stat-number">{{ stats.high_severity_events_24h }}</div>
+    <div class="stat-label">High Severity Events (24h)</div>
+  </div>
+</div>
+
+<!-- Charts Section -->
+<div class="dashboard-section">
+  <h3>Security Events Timeline (Last 24 Hours)</h3>
+  <div class="chart-container">
+    <canvas id="eventsChart"></canvas>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+  <!-- Top IPs -->
+  <div class="dashboard-section">
+    <h3>Top IP Addresses (24h)</h3>
+    <div class="ip-list">
+      {% for ip in top_ips %}
+      <div class="ip-item">
+        <span>{{ ip.ip_address }}</span>
+        <span>
+          <strong>{{ ip.event_count }}</strong> events
+          <button
+            class="btn btn-danger btn-sm"
+            onclick="blockIP('{{ ip.ip_address }}')"
+          >
+            Block
+          </button>
+        </span>
+      </div>
+      {% empty %}
+      <p>No events in the last 24 hours.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Event Type Distribution -->
+  <div class="dashboard-section">
+    <h3>Event Type Distribution (24h)</h3>
+    <div class="event-list">
+      {% for event in event_distribution %}
+      <div class="event-item">
+        <span>{{ event.event_type|title }}</span>
+        <strong>{{ event.count }}</strong>
+      </div>
+      {% empty %}
+      <p>No events in the last 24 hours.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Recent High Severity Events -->
+<div class="dashboard-section">
+  <h3>Recent High Severity Events (Last 7 Days)</h3>
+  <div class="event-list">
+    {% for log in recent_high_severity %}
+    <div class="event-item">
+      <div>
+        <strong>{{ log.get_event_type_display }}</strong>
+        {% if log.user %} - {{ log.user.username }} {% endif %}
+        <br />
+        <small
+          >{{ log.ip_address }} - {{ log.created_at|date:"M d, H:i" }}</small
+        >
+      </div>
+      <span class="severity-badge severity-{{ log.severity }}">
+        {{ log.get_severity_display }}
+      </span>
+    </div>
+    {% empty %}
+    <p>No high severity events in the last 7 days.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Locked Users -->
+{% if locked_users %}
+<div class="dashboard-section">
+  <h3>Currently Locked Users</h3>
+  <div class="user-list">
+    {% for user in locked_users %}
+    <div class="user-item">
+      <div>
+        <strong>{{ user.username }}</strong> ({{ user.email }})
+        <br />
+        <small>Locked until: {{ user.locked_until|date:"M d, H:i" }}</small>
+      </div>
+      <button
+        class="btn btn-success btn-sm"
+        onclick="unlockUser('{{ user.id }}', '{{ user.username }}')"
+      >
+        Unlock
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %} {% endif %}
+
+<!-- Modals -->
+<div id="blockIPModal" class="modal" style="display: none">
+  <div class="modal-content">
+    <h4>Block IP Address</h4>
+    <form id="blockIPForm">
+      <p>IP Address: <strong id="blockIPAddress"></strong></p>
+      <label>Duration (minutes):</label>
+      <input type="number" id="blockDuration" value="60" min="1" max="10080" />
+      <label>Reason:</label>
+      <textarea
+        id="blockReason"
+        placeholder="Reason for blocking..."
+      ></textarea>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-danger">Block IP</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="closeModal('blockIPModal')"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="unlockUserModal" class="modal" style="display: none">
+  <div class="modal-content">
+    <h4>Unlock User Account</h4>
+    <form id="unlockUserForm">
+      <p>User: <strong id="unlockUsername"></strong></p>
+      <label>Reason:</label>
+      <textarea
+        id="unlockReason"
+        placeholder="Reason for unlocking..."
+      ></textarea>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-success">Unlock User</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="closeModal('unlockUserModal')"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Chart initialization
+  document.addEventListener("DOMContentLoaded", function () {
+    loadSecurityChart();
+  });
+
+  function loadSecurityChart() {
+    fetch("/admin/security/stats-api/")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const ctx = document.getElementById("eventsChart").getContext("2d");
+          new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: data.hourly_stats.map((item) => item.hour),
+              datasets: [
+                {
+                  label: "Security Events",
+                  data: data.hourly_stats.map((item) => item.count),
+                  borderColor: "rgb(75, 192, 192)",
+                  backgroundColor: "rgba(75, 192, 192, 0.2)",
+                  tension: 0.1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+        }
+      })
+      .catch((error) => console.error("Error loading chart:", error));
+  }
+
+  // Modal functions
+  function blockIP(ipAddress) {
+    document.getElementById("blockIPAddress").textContent = ipAddress;
+    document.getElementById("blockIPModal").style.display = "block";
+  }
+
+  function unlockUser(userId, username) {
+    document.getElementById("unlockUsername").textContent = username;
+    document.getElementById("unlockUserForm").dataset.userId = userId;
+    document.getElementById("unlockUserModal").style.display = "block";
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+  }
+
+  // Form submissions
+  document
+    .getElementById("blockIPForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const ipAddress = document.getElementById("blockIPAddress").textContent;
+      const duration = document.getElementById("blockDuration").value;
+      const reason = document.getElementById("blockReason").value;
+
+      const formData = new FormData();
+      formData.append("ip_address", ipAddress);
+      formData.append("duration_minutes", duration);
+      formData.append("reason", reason);
+      formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+      fetch("/admin/security/block-ip/", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(data.message);
+            closeModal("blockIPModal");
+            location.reload();
+          } else {
+            alert("Error: " + data.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred while blocking the IP.");
+        });
+    });
+
+  document
+    .getElementById("unlockUserForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const userId = this.dataset.userId;
+      const reason = document.getElementById("unlockReason").value;
+
+      const formData = new FormData();
+      formData.append("user_id", userId);
+      formData.append("reason", reason);
+      formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+      fetch("/admin/security/unlock-user/", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(data.message);
+            closeModal("unlockUserModal");
+            location.reload();
+          } else {
+            alert("Error: " + data.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred while unlocking the user.");
+        });
+    });
+
+  // Close modals when clicking outside
+  window.onclick = function (event) {
+    const modals = document.querySelectorAll(".modal");
+    modals.forEach((modal) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  };
+</script>
+
+<style>
+  .modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+  }
+
+  .modal-content h4 {
+    margin-top: 0;
+  }
+
+  .modal-content label {
+    display: block;
+    margin: 10px 0 5px 0;
+    font-weight: bold;
+  }
+
+  .modal-content input,
+  .modal-content textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .modal-content textarea {
+    height: 80px;
+    resize: vertical;
+  }
+
+  .modal-actions {
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .modal-actions button {
+    margin-left: 10px;
+  }
+</style>
+{% endblock %}
