@@ -1,0 +1,217 @@
+version: '3.8'
+
+services:
+  # Istanbul Plus Services
+  istanbulplus-web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: istanbulplus-web
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    environment:
+      - DEBUG=False
+      - DB_NAME=istanbulplus_db
+      - DB_USER=istanbulplus_user
+      - DB_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
+      - DB_HOST=istanbulplus-db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/3
+      - REDIS_RATE_LIMIT_URL=redis://redis:6379/4
+      - SECRET_KEY=${ISTANBULPLUS_SECRET_KEY}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - OTP_SMS_API_KEY=${OTP_SMS_API_KEY}
+      - PAYMENT_MERCHANT_ID=${PAYMENT_MERCHANT_ID}
+      - SITE_URL=https://istanbulplus.ir
+    volumes:
+      - istanbulplus_media:/app/media
+      - istanbulplus_static:/app/staticfiles
+    depends_on:
+      - istanbulplus-db
+      - redis
+    networks:
+      - istanbulplus_network
+      - shared_network
+
+  istanbulplus-db:
+    image: postgres:15-alpine
+    container_name: istanbulplus-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=istanbulplus_db
+      - POSTGRES_USER=istanbulplus_user
+      - POSTGRES_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - istanbulplus_db_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - istanbulplus_network
+
+  istanbulplus-celery:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: istanbulplus-celery
+    restart: unless-stopped
+    command: celery -A istanbulplusir worker --loglevel=info
+    environment:
+      - DEBUG=False
+      - DB_NAME=istanbulplus_db
+      - DB_USER=istanbulplus_user
+      - DB_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
+      - DB_HOST=istanbulplus-db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/3
+      - SECRET_KEY=${ISTANBULPLUS_SECRET_KEY}
+    volumes:
+      - istanbulplus_media:/app/media
+    depends_on:
+      - istanbulplus-db
+      - redis
+    networks:
+      - istanbulplus_network
+      - shared_network
+
+  # Peykan Tourism Services (existing project)
+  peykan-web:
+    image: peykan-tourism:latest  # Assuming peykan-tourism has its own image
+    container_name: peykan-web
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_NAME=peykan_db
+      - DB_USER=peykan_user
+      - DB_PASSWORD=${PEYKAN_DB_PASSWORD}
+      - DB_HOST=peykan-db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - peykan_media:/app/media
+      - peykan_static:/app/static
+    depends_on:
+      - peykan-db
+      - redis
+    networks:
+      - peykan_network
+      - shared_network
+
+  peykan-db:
+    image: postgres:15-alpine
+    container_name: peykan-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=peykan_db
+      - POSTGRES_USER=peykan_user
+      - POSTGRES_PASSWORD=${PEYKAN_DB_PASSWORD}
+    volumes:
+      - peykan_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - peykan_network
+
+  # Shared Redis
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    networks:
+      - shared_network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - istanbulplus_static:/var/www/istanbulplus/static:ro
+      - istanbulplus_media:/var/www/istanbulplus/media:ro
+      - peykan_static:/var/www/peykan/static:ro
+      - peykan_media:/var/www/peykan/media:ro
+    depends_on:
+      - istanbulplus-web
+      - peykan-web
+    networks:
+      - shared_network
+
+  # Monitoring with Prometheus (optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - monitoring_network
+
+  # Grafana for visualization (optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - monitoring_network
+
+volumes:
+  istanbulplus_db_data:
+    driver: local
+  istanbulplus_media:
+    driver: local
+  istanbulplus_static:
+    driver: local
+  peykan_db_data:
+    driver: local
+  peykan_media:
+    driver: local
+  peykan_static:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  istanbulplus_network:
+    driver: bridge
+  peykan_network:
+    driver: bridge
+  shared_network:
+    driver: bridge
+  monitoring_network:
+    driver: bridge

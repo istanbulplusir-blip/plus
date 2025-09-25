@@ -1,0 +1,51 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # Istanbul Plus monitoring
+  - job_name: 'istanbulplus'
+    static_configs:
+      - targets: ['istanbulplus-web:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Peykan Tourism monitoring
+  - job_name: 'peykan'
+    static_configs:
+      - targets: ['peykan-web:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # Redis monitoring
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 30s
+
+  # PostgreSQL monitoring
+  - job_name: 'postgresql-istanbulplus'
+    static_configs:
+      - targets: ['istanbulplus-db:5432']
+    scrape_interval: 30s
+
+  - job_name: 'postgresql-peykan'
+    static_configs:
+      - targets: ['peykan-db:5432']
+    scrape_interval: 30s
+
+  # Nginx monitoring
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+    scrape_interval: 30s
+
+  # Node exporter for system metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+    scrape_interval: 30s
