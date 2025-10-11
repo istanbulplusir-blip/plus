@@ -7,11 +7,15 @@
 /* Fallback for browsers that don't support CSS custom properties */
 .btn-modern {
   /* Fallback colors for older browsers */
-  background: #667eea; /* Fallback for --color-primary */
+  background: #667eea;
+  /* Fallback for --color-primary */
   color: #ffffff;
-  border-radius: 12px; /* Fallback for --radius-xl */
-  padding: 12px 24px; /* Fallback for --space-3 --space-6 */
-  transition: all 0.2s ease-in-out; /* Fallback for --transition-base */
+  border-radius: 12px;
+  /* Fallback for --radius-xl */
+  padding: 12px 24px;
+  /* Fallback for --space-3 --space-6 */
+  transition: all 0.2s ease-in-out;
+  /* Fallback for --transition-base */
 }
 
 /* Modern browsers with custom property support */
@@ -27,7 +31,8 @@
 /* 2. Backdrop Filter Fallbacks */
 /* Fallback for browsers that don't support backdrop-filter */
 .card {
-  background: rgba(255, 255, 255, 0.9); /* Solid fallback */
+  background: rgba(255, 255, 255, 0.9);
+  /* Solid fallback */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -56,7 +61,7 @@
   gap: 1rem;
 }
 
-.product-grid > * {
+.product-grid>* {
   flex: 1 1 300px;
   min-width: 300px;
 }
@@ -68,8 +73,8 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-6, 1.5rem);
   }
-  
-  .product-grid > * {
+
+  .product-grid>* {
     flex: none;
     min-width: auto;
   }
@@ -81,11 +86,11 @@
   display: flex;
 }
 
-.btn-group > * {
+.btn-group>* {
   margin-right: 0.5rem;
 }
 
-.btn-group > *:last-child {
+.btn-group>*:last-child {
   margin-right: 0;
 }
 
@@ -94,8 +99,8 @@
   .btn-group {
     gap: 0.5rem;
   }
-  
-  .btn-group > * {
+
+  .btn-group>* {
     margin-right: 0;
   }
 }
@@ -120,10 +125,11 @@
 .aspect-ratio-container {
   position: relative;
   width: 100%;
-  padding-bottom: 75%; /* 4:3 aspect ratio */
+  padding-bottom: 75%;
+  /* 4:3 aspect ratio */
 }
 
-.aspect-ratio-container > * {
+.aspect-ratio-container>* {
   position: absolute;
   top: 0;
   left: 0;
@@ -138,8 +144,8 @@
     aspect-ratio: 4/3;
     padding-bottom: 0;
   }
-  
-  .aspect-ratio-container > * {
+
+  .aspect-ratio-container>* {
     position: static;
   }
 }
@@ -204,31 +210,31 @@
   .text-start {
     text-align: start;
   }
-  
+
   .text-end {
     text-align: end;
   }
-  
+
   .margin-start {
     margin-left: 0;
     margin-inline-start: 1rem;
   }
-  
+
   .margin-end {
     margin-right: 0;
     margin-inline-end: 1rem;
   }
-  
+
   .padding-start {
     padding-left: 0;
     padding-inline-start: 1rem;
   }
-  
+
   .padding-end {
     padding-right: 0;
     padding-inline-end: 1rem;
   }
-  
+
   /* Remove RTL overrides when logical properties are supported */
   [dir="rtl"] .text-start,
   [dir="rtl"] .text-end,
@@ -256,7 +262,7 @@
     transform-style: preserve-3d;
     perspective: 1000px;
   }
-  
+
   .card-3d:hover {
     transform: rotateY(5deg) rotateX(5deg) scale(1.05);
   }
@@ -279,7 +285,8 @@
 /* 10. CSS Scroll Behavior Fallbacks */
 /* JavaScript fallback will be handled in JS file */
 html {
-  scroll-behavior: auto; /* Fallback */
+  scroll-behavior: auto;
+  /* Fallback */
 }
 
 /* Modern browsers with smooth scroll support */
@@ -310,14 +317,14 @@ html {
   .card-container {
     container-type: inline-size;
   }
-  
+
   @container (max-width: 400px) {
     .responsive-card {
       font-size: 14px;
       padding: 12px;
     }
   }
-  
+
   @container (min-width: 401px) {
     .responsive-card {
       font-size: 16px;
@@ -346,7 +353,8 @@ html {
 /* 13. CSS Color Functions Fallbacks */
 /* Static color fallbacks */
 .color-modern {
-  background-color: #667eea; /* Fallback */
+  background-color: #667eea;
+  /* Fallback */
   color: #ffffff;
 }
 
@@ -378,64 +386,68 @@ html {
 /* 15. Browser-Specific Fixes */
 
 /* Internet Explorer 11 Fixes */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+
   /* IE11 flexbox fixes */
   .flex-ie-fix {
     display: -ms-flexbox;
     display: flex;
   }
-  
-  .flex-ie-fix > * {
+
+  .flex-ie-fix>* {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
   }
-  
+
   /* IE11 grid fallback */
   .grid-ie-fallback {
     display: -ms-grid;
     -ms-grid-columns: 1fr 1fr 1fr;
     -ms-grid-rows: auto;
   }
-  
-  .grid-ie-fallback > *:nth-child(1) {
+
+  .grid-ie-fallback>*:nth-child(1) {
     -ms-grid-column: 1;
   }
-  
-  .grid-ie-fallback > *:nth-child(2) {
+
+  .grid-ie-fallback>*:nth-child(2) {
     -ms-grid-column: 2;
   }
-  
-  .grid-ie-fallback > *:nth-child(3) {
+
+  .grid-ie-fallback>*:nth-child(3) {
     -ms-grid-column: 3;
   }
 }
 
 /* Safari-specific fixes */
 @supports (-webkit-appearance: none) {
+
   /* Safari button appearance fix */
   .btn-safari-fix {
     -webkit-appearance: none;
     appearance: none;
   }
-  
+
   /* Safari flexbox gap fix */
   .flex-safari-gap {
     margin: -0.5rem;
   }
-  
-  .flex-safari-gap > * {
+
+  .flex-safari-gap>* {
     margin: 0.5rem;
   }
 }
 
 /* Firefox-specific fixes */
 @-moz-document url-prefix() {
+
   /* Firefox flexbox fixes */
   .flex-firefox-fix {
     min-height: 0;
     min-width: 0;
   }
-  
+
   /* Firefox outline fix */
   .btn-firefox-outline::-moz-focus-inner {
     border: 0;
@@ -445,21 +457,22 @@ html {
 
 /* Chrome/Webkit specific fixes */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
+
   /* Chrome scrollbar styling */
   .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 4px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.5);
   }
@@ -486,6 +499,7 @@ html {
 
 /* 17. Print Styles */
 @media print {
+
   /* Remove interactive elements */
   .btn,
   .dropdown,
@@ -493,7 +507,7 @@ html {
   .tooltip {
     display: none !important;
   }
-  
+
   /* Ensure good contrast */
   * {
     background: transparent !important;
@@ -501,21 +515,21 @@ html {
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
+
   /* Page breaks */
   .card,
   .product-item {
     page-break-inside: avoid;
     break-inside: avoid;
   }
-  
+
   /* Show URLs for links */
   a[href]:after {
     content: " (" attr(href) ")";
     font-size: 0.8em;
     color: #666;
   }
-  
+
   /* Hide decorative images */
   .hero-bg,
   .decorative-img {
@@ -530,13 +544,13 @@ html {
     background: Canvas;
     color: CanvasText;
   }
-  
+
   .btn {
     border: 2px solid ButtonText;
     background: ButtonFace;
     color: ButtonText;
   }
-  
+
   .btn:hover {
     background: Highlight;
     color: HighlightText;
@@ -545,6 +559,7 @@ html {
 
 /* 19. Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -553,12 +568,12 @@ html {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   /* Keep essential animations but make them instant */
   .loading-spinner {
     animation: none;
   }
-  
+
   .loading-spinner::after {
     content: "Loading...";
   }
@@ -571,19 +586,19 @@ html {
     background: Canvas;
     color: CanvasText;
   }
-  
+
   .btn {
     border: 1px solid ButtonText;
     background: ButtonFace;
     color: ButtonText;
     forced-color-adjust: none;
   }
-  
+
   .btn:hover {
     background: Highlight;
     color: HighlightText;
   }
-  
+
   /* Ensure icons are visible */
   .icon {
     fill: currentColor;
@@ -602,7 +617,7 @@ html {
 }
 
 .no-webp .webp-bg {
-  background-image: url('fallback.jpg');
+  /* background-image: url('fallback.jpg'); */
 }
 
 .webp .webp-bg {
@@ -610,7 +625,7 @@ html {
 }
 
 .no-avif .avif-bg {
-  background-image: url('fallback.jpg');
+  /* background-image: url('fallback.jpg'); */
 }
 
 .avif .avif-bg {
@@ -621,21 +636,27 @@ html {
 /* Styles for when polyfills are loaded */
 .polyfilled .modern-feature {
   /* Adjusted styles for polyfilled features */
-  opacity: 0.9; /* Slightly reduced to indicate polyfill */
+  opacity: 0.9;
+  /* Slightly reduced to indicate polyfill */
 }
 
 /* 23. Graceful Degradation Examples */
 /* Complex gradient with simple fallback */
 .gradient-complex {
-  background: #667eea; /* Simple fallback */
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Standard gradient */
-  background: conic-gradient(from 180deg at 50% 50%, #667eea 0deg, #764ba2 180deg, #667eea 360deg); /* Modern gradient */
+  background: #667eea;
+  /* Simple fallback */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* Standard gradient */
+  background: conic-gradient(from 180deg at 50% 50%, #667eea 0deg, #764ba2 180deg, #667eea 360deg);
+  /* Modern gradient */
 }
 
 /* Complex animation with simple fallback */
 .animate-complex {
-  opacity: 1; /* Fallback state */
-  transform: translateY(0); /* Fallback position */
+  opacity: 1;
+  /* Fallback state */
+  transform: translateY(0);
+  /* Fallback position */
 }
 
 @supports (animation-timeline: scroll()) {
@@ -650,6 +671,7 @@ html {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -680,7 +702,7 @@ html {
   flex-direction: column;
 }
 
-.ie11-flex-fix > * {
+.ie11-flex-fix>* {
   flex-shrink: 0;
 }
 

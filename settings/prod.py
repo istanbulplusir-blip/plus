@@ -4,7 +4,9 @@ import os
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['istanbulplus.ir', 'www.istanbulplus.ir']
+ALLOWED_HOSTS = [
+    'istanbulplus.ir', 'www.istanbulplus.ir', 'localhost', '127.0.0.1'
+]
 
 # Database - PostgreSQL for production
 DATABASES = {
@@ -16,7 +18,7 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': os.environ.get('DB_PORT', '5432'),
         'OPTIONS': {
-            'sslmode': 'require',
+            'sslmode': 'disable',
         },
     }
 }
@@ -31,7 +33,8 @@ EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@istanbulplus.ir')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL',
+                                    'noreply@istanbulplus.ir')
 
 # Site URL for email links
 SITE_URL = os.environ.get('SITE_URL', 'https://istanbulplus.ir')
@@ -54,8 +57,10 @@ CACHES = {
         }
     },
     'rate_limit': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.environ.get('REDIS_RATE_LIMIT_URL', 'redis://127.0.0.1:6379/2'),
+        'BACKEND':
+        'django_redis.cache.RedisCache',
+        'LOCATION':
+        os.environ.get('REDIS_RATE_LIMIT_URL', 'redis://127.0.0.1:6379/2'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'CONNECTION_POOL_KWARGS': {
@@ -97,7 +102,7 @@ SECURE_HSTS_PRELOAD = True
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # HTTPS settings
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
@@ -138,8 +143,8 @@ SECURE_PERMISSIONS_POLICY = {
     'xr-spatial-tracking': [],
 }
 
-# Static files - use WhiteNoise with compression
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# Static files - use simple storage for production with Nginx
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # CSS Optimization Settings
 CSS_OPTIMIZATION = {
@@ -162,7 +167,25 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Whitenoise settings for better static file serving
-MIDDLEWARE.insert(1, 'django.middleware.security.SecurityMiddleware')
+# MIDDLEWARE.insert(1, 'django.middleware.security.SecurityMiddleware')
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+# WhiteNoise configuration for media files
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = True
+
+# Static files storage backend - use simple storage for production with Nginx
+# Use STORAGES for Django 4.2+ - Override any default settings
+if 'STORAGES' not in dir():
+    STORAGES = {}
+STORAGES.update({
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+})
 
 # Add compression headers for static files
 SECURE_BROWSER_XSS_FILTER = True
@@ -179,7 +202,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'format':
+            '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
     },
@@ -205,5 +229,15 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+    },
+}
+
+# FINAL OVERRIDE: Force Django to use StaticFilesStorage instead of WhiteNoise
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }

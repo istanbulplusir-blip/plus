@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  # Istanbul Plus Services
+  istanbulplus-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: istanbulplus-web
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - DB_NAME=istanbulplus_db
+      - DB_USER=istanbulplus_user
+      - DB_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
+      - DB_HOST=istanbulplus-db
+      - DB_PORT=5432
+      - REDIS_URL=redis://istanbulplus_redis:6379/3
+      - REDIS_RATE_LIMIT_URL=redis://istanbulplus_redis:6379/4
+      - SECRET_KEY=${ISTANBULPLUS_SECRET_KEY}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - OTP_SMS_API_KEY=${OTP_SMS_API_KEY}
+      - PAYMENT_MERCHANT_ID=${PAYMENT_MERCHANT_ID}
+      - SITE_URL=https://istanbulplus.ir
+    volumes:
+      - istanbulplus_media:/app/media
+      - istanbulplus_static:/app/staticfiles
+    depends_on:
+      - istanbulplus-db
+      - istanbulplus_redis
+    networks:
+      - istanbulplus_internal
+      - shared_network
+
+  istanbulplus-db:
+    image: postgres:15-alpine
+    container_name: istanbulplus-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=istanbulplus_db
+      - POSTGRES_USER=istanbulplus_user
+      - POSTGRES_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - istanbulplus_db_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - istanbulplus_internal
+
+  istanbulplus-celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: istanbulplus-celery
+    restart: unless-stopped
+    command: celery -A celery_app worker --loglevel=info
+    environment:
+      - DEBUG=False
+      - DB_NAME=istanbulplus_db
+      - DB_USER=istanbulplus_user
+      - DB_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
+      - DB_HOST=istanbulplus-db
+      - DB_PORT=5432
+      - REDIS_URL=redis://istanbulplus_redis:6379/3
+      - SECRET_KEY=${ISTANBULPLUS_SECRET_KEY}
+    volumes:
+      - istanbulplus_media:/app/media
+    depends_on:
+      - istanbulplus-db
+      - istanbulplus_redis
+    networks:
+      - istanbulplus_internal
+      - shared_network
+
+  # Redis for Istanbul Plus
+  istanbulplus_redis:
+    image: redis:7-alpine
+    container_name: istanbulplus_redis
+    restart: unless-stopped
+    volumes:
+      - istanbulplus_redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    networks:
+      - istanbulplus_internal
+      - shared_network
+
+volumes:
+  istanbulplus_db_data:
+    driver: local
+  istanbulplus_media:
+    driver: local
+  istanbulplus_static:
+    driver: local
+  istanbulplus_redis_data:
+    driver: local
+
+networks:
+  istanbulplus_internal:
+    driver: bridge
+    internal: true
+  shared_network:
+    driver: bridge

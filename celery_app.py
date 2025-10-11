@@ -3,7 +3,7 @@ from celery import Celery
 from django.conf import settings
 
 # Set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.prod')
 
 app = Celery('istanbulplusir')
 
@@ -18,11 +18,17 @@ app.autodiscover_tasks()
 app.conf.update(
     # Task routing
     task_routes={
-        'users.tasks.cleanup_expired_data': {'queue': 'maintenance'},
-        'users.tasks.optimize_database': {'queue': 'maintenance'},
-        'users.tasks.generate_security_report': {'queue': 'reports'},
+        'users.tasks.cleanup_expired_data': {
+            'queue': 'maintenance'
+        },
+        'users.tasks.optimize_database': {
+            'queue': 'maintenance'
+        },
+        'users.tasks.generate_security_report': {
+            'queue': 'reports'
+        },
     },
-    
+
     # Task scheduling
     beat_schedule={
         'cleanup-expired-data': {
@@ -42,16 +48,16 @@ app.conf.update(
             'schedule': 604800.0,  # Weekly
         },
     },
-    
+
     # Worker configuration
     worker_prefetch_multiplier=1,
     task_acks_late=True,
     worker_max_tasks_per_child=1000,
-    
+
     # Result backend
     result_backend='redis://127.0.0.1:6379/3',
     result_expires=3600,
-    
+
     # Task serialization
     task_serializer='json',
     accept_content=['json'],
