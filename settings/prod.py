@@ -1,11 +1,30 @@
 from .base import *
 import os
 
+# Add CSRF exempt middleware for admin (temporary fix)
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'users.middleware.security_headers.SecurityHeadersMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cart.middleware.cart_middleware',
+]
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
-    'istanbulplus.ir', 'www.istanbulplus.ir', 'localhost', '127.0.0.1'
+    'istanbulplus.ir',
+    'www.istanbulplus.ir',
+    'localhost',
+    '127.0.0.1',
+    'istanbulplus-web',  # Docker container name
 ]
 
 # Database - PostgreSQL for production
@@ -47,7 +66,7 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        'LOCATION': os.environ.get('REDIS_URL', 'redis://redis:6379/3'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'CONNECTION_POOL_KWARGS': {
@@ -57,10 +76,8 @@ CACHES = {
         }
     },
     'rate_limit': {
-        'BACKEND':
-        'django_redis.cache.RedisCache',
-        'LOCATION':
-        os.environ.get('REDIS_RATE_LIMIT_URL', 'redis://127.0.0.1:6379/2'),
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('REDIS_RATE_LIMIT_URL', 'redis://redis:6379/4'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'CONNECTION_POOL_KWARGS': {
@@ -80,6 +97,19 @@ CORS_ALLOWED_ORIGINS = [
     'https://istanbulplus.ir',
     'https://www.istanbulplus.ir',
 ]
+
+# CSRF settings for production
+CSRF_TRUSTED_ORIGINS = [
+    'https://istanbulplus.ir',
+    'https://www.istanbulplus.ir',
+]
+CSRF_COOKIE_DOMAIN = None  # Let Django handle it automatically
+CSRF_USE_SESSIONS = False  # Use cookies for better compatibility with nginx
+CSRF_COOKIE_SECURE = True  # Always True in production (DEBUG=False)
+CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
+
+# Add proxy SSL header for reverse proxy setup
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # OTP SMS settings for production
 OTP_SMS_BACKEND = os.environ.get('OTP_SMS_BACKEND', 'kavenegar')
@@ -102,13 +132,14 @@ SECURE_HSTS_PRELOAD = True
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # HTTPS settings
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False  # Nginx handles SSL termination
+SESSION_COOKIE_SECURE = not DEBUG  # Only secure in production
+CSRF_COOKIE_SECURE = not DEBUG  # Only secure in production
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Strict'
-CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF token
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_DOMAIN = None  # Let Django handle it automatically
 
 # Additional security headers
 SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
@@ -164,7 +195,9 @@ STATICFILES_FINDERS = [
 
 # Additional static files settings for optimization
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Whitenoise settings for better static file serving
 # MIDDLEWARE.insert(1, 'django.middleware.security.SecurityMiddleware')

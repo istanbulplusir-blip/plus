@@ -27,11 +27,19 @@ services:
       - PAYMENT_MERCHANT_ID=${PAYMENT_MERCHANT_ID}
       - SITE_URL=https://istanbulplus.ir
     volumes:
-      - istanbulplus_media:/app/media
-      - istanbulplus_static:/app/staticfiles
+      - plus_media:/app/media
+      - plus_static:/app/staticfiles
     depends_on:
-      - istanbulplus-db
-      - redis
+      istanbulplus-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - istanbulplus_network
       - shared_network
@@ -46,12 +54,23 @@ services:
       - POSTGRES_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
-      - istanbulplus_db_data:/var/lib/postgresql/data
+      - plus_db_data:/var/lib/postgresql/data
       - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     ports:
       - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U istanbulplus_user -d istanbulplus_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - istanbulplus_network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   istanbulplus-celery:
     build: 
@@ -59,7 +78,9 @@ services:
       dockerfile: Dockerfile
     container_name: istanbulplus-celery
     restart: unless-stopped
-    command: celery -A istanbulplusir worker --loglevel=info
+    command: celery -A celery_app worker --loglevel=info
+    env_file:
+      - .env
     environment:
       - DEBUG=False
       - DB_NAME=istanbulplus_db
@@ -67,55 +88,34 @@ services:
       - DB_PASSWORD=${ISTANBULPLUS_DB_PASSWORD}
       - DB_HOST=istanbulplus-db
       - DB_PORT=5432
-      - REDIS_URL=redis://redis:6379/3
+      - REDIS_URL=redis://redis:6379/5
+      - REDIS_RESULT_URL=redis://redis:6379/6
       - SECRET_KEY=${ISTANBULPLUS_SECRET_KEY}
     volumes:
-      - istanbulplus_media:/app/media
+      - plus_media:/app/media
     depends_on:
-      - istanbulplus-db
-      - redis
+      istanbulplus-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A celery_app inspect ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - istanbulplus_network
       - shared_network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
-  # Peykan Tourism Services (existing project)
-  peykan-web:
-    image: peykan-tourism:latest  # Assuming peykan-tourism has its own image
-    container_name: peykan-web
-    restart: unless-stopped
-    ports:
-      - "8000:8000"
-    environment:
-      - DB_NAME=peykan_db
-      - DB_USER=peykan_user
-      - DB_PASSWORD=${PEYKAN_DB_PASSWORD}
-      - DB_HOST=peykan-db
-      - DB_PORT=5432
-      - REDIS_URL=redis://redis:6379/0
-    volumes:
-      - peykan_media:/app/media
-      - peykan_static:/app/static
-    depends_on:
-      - peykan-db
-      - redis
-    networks:
-      - peykan_network
-      - shared_network
-
-  peykan-db:
-    image: postgres:15-alpine
-    container_name: peykan-db
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=peykan_db
-      - POSTGRES_USER=peykan_user
-      - POSTGRES_PASSWORD=${PEYKAN_DB_PASSWORD}
-    volumes:
-      - peykan_db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      - peykan_network
+  # Peykan Tourism Services - External containers from plusistanbul project
+  # These services are managed by plusistanbul/docker-compose.production-dev.yml
 
   # Shared Redis
   redis:
@@ -125,10 +125,21 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - plus_redis_data:/data
     command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - shared_network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   # Nginx Reverse Proxy
   nginx:
@@ -141,16 +152,23 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-      - istanbulplus_static:/var/www/istanbulplus/static:ro
-      - istanbulplus_media:/var/www/istanbulplus/media:ro
+      - nginx_ssl_certs:/etc/nginx/ssl:ro
+      - plus_static:/var/www/plus/static:ro
+      - plus_media:/var/www/plus/media:ro
       - peykan_static:/var/www/peykan/static:ro
       - peykan_media:/var/www/peykan/media:ro
+      - nginx_logs:/var/log/nginx
     depends_on:
-      - istanbulplus-web
-      - peykan-web
+      istanbulplus-web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - shared_network
+      - peykan_external  # Connect to Peykan external network
 
   # Monitoring with Prometheus (optional)
   prometheus:
@@ -161,7 +179,7 @@ services:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
+      - plus_prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -169,8 +187,19 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - monitoring_network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   # Grafana for visualization (optional)
   grafana:
@@ -178,40 +207,68 @@ services:
     container_name: grafana
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3001:3000"  # Changed to 3001 to avoid conflict with Peykan frontend
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
     volumes:
-      - grafana_data:/var/lib/grafana
+      - plus_grafana_data:/var/lib/grafana
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - monitoring_network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
 
 volumes:
-  istanbulplus_db_data:
+  # Plus project volumes with unique names
+  plus_db_data:
     driver: local
-  istanbulplus_media:
+  plus_media:
     driver: local
-  istanbulplus_static:
+  plus_static:
     driver: local
-  peykan_db_data:
+  plus_redis_data:
     driver: local
+  plus_prometheus_data:
+    driver: local
+  plus_grafana_data:
+    driver: local
+  
+  # Shared volumes for nginx
+  nginx_ssl_certs:
+    driver: local
+  nginx_logs:
+    driver: local
+  
+  # External volumes from Peykan project
   peykan_media:
-    driver: local
+    external: true
+    name: plusistanbul_media_volume_dev
   peykan_static:
-    driver: local
-  redis_data:
-    driver: local
-  prometheus_data:
-    driver: local
-  grafana_data:
-    driver: local
+    external: true
+    name: plusistanbul_static_volume_dev
 
 networks:
+  # Plus internal network
   istanbulplus_network:
     driver: bridge
-  peykan_network:
-    driver: bridge
+  
+  # Shared network for nginx and redis
   shared_network:
     driver: bridge
+  
+  # Monitoring network
   monitoring_network:
     driver: bridge
+  
+  # External network to connect to Peykan services
+  peykan_external:
+    external: true
+    name: plusistanbul_peykan_external

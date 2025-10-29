@@ -16,6 +16,9 @@ app.autodiscover_tasks()
 
 # Celery configuration
 app.conf.update(
+    # Broker configuration
+    broker_url=os.environ.get('REDIS_URL', 'redis://istanbulplus_redis:6379/5'),
+    
     # Task routing
     task_routes={
         'users.tasks.cleanup_expired_data': {
@@ -55,7 +58,7 @@ app.conf.update(
     worker_max_tasks_per_child=1000,
 
     # Result backend
-    result_backend='redis://127.0.0.1:6379/3',
+    result_backend=os.environ.get('REDIS_RESULT_URL', os.environ.get('REDIS_URL', 'redis://istanbulplus_redis:6379/6')),
     result_expires=3600,
 
     # Task serialization
