@@ -62,17 +62,20 @@ SITE_URL = os.environ.get('SITE_URL', 'https://istanbulplus.ir')
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 FILE_UPLOAD_PERMISSIONS = 0o644
 
-# Cache settings - Redis for production
+# Cache settings - Redis for production with password authentication
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': os.environ.get('REDIS_URL', 'redis://redis:6379/3'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': os.environ.get('REDIS_PASSWORD'),
             'CONNECTION_POOL_KWARGS': {
                 'max_connections': 50,
                 'retry_on_timeout': True,
-            }
+            },
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
         }
     },
     'rate_limit': {
@@ -80,10 +83,13 @@ CACHES = {
         'LOCATION': os.environ.get('REDIS_RATE_LIMIT_URL', 'redis://redis:6379/4'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': os.environ.get('REDIS_PASSWORD'),
             'CONNECTION_POOL_KWARGS': {
                 'max_connections': 50,
                 'retry_on_timeout': True,
-            }
+            },
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
         }
     }
 }

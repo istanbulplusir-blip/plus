@@ -16,8 +16,8 @@ app.autodiscover_tasks()
 
 # Celery configuration
 app.conf.update(
-    # Broker configuration
-    broker_url=os.environ.get('REDIS_URL', 'redis://istanbulplus_redis:6379/5'),
+    # Broker configuration - uses CELERY_BROKER_URL with password authentication
+    broker_url=os.environ.get('CELERY_BROKER_URL', 'redis://istanbulplus_redis:6379/5'),
     
     # Task routing
     task_routes={
@@ -57,8 +57,8 @@ app.conf.update(
     task_acks_late=True,
     worker_max_tasks_per_child=1000,
 
-    # Result backend
-    result_backend=os.environ.get('REDIS_RESULT_URL', os.environ.get('REDIS_URL', 'redis://istanbulplus_redis:6379/6')),
+    # Result backend - uses CELERY_RESULT_BACKEND with password authentication
+    result_backend=os.environ.get('CELERY_RESULT_BACKEND', 'redis://istanbulplus_redis:6379/6'),
     result_expires=3600,
 
     # Task serialization
